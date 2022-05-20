@@ -54,6 +54,7 @@ app.post('/*', async (req, res) => {
         result.push(feed);
     }
 
+    res.setHeader('content-type', 'application/json');
     res.send(JSON.stringify(result));
 });
 
