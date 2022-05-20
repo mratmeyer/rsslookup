@@ -9,7 +9,17 @@ export default function Home() {
   const handleSubmit = (e) =>  {
     setLoading(true);
 
-    fetch('https://api.rssfinder.net').then((response) => response.json())
+    const body = {
+      "url": url
+    }
+
+    fetch('https://api.rssfinder.net/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    }).then((response) => response.json())
       .then((data) => {
         setResponse(data);
         setLoading(false);
@@ -25,12 +35,18 @@ export default function Home() {
       <div id="app">
         <h1 className="text-6xl font-semibold mb-8">RSS Feed Finder</h1>
         <p className="text-xl mb-8">Can't find the RSS feed for your favorite site? Paste the URL below and we'll try and find it.</p>
-        <input type="text" onChange={(e) => setUrl(e.target.value)} className="shadow-md p-5 rounded-md w-full mb-4" id="inputText" name="inputText" placeholder="Paste URL here..." value={ url }></input>
+        <input type="url" onChange={(e) => setUrl(e.target.value)} className="shadow-md p-5 rounded-md w-full mb-4" id="inputText" name="inputText" placeholder="Paste URL here..." value={ url }></input>
         <button className="px-3 py-1 bg-white text-lg shadow-md rounded-lg font-bold" onClick={ handleSubmit } >Lets go</button>
         {loading 
           ? <div><p>Loading...</p></div>
           : <div>{response != null
-            ? <p>data</p>
+            ? <div>
+              {response.map((feed) => (
+              <div className="bg-white p-2 mb-1 cursor-move">
+                <span>{feed}</span>
+              </div>
+            ))}
+              </div>
             : <p>no data</p>
           }</div>
         }
