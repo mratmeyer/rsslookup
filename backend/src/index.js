@@ -7,8 +7,15 @@ const port = 8080;
 const fetch = require('node-fetch');
 const { WritableStream } = require("htmlparser2/lib/WritableStream");
 
-app.get('/*', async (req, res) => {
-    const url = "https://www.maxratmeyer.com"
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.post('/*', async (req, res) => {
+    if (req.body.url == null) {
+        res.send("no url");
+    }
+
+    const url = req.body.url;
 
     const response = await fetch(url);
     const feeds = new Set();
