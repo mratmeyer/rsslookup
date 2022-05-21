@@ -17,14 +17,12 @@ app.post('/*', async (req, res) => {
 
     let url = req.body.url;
 
+    if (url.slice(-1) === '/') {
+        url = url.slice(0, -1);
+    }
+
     const response = await fetch(url);
     const feeds = new Set();
-
-    let urlBase = url;
-
-    if (url.charAt(url.length - 1) === '/') {
-        urlBase = url.slice(-1);
-    }
 
     if (!response.ok) throw new Error(`unexpected response ${response.statusText}`);
 
@@ -35,7 +33,7 @@ app.post('/*', async (req, res) => {
                     let feedURL = attributes.href;
 
                     if (feedURL.charAt(0) == '/') {
-                        feedURL = urlBase + feedURL;
+                        feedURL = url + feedURL;
                     }
 
                     feeds.add(feedURL);
@@ -51,7 +49,7 @@ app.post('/*', async (req, res) => {
     const response2 = await fetch(url + '/feed/');
 
     if (response2.status == 200) {
-        feeds.add(urlBase + '/feed/');
+        feeds.add(url + '/feed/');
     }
 
     const result = [];
