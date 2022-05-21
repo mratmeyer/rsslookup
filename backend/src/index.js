@@ -15,7 +15,11 @@ app.post('/*', async (req, res) => {
         res.send("no url");
     }
 
-    const url = req.body.url;
+    let url = req.body.url;
+
+    if (url.charAt(url.length - 1) === '/') {
+        url = url.slice(-1);
+    }
 
     const response = await fetch(url);
     const feeds = new Set();
