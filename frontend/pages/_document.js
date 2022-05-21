@@ -12,11 +12,11 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
             <link rel="preconnect" href="https://fonts.gstatic.com" />
-            <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet" />
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
             <script defer src="https://shynet.maxnet.work/ingress/9aa3b827-a913-4be4-bb90-4d8dca05f744/script.js"></script>
         </Head>
-        <div className="">
+        <div className="bg-gray-100">
           <div className="m-auto max-w-2xl p-12 min-h-screen">
             <body>
               <div className="mb-8">
