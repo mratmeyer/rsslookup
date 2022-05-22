@@ -14,7 +14,7 @@ export default function Home() {
       "url": url
     }
 
-    fetch('https://api.rssfinder.net/', {
+    fetch('https://api.rsslookup.com/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,16 +30,16 @@ export default function Home() {
   return (
     <div>
       <NextSeo
-        title="RSS Finder - Get the RSS feed for any webpage"
-        description="RSS Finder is a free tool to find the RSS feed for any website."
-        canonical="https://www.rssfinder.net/"
+        title="RSS Lookup - Get the RSS feed for any webpage"
+        description="RSS Lookup is a free tool to find the RSS feed for any website."
+        canonical="https://www.rsslookup.com/"
       />
       <Head>
-        <title>RSS Finder - Get the RSS feed for any webpage</title>
+        <title>RSS Lookup - Get the RSS feed for any webpage</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div id="app">
-        <h1 className="text-6xl font-semibold mb-8">RSS Finder</h1>
+        <h1 className="text-6xl font-semibold mb-8">RSS Lookup</h1>
         <h2 className="text-3xl font-semibold mb-8">A free tool to find RSS feeds for any website.</h2>
         <p className="text-xl mb-8">Can't find the RSS feed for your favorite site? Paste the URL to the site below and we'll try and find it.</p>
         <div className="flex mb-8">
@@ -67,12 +67,12 @@ export default function Home() {
         <div className="mb-8">
           <h2 className="text-3xl font-semibold mb-4">Frequently asked questions</h2>
           <div>
-            <h3 className="text-2xl font-semibold mb-2">What does RSS Finder do?</h3>
-            <p className="text-xl mb-4">RSS Finder is a free tool that tries to find the RSS feed associated with a website. When using the tool, RSS Finder fetches the site and looks for relevant RSS html tags as well as tries common feed paths if it can't find any.</p>
+            <h3 className="text-2xl font-semibold mb-2">What does RSS Lookup do?</h3>
+            <p className="text-xl mb-4">RSS Lookup is a free tool that tries to find the RSS feed associated with a website. When using the tool, RSS Lookup fetches the site and looks for relevant RSS html tags as well as tries common feed paths if it can't find any.</p>
           </div>
           <div>
-            <h3 className="text-2xl font-semibold mb-2">Why couldn't RSS Finder find any feeds?</h3>
-            <p className="text-xl mb-4">RSS Finder looks for feeds if they exist, but unfortunately many websites simply don't use RSS. In addition, some haven't properly configured their HTML(including the relevant RSS tags). If you run into a site that RSS Finder should have worked on, please let me know.</p>
+            <h3 className="text-2xl font-semibold mb-2">Why couldn't RSS Lookup find any feeds?</h3>
+            <p className="text-xl mb-4">RSS Lookup looks for feeds if they exist, but unfortunately many websites simply don't use RSS. In addition, some haven't properly configured their HTML(including the relevant RSS tags). If you run into a site that RSS Lookup should have worked on, please let me know.</p>
           </div>
           <div>
             <h3 className="text-2xl font-semibold mb-2">Is there a public facing API?</h3>
