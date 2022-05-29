@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { NextSeo } from 'next-seo';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 
@@ -9,28 +9,35 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const [token, setToken] = useState(null);
+  const captchaRef = useRef(null);
 
-  const handleSubmit = (e) =>  {
+  const handleSubmit = async (e) =>  {
     e.preventDefault();
-    setLoading(true);
-
-    const body = {
-      "hcaptcha": token,
-      "url": url
-    }
-
-    fetch('https://api.rsslookup.com/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    }).then((response) => response.json())
-      .then((data) => {
-        setResponse(data);
-        setLoading(false);
-      })
+    captchaRef.current.execute();
   }
+
+  useEffect(() => {
+    if (token) {
+      setLoading(true);
+
+      const body = {
+        "hcaptcha": token,
+        "url": url
+      }
+
+      fetch('https://api.rsslookup.com/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      }).then((response) => response.json())
+        .then((data) => {
+          setResponse(data);
+          setLoading(false);
+      });
+    }
+  }, [token]);
 
   return (
     <div>
@@ -51,6 +58,8 @@ export default function Home() {
           <HCaptcha
             sitekey="634ade25-d644-4336-8d55-9c7218af99bb"
             onVerify={setToken}
+            size="invisible"
+            ref={captchaRef}
           />
           <div className="flex mt-4 mb-8">
             <input type="url" onChange={(e) => setUrl(e.target.value)} className="p-3 rounded-md w-full" id="inputText" name="inputText" placeholder="Paste URL here..." value={ url }></input>
@@ -65,7 +74,7 @@ export default function Home() {
                 { response.status == 200
                   ? <div>
                     {response.result.map((feed) => (
-                    <div key={feed} className="flex bg-white p-4 mb-2 rounded-md shadow-sm">
+                    <div key={feed} className="flex bg-white p-4 mb-2 rounded-md shadow-sm cursor-move">
                       <span className="text-slate-700">{feed}</span>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 stroke-slate-500 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
@@ -98,7 +107,7 @@ export default function Home() {
           </div>
           <div>
             <h3 className="text-2xl font-semibold mb-2">What information does this site collect?</h3>
-            <p className="text-xl mb-4">This site is a side project I set up in a couple days- it's not meant to collect data. Besides my self-hosted analytics system for general site viewer data, I don't keep track of which sites are requested or anything like that.</p>
+            <p className="text-xl mb-4">This site is a side project I set up in a couple days- it's not meant to collect data. Besides my self-hosted analytics system for general site viewer data and information from hcaptcha to prevent abuse, I don't keep track of which sites are requested or anything like that.</p>
           </div>
         </div>
       </div>
