@@ -77,6 +77,16 @@ functions.http('rsslookup', async (req, res) => {
         }
     }
 
+    if (feeds.size == 0) {
+        console.log("Unable to find any feeds on site.")
+        res.setHeader('content-type', 'application/json');
+        res.status(404);
+        res.send(JSON.stringify({
+            "status": "404",
+            "url": "Sorry, we couldn't find any RSS feeds on this site!"
+        }));
+    }
+
     const result = [];
 
     for (let feed of feeds) {
