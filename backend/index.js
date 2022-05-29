@@ -35,12 +35,6 @@ functions.http('rsslookup', async (req, res) => {
         }));
     }
 
-    let url = req.body.url;
-
-    if (url.slice(-1) === '/') {
-        url = url.slice(0, -1);
-    }
-
     const response = await fetch(url).catch(error => {
         console.log("Unable to find URL")
         res.setHeader('content-type', 'application/json');
@@ -68,6 +62,12 @@ functions.http('rsslookup', async (req, res) => {
                     let feedURL = attributes.href;
 
                     if (feedURL.charAt(0) == '/') {
+                        let url = response.url;
+
+                        if (url.slice(-1) === '/') {
+                            url = url.slice(0, -1);
+                        }
+
                         feedURL = url + feedURL;
                     }
 
