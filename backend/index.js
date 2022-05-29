@@ -15,8 +15,8 @@ functions.http('rsslookup', async (req, res) => {
     if (req.body.url === undefined) {
         console.log("Must pass in a URL body tag!")
         res.setHeader('content-type', 'application/json');
-        res.status(404).send(JSON.stringify({
-            "status": "404",
+        res.status(500).send(JSON.stringify({
+            "status": "500",
             "url": "You must pass a URL tag in the body!"
         }));
     }
@@ -30,8 +30,8 @@ functions.http('rsslookup', async (req, res) => {
     const response = await fetch(url).catch(error => {
         console.log("Unable to find URL")
         res.setHeader('content-type', 'application/json');
-        res.status(404).send(JSON.stringify({
-            "status": "404",
+        res.status(500).send(JSON.stringify({
+            "status": "500",
             "message": "We can't find anything on this URL!"
         }));
     });;
@@ -41,8 +41,8 @@ functions.http('rsslookup', async (req, res) => {
     if (!response.ok) {
         console.log("Unable to find URL")
         res.setHeader('content-type', 'application/json');
-        res.status(404).send(JSON.stringify({
-            "status": "404",
+        res.status(500).send(JSON.stringify({
+            "status": "500",
             "message": "We can't find anything on this URL!"
         }));
     }
@@ -76,8 +76,8 @@ functions.http('rsslookup', async (req, res) => {
     if (feeds.size == 0) {
         console.log("Unable to find any feeds on site.")
         res.setHeader('content-type', 'application/json');
-        res.status(404).send(JSON.stringify({
-            "status": "404",
+        res.status(500).send(JSON.stringify({
+            "status": "500",
             "url": "Sorry, we couldn't find any RSS feeds on this site!"
         }));
     }
