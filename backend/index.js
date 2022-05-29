@@ -82,7 +82,15 @@ functions.http('rsslookup', async (req, res) => {
             const feedResponse = await fetch(url + '/feed/');
 
             if (feedResponse.status == 200) {
-                feeds.add(url + '/feed/');
+                feeds.add(feedResponse.url);
+            }
+        }
+
+        if (feeds.size == 0) {
+            const feedResponse = await fetch(url + '/rss/');
+
+            if (feedResponse.status == 200) {
+                feeds.add(feedResponse.url);
             }
         }
 
