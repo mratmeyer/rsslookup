@@ -15,8 +15,8 @@ functions.http('rsslookup', async (req, res) => {
     if (req.body.url === undefined) {
         console.log("Must pass in a URL body tag!")
         res.setHeader('content-type', 'application/json');
-        res.status(500).send(JSON.stringify({
-            "status": "500",
+        res.status(404).send(JSON.stringify({
+            "status": "404",
             "url": "You must pass a URL tag in the body!"
         }));
     }
