@@ -1,18 +1,15 @@
-const express = require('express');
-const app = express();
-const cors = require('cors');
-app.use(cors());
-const port = 8080;
-
+const functions = require('@google-cloud/functions-framework');
 const fetch = require('node-fetch');
 const { WritableStream } = require("htmlparser2/lib/WritableStream");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.post('/*', async (req, res) => {
-    if (req.body.url == null) {
-        res.send("no url");
+functions.http('rsslookup', async (req, res) => {
+    if (req.body.url === undefined) {
+        console.log("Must pass in a URL body tag!")
+        res.setHeader('content-type', 'application/json');
+        res.status(500);
+        res.send(JSON.stringify({
+            "status": "500"
+        }));
     }
 
     let url = req.body.url;
@@ -60,8 +57,4 @@ app.post('/*', async (req, res) => {
 
     res.setHeader('content-type', 'application/json');
     res.send(JSON.stringify(result));
-});
-
-app.listen(port, () => {
-    console.log(`Listening on port ${port}.`);
 });
