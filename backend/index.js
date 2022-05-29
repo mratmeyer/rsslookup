@@ -3,6 +3,15 @@ const fetch = require('node-fetch');
 const { WritableStream } = require("htmlparser2/lib/WritableStream");
 
 functions.http('rsslookup', async (req, res) => {
+    if (req.headers['authorization'] != process.env.AUTH_TOKEN) {
+        console.log("Tried to bypass Cloudflare!")
+        res.setHeader('content-type', 'application/json');
+        res.status(403);
+        res.send(JSON.stringify({
+            "status": "403"
+        }));
+    }
+
     if (req.body.url === undefined) {
         console.log("Must pass in a URL body tag!")
         res.setHeader('content-type', 'application/json');
