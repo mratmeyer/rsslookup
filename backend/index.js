@@ -6,8 +6,7 @@ functions.http('rsslookup', async (req, res) => {
     if (req.headers['authorization'] != process.env.AUTH_TOKEN) {
         console.log("Tried to bypass Cloudflare!")
         res.setHeader('content-type', 'application/json');
-        res.status(403);
-        res.send(JSON.stringify({
+        res.status(403).send(JSON.stringify({
             "status": "403",
             "message": "No!"
         }));
@@ -16,8 +15,7 @@ functions.http('rsslookup', async (req, res) => {
     if (req.body.url === undefined) {
         console.log("Must pass in a URL body tag!")
         res.setHeader('content-type', 'application/json');
-        res.status(500);
-        res.send(JSON.stringify({
+        res.status(500).send(JSON.stringify({
             "status": "500",
             "url": "You must pass a URL tag in the body!"
         }));
@@ -32,8 +30,7 @@ functions.http('rsslookup', async (req, res) => {
     const response = await fetch(url).catch(error => {
         console.log("Unable to find URL")
         res.setHeader('content-type', 'application/json');
-        res.status(404);
-        res.send(JSON.stringify({
+        res.status(404).send(JSON.stringify({
             "status": "404",
             "message": "We can't find anything on this URL!"
         }));
@@ -44,8 +41,7 @@ functions.http('rsslookup', async (req, res) => {
     if (!response.ok) {
         console.log("Unable to find URL")
         res.setHeader('content-type', 'application/json');
-        res.status(404);
-        res.send(JSON.stringify({
+        res.status(404).send(JSON.stringify({
             "status": "404",
             "message": "We can't find anything on this URL!"
         }));
@@ -80,8 +76,7 @@ functions.http('rsslookup', async (req, res) => {
     if (feeds.size == 0) {
         console.log("Unable to find any feeds on site.")
         res.setHeader('content-type', 'application/json');
-        res.status(404);
-        res.send(JSON.stringify({
+        res.status(404).send(JSON.stringify({
             "status": "404",
             "url": "Sorry, we couldn't find any RSS feeds on this site!"
         }));
