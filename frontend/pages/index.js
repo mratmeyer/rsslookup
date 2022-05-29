@@ -1,16 +1,26 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { NextSeo } from 'next-seo';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 export default function Home() {
   const [url, setUrl] = useState('');
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const [token, setToken] = useState(null);
+  const captchaRef = useRef(null);
+
+  const onLoad = () => {
+    captchaRef.current.execute();
+  };
+
   const handleSubmit = (e) =>  {
+    e.preventDefault();
     setLoading(true);
 
     const body = {
+      "hcaptcha": token,
       "url": url
     }
 
@@ -27,6 +37,13 @@ export default function Home() {
       })
   }
 
+  useEffect(() => {
+    if (token) {
+      console.log(`hCaptcha Token: ${token}`);
+    }
+
+  }, [token]);
+
   return (
     <div>
       <NextSeo
@@ -41,11 +58,19 @@ export default function Home() {
       <div id="app">
         <h1 className="text-6xl font-semibold mb-8">RSS Lookup</h1>
         <h2 className="text-3xl font-semibold mb-8">A free tool to find RSS feeds for any website.</h2>
-        <p className="text-xl mb-8">Can't find the RSS feed for your favorite site? Paste the URL to the site below and we'll try and find it.</p>
-        <div className="flex mb-8">
-          <input type="url" onChange={(e) => setUrl(e.target.value)} className="p-3 rounded-md w-full" id="inputText" name="inputText" placeholder="Paste URL here..." value={ url }></input>
-          <button className="bg-white w-32 text-lg shadow-md rounded-md font-bold ml-2" onClick={ handleSubmit } >Find feed</button>
-        </div>
+        <p className="text-xl mb-4">Can't find the RSS feed for your favorite site? Paste the URL to the site below and we'll try and find it.</p>
+        <form>
+          <HCaptcha
+            sitekey="634ade25-d644-4336-8d55-9c7218af99bb"
+            onLoad={onLoad}
+            onVerify={setToken}
+            ref={captchaRef}
+          />
+          <div className="flex mt-4 mb-8">
+            <input type="url" onChange={(e) => setUrl(e.target.value)} className="p-3 rounded-md w-full" id="inputText" name="inputText" placeholder="Paste URL here..." value={ url }></input>
+            <button className="bg-white w-32 text-lg shadow-md rounded-md font-bold ml-2" onClick={ handleSubmit } >Find feed</button>
+          </div>
+        </form>
         <div className="mb-8">
           {loading 
             ? <div><p>Loading...</p></div>

@@ -28,7 +28,16 @@ functions.http('rsslookup', async (req, res) => {
         }));
     }
 
-    verify(process.env.HCAPTCHA_SECRET, process.env.HCAPTCHA_TOKEN).then((data) => {
+    if (req.body.hcaptcha === undefined) {
+        console.log("No hcaptcha token!")
+        res.setHeader('content-type', 'application/json');
+        res.status(403).send(JSON.stringify({
+            "status": "403",
+            "message": "Can't find hcaptcha token!"
+        }));
+    }
+
+    verify(process.env.HCAPTCHA_SECRET, req.body.hcaptcha).then((data) => {
         if (data.success === true) {
             console.log('Request passed captcha!', data);
         } else {
