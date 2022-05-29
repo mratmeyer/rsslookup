@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useEffect, useState, useRef } from 'react'
+import { useState } from 'react'
 import { NextSeo } from 'next-seo';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 
@@ -9,11 +9,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const [token, setToken] = useState(null);
-  const captchaRef = useRef(null);
-
-  const onLoad = () => {
-    captchaRef.current.execute();
-  };
 
   const handleSubmit = (e) =>  {
     e.preventDefault();
@@ -37,13 +32,6 @@ export default function Home() {
       })
   }
 
-  useEffect(() => {
-    if (token) {
-      console.log(`hCaptcha Token: ${token}`);
-    }
-
-  }, [token]);
-
   return (
     <div>
       <NextSeo
@@ -62,9 +50,7 @@ export default function Home() {
         <form>
           <HCaptcha
             sitekey="634ade25-d644-4336-8d55-9c7218af99bb"
-            onLoad={onLoad}
             onVerify={setToken}
-            ref={captchaRef}
           />
           <div className="flex mt-4 mb-8">
             <input type="url" onChange={(e) => setUrl(e.target.value)} className="p-3 rounded-md w-full" id="inputText" name="inputText" placeholder="Paste URL here..." value={ url }></input>
