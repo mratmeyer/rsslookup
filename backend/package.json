@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
       "@google-cloud/functions-framework": "^2.1.0",
+      "hcaptcha": "^0.1.1",
       "htmlparser2": "^8.0.1",
       "node-fetch": "^2.6.7"
   }

@@ -2,6 +2,8 @@ const functions = require('@google-cloud/functions-framework');
 const fetch = require('node-fetch');
 const { WritableStream } = require("htmlparser2/lib/WritableStream");
 
+const {verify} = require('hcaptcha');
+
 functions.http('rsslookup', async (req, res) => {
     if (!(req.method === 'POST' || req.method === 'OPTIONS')) {
         console.log("Invalid HTTP request")
@@ -26,6 +28,19 @@ functions.http('rsslookup', async (req, res) => {
         }));
     }
 
+    verify(process.env.HCAPTCHA_SECRET, process.env.HCAPTCHA_TOKEN).then((data) => {
+        if (data.success === true) {
+            console.log('Request passed captcha!', data);
+        } else {
+            console.log('Request failed captcha');
+            res.setHeader('content-type', 'application/json');
+            res.status(403).send(JSON.stringify({
+                "status": "403",
+                "message": "Failed captcha!"
+            }));
+        }
+    }).catch(console.error);
+
     if (req.body.url === undefined) {
         console.log("Must pass in a URL body tag!")
         res.setHeader('content-type', 'application/json');
@@ -35,7 +50,7 @@ functions.http('rsslookup', async (req, res) => {
         }));
     }
 
-    const response = await fetch(url).catch(error => {
+    const response = await fetch(req.body.url).catch(error => {
         console.log("Unable to find URL")
         res.setHeader('content-type', 'application/json');
         res.status(500).send(JSON.stringify({
@@ -55,6 +70,12 @@ functions.http('rsslookup', async (req, res) => {
         }));
     }
 
+    let url = response.url;
+
+    if (url.slice(-1) === '/') {
+        url = url.slice(0, -1);
+    }
+
     const parserStream = new WritableStream({
         onopentag(name, attributes) {
             if (name === "link") {
@@ -62,12 +83,6 @@ functions.http('rsslookup', async (req, res) => {
                     let feedURL = attributes.href;
 
                     if (feedURL.charAt(0) == '/') {
-                        let url = response.url;
-
-                        if (url.slice(-1) === '/') {
-                            url = url.slice(0, -1);
-                        }
-
                         feedURL = url + feedURL;
                     }
 
