@@ -3,21 +3,26 @@ const fetch = require('node-fetch');
 const { WritableStream } = require("htmlparser2/lib/WritableStream");
 
 functions.http('rsslookup', async (req, res) => {
+    if (!(req.method === 'POST' || req.method === 'OPTIONS')) {
+        console.log("Invalid HTTP request")
+        res.setHeader('content-type', 'application/json');
+        res.status(500).send(JSON.stringify({
+            "status": "500",
+            "message": "Invalid HTTP request"
+        }));
+    }
+
+    if (req.method === 'OPTIONS') {
+        console.log("Responding to preflight.")
+        res.status(200).send();
+    }
+
     if (req.headers['authorization'] != process.env.AUTH_TOKEN) {
         console.log("Tried to bypass Cloudflare!")
         res.setHeader('content-type', 'application/json');
         res.status(403).send(JSON.stringify({
             "status": "403",
             "message": "No!"
-        }));
-    }
-
-    if (req.method == 'OPTIONS') {
-        console.log("Responding to preflight.")
-        res.setHeader('content-type', 'application/json');
-        res.status(200).send(JSON.stringify({
-            "status": "500",
-            "url": "You must pass a URL tag in the body!"
         }));
     }
 
