@@ -12,6 +12,15 @@ functions.http('rsslookup', async (req, res) => {
         }));
     }
 
+    if (req.method == 'OPTIONS') {
+        console.log("Responding to preflight.")
+        res.setHeader('content-type', 'application/json');
+        res.status(200).send(JSON.stringify({
+            "status": "500",
+            "url": "You must pass a URL tag in the body!"
+        }));
+    }
+
     if (req.body.url === undefined) {
         console.log("Must pass in a URL body tag!")
         res.setHeader('content-type', 'application/json');
