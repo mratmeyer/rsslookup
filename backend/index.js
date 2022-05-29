@@ -8,7 +8,8 @@ functions.http('rsslookup', async (req, res) => {
         res.setHeader('content-type', 'application/json');
         res.status(403);
         res.send(JSON.stringify({
-            "status": "403"
+            "status": "403",
+            "message": "No!"
         }));
     }
 
@@ -17,7 +18,8 @@ functions.http('rsslookup', async (req, res) => {
         res.setHeader('content-type', 'application/json');
         res.status(500);
         res.send(JSON.stringify({
-            "status": "500"
+            "status": "500",
+            "url": "You must pass a URL tag in the body!"
         }));
     }
 
@@ -27,10 +29,27 @@ functions.http('rsslookup', async (req, res) => {
         url = url.slice(0, -1);
     }
 
-    const response = await fetch(url);
+    const response = await fetch(url).catch(error => {
+        console.log("Unable to find URL")
+        res.setHeader('content-type', 'application/json');
+        res.status(404);
+        res.send(JSON.stringify({
+            "status": "404",
+            "message": "We can't find anything on this URL!"
+        }));
+    });;
+
     const feeds = new Set();
 
-    if (!response.ok) throw new Error(`unexpected response ${response.statusText}`);
+    if (!response.ok) {
+        console.log("Unable to find URL")
+        res.setHeader('content-type', 'application/json');
+        res.status(404);
+        res.send(JSON.stringify({
+            "status": "404",
+            "message": "We can't find anything on this URL!"
+        }));
+    }
 
     const parserStream = new WritableStream({
         onopentag(name, attributes) {
@@ -48,14 +67,14 @@ functions.http('rsslookup', async (req, res) => {
         },
     });
 
-    response.body.pipe(parserStream).on("finish", () => {
-        console.log("done")
-    });
+    await response.body.pipe(parserStream);
 
-    const response2 = await fetch(url + '/feed/');
+    if (feeds.size == 0) {
+        const feedResponse = await fetch(url + '/feed/');
 
-    if (response2.status == 200) {
-        feeds.add(url + '/feed/');
+        if (feedResponse.status == 200) {
+            feeds.add(url + '/feed/');
+        }
     }
 
     const result = [];
