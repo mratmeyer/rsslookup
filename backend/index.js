@@ -22,8 +22,8 @@ functions.http('rsslookup', async (req, res) => {
     if (req.headers['authorization'] != process.env.AUTH_TOKEN) {
         console.log("Tried to bypass Cloudflare!")
         res.setHeader('content-type', 'application/json');
-        res.status(403).send(JSON.stringify({
-            "status": "403",
+        res.status(500).send(JSON.stringify({
+            "status": "500",
             "message": "No!"
         }));
     }
@@ -31,8 +31,8 @@ functions.http('rsslookup', async (req, res) => {
     if (req.body.hcaptcha === undefined) {
         console.log("No hcaptcha token!")
         res.setHeader('content-type', 'application/json');
-        res.status(403).send(JSON.stringify({
-            "status": "403",
+        res.status(500).send(JSON.stringify({
+            "status": "500",
             "message": "Can't find hcaptcha token!"
         }));
     }
@@ -43,8 +43,8 @@ functions.http('rsslookup', async (req, res) => {
         } else {
             console.log('Request failed captcha');
             res.setHeader('content-type', 'application/json');
-            res.status(403).send(JSON.stringify({
-                "status": "403",
+            res.status(500).send(JSON.stringify({
+                "status": "500",
                 "message": "Failed captcha!"
             }));
         }
@@ -127,10 +127,15 @@ functions.http('rsslookup', async (req, res) => {
             }));
         }
 
-        const result = [];
+        const jsonList = [];
 
         for (let feed of feeds) {
-            result.push(feed);
+            jsonList.push(feed);
+        }
+
+        const result = {
+            "status": "200",
+            "result": jsonList
         }
 
         res.setHeader('content-type', 'application/json');
