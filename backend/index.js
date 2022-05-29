@@ -77,31 +77,32 @@ functions.http('rsslookup', async (req, res) => {
         },
     });
 
-    await response.body.pipe(parserStream);
+    await response.body.pipe(parserStream).on("finish", () => {
+        if (feeds.size == 0) {
+            const feedResponse = await fetch(url + '/feed/');
 
-    if (feeds.size == 0) {
-        const feedResponse = await fetch(url + '/feed/');
-
-        if (feedResponse.status == 200) {
-            feeds.add(url + '/feed/');
+            if (feedResponse.status == 200) {
+                feeds.add(url + '/feed/');
+            }
         }
-    }
 
-    if (feeds.size == 0) {
-        console.log("Unable to find any feeds on site.")
+        if (feeds.size == 0) {
+            console.log("Unable to find any feeds on site.")
+            res.setHeader('content-type', 'application/json');
+            res.status(500).send(JSON.stringify({
+                "status": "500",
+                "url": "Sorry, we couldn't find any RSS feeds on this site!"
+            }));
+        }
+
+        const result = [];
+
+        for (let feed of feeds) {
+            result.push(feed);
+        }
+
         res.setHeader('content-type', 'application/json');
-        res.status(500).send(JSON.stringify({
-            "status": "500",
-            "url": "Sorry, we couldn't find any RSS feeds on this site!"
-        }));
-    }
-
-    const result = [];
-
-    for (let feed of feeds) {
-        result.push(feed);
-    }
-
-    res.setHeader('content-type', 'application/json');
-    res.send(JSON.stringify(result));
+        res.send(JSON.stringify(result));
+    });
+    
 });
