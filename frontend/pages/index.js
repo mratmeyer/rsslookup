@@ -62,14 +62,21 @@ export default function Home() {
             ? <div><p>Loading...</p></div>
             : <div>{response != null
               ? <div>
-                {response.map((feed) => (
-                <div key={feed} className="flex bg-white p-4 mb-2 rounded-md shadow-sm cursor-move">
-                  <span className="text-slate-700">{feed}</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 stroke-slate-500 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                  </svg>
-                </div>
-                ))}
+                { response.status == 200
+                  ? <div>
+                    {response.result.map((feed) => (
+                    <div key={feed} className="flex bg-white p-4 mb-2 rounded-md shadow-sm cursor-move">
+                      <span className="text-slate-700">{feed}</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 stroke-slate-500 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                      </svg>
+                    </div>
+                    ))}
+                  </div>
+                  : <div className="bg-white rounded-md bg-red-300 p-3 px-4">
+                    <span><b>Error:</b> {response.message}</span>
+                  </div>
+                }
                 </div>
               : <div></div>
             }</div>
