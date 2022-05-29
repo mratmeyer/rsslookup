@@ -77,7 +77,7 @@ functions.http('rsslookup', async (req, res) => {
         },
     });
 
-    await response.body.pipe(parserStream).on("finish", () => {
+    response.body.pipe(parserStream).on("finish", async () => {
         if (feeds.size == 0) {
             const feedResponse = await fetch(url + '/feed/');
 
