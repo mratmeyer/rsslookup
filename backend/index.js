@@ -1,47 +1,53 @@
-const functions = require('@google-cloud/functions-framework');
+const PORT = 8080;
+
+// Initialize express server
+const express = require('express');
+const app = express();
+
+// Initialize CORS
+const cors = require('cors');
+
+// Initialize node-fetch, hcaptcha, and htmlparser2
 const fetch = require('node-fetch');
-const { WritableStream } = require("htmlparser2/lib/WritableStream");
-
 const {verify} = require('hcaptcha');
+const {WritableStream} = require("htmlparser2/lib/WritableStream");
 
-functions.http('rsslookup', async (req, res) => {
+// Initialize express plugins
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.all('/*', async (req, res) => {
+    // Block all non-POST or OPTIONS requests
     if (!(req.method === 'POST' || req.method === 'OPTIONS')) {
-        console.log("Invalid HTTP request")
+        console.log("Failed Request: Request must be POST or OPTIONS")
         res.setHeader('content-type', 'application/json');
         res.status(500).send(JSON.stringify({
             "status": "500",
-            "message": "Invalid HTTP request"
+            "message": "Request must be POST or OPTIONS"
         }));
     }
 
+    // Accept all OPTIONS requests
     if (req.method === 'OPTIONS') {
-        console.log("Responding to preflight.")
+        console.log("Successful Request: Responding to preflight")
         res.status(200).send();
     }
 
-    if (req.headers['authorization'] != process.env.AUTH_TOKEN) {
-        console.log("Tried to bypass Cloudflare!")
-        res.setHeader('content-type', 'application/json');
-        res.status(500).send(JSON.stringify({
-            "status": "500",
-            "message": "No!"
-        }));
-    }
-
+    // Block if no hcaptcha token
     if (req.body.hcaptcha === undefined) {
-        console.log("No hcaptcha token!")
+        console.log("Failed Request: No hcaptcha token!")
         res.setHeader('content-type', 'application/json');
         res.status(500).send(JSON.stringify({
             "status": "500",
-            "message": "Can't find hcaptcha token!"
+            "message": "No hcaptcha token!"
         }));
     }
 
+    // Process hcaptcha
     verify(process.env.HCAPTCHA_SECRET, req.body.hcaptcha).then((data) => {
-        if (data.success === true) {
-            console.log('Request passed captcha!', data);
-        } else {
-            console.log('Request failed captcha');
+        if (data.success !== true) {
+            console.log('Failed Request: Request failed captcha');
             res.setHeader('content-type', 'application/json');
             res.status(500).send(JSON.stringify({
                 "status": "500",
@@ -50,49 +56,56 @@ functions.http('rsslookup', async (req, res) => {
         }
     }).catch(console.error);
 
+    // Check if URL has been passed
     if (req.body.url === undefined) {
-        console.log("Must pass in a URL body tag!")
+        console.log("Failed Request: Must pass in a URL body tag!")
         res.setHeader('content-type', 'application/json');
         res.status(500).send(JSON.stringify({
             "status": "500",
-            "url": "You must pass a URL tag in the body!"
+            "url": "Must pass a URL tag in the body!"
         }));
     }
 
+    // If error during fetch, return error
     const response = await fetch(req.body.url).catch(error => {
-        console.log("Unable to find URL")
+        console.log("Failed Request: Invalid URL")
         res.setHeader('content-type', 'application/json');
         res.status(500).send(JSON.stringify({
             "status": "500",
-            "message": "We can't find anything on this URL!"
+            "message": "We were unable to access this URL!"
         }));
     });;
 
     const feeds = new Set();
 
+    // If response not successful, return error
     if (!response.ok) {
-        console.log("Unable to find URL")
+        console.log("Failed Request: Invalid URL")
         res.setHeader('content-type', 'application/json');
         res.status(500).send(JSON.stringify({
             "status": "500",
-            "message": "We can't find anything on this URL!"
+            "message": "We were unable to access this URL!"
         }));
     }
 
-    let url = response.url;
+    const url = response.url;
 
-    if (url.slice(-1) === '/') {
-        url = url.slice(0, -1);
-    }
-
+    // Parse through stream
     const parserStream = new WritableStream({
         onopentag(name, attributes) {
             if (name === "link") {
+                // Look for RSS link tags
                 if (attributes.type === "application/rss+xml" || attributes.type === "application/atom+xml" || attributes.type === "application/rss&#re;xml") {
                     let feedURL = attributes.href;
 
+                    // If feed URL starts with /
                     if (feedURL.charAt(0) == '/') {
-                        feedURL = url + feedURL;
+                        // If URL ends with /, remove it for consistency
+                        if (url.slice(-1) === '/') {
+                            feedURL = url.slice(0, -1) + feedURL;
+                        } else {
+                            feedURL = url + feedURL;
+                        }
                     }
 
                     feeds.add(feedURL);
@@ -101,7 +114,9 @@ functions.http('rsslookup', async (req, res) => {
         },
     });
 
+    // On finish, execute rest of code
     response.body.pipe(parserStream).on("finish", async () => {
+        // If no feeds have been found yet, check /feed/
         if (feeds.size == 0) {
             const feedResponse = await fetch(url + '/feed/');
 
@@ -110,6 +125,7 @@ functions.http('rsslookup', async (req, res) => {
             }
         }
 
+        // If no feeds have still been found yet, check /rss/
         if (feeds.size == 0) {
             const feedResponse = await fetch(url + '/rss/');
 
@@ -118,8 +134,9 @@ functions.http('rsslookup', async (req, res) => {
             }
         }
 
+        // If still no feeds, return error that no feeds found
         if (feeds.size == 0) {
-            console.log("Unable to find any feeds on site.")
+            console.log("Failed Request: Unable to find any feeds on site")
             res.setHeader('content-type', 'application/json');
             res.status(500).send(JSON.stringify({
                 "status": "500",
@@ -127,19 +144,21 @@ functions.http('rsslookup', async (req, res) => {
             }));
         }
 
-        const jsonList = [];
-
-        for (let feed of feeds) {
-            jsonList.push(feed);
-        }
-
         const result = {
             "status": "200",
-            "result": jsonList
+            "result": []
+        }
+
+        for (let feed of feeds) {
+            result["result"].push(feed);
         }
 
         res.setHeader('content-type', 'application/json');
         res.send(JSON.stringify(result));
     });
     
+});
+
+app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}.`);
 });
