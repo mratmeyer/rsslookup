@@ -1,7 +1,7 @@
 {
   "name": "rsslookup",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "A free tool to find the RSS feed for any website.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
