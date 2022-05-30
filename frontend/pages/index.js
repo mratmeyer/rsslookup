@@ -109,7 +109,7 @@ export default function Home() {
           </div>
           <div>
             <h3 className="text-2xl font-semibold mb-2">What information does this site collect?</h3>
-            <p className="text-xl mb-4">This site is a side project I set up in a couple days- it's not meant to collect a bunch of data. Besides my self-hosted analytics system for general site viewer data and information from Hcaptcha to prevent abuse, I don't keep track of specific URLs requested on RSS Lookup.</p>
+            <p className="text-xl mb-4">This site is a side project I set up in a couple days- it's not meant to collect a bunch of data. Besides my self-hosted analytics system for general site viewer data and information from Hcaptcha to prevent abuse, I don't keep track of specific URLs requested using RSS Lookup.</p>
           </div>
         </div>
       </div>
