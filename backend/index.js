@@ -18,7 +18,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.all('/*', async (req, res) => {
-    const debug = " (" + req.headers['Fly-Client-IP'] + ", " + req.headers['Fly-Region'] + ")"
+    const ip = req.get('Fly-Client-IP')
+    const region = req.get('Fly-Region')
+    const debug = " (" + ip + ", " + region + ")"
 
     // Block all non-POST or OPTIONS requests
     if (!(req.method === 'POST' || req.method === 'OPTIONS')) {
