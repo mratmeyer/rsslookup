@@ -144,7 +144,7 @@ app.all('/*', async (req, res) => {
             res.setHeader('content-type', 'application/json');
             return res.status(500).send(JSON.stringify({
                 "status": "500",
-                "url": "Sorry, we couldn't find any RSS feeds on this site!"
+                "message": "Sorry, we couldn't find any RSS feeds on this site!"
             }));
         }
 
