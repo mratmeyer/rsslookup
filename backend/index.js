@@ -22,7 +22,7 @@ app.all('/*', async (req, res) => {
     if (!(req.method === 'POST' || req.method === 'OPTIONS')) {
         console.log("Failed Request: Request must be POST or OPTIONS")
         res.setHeader('content-type', 'application/json');
-        res.status(500).send(JSON.stringify({
+        return res.status(500).send(JSON.stringify({
             "status": "500",
             "message": "Request must be POST or OPTIONS"
         }));
@@ -31,14 +31,14 @@ app.all('/*', async (req, res) => {
     // Accept all OPTIONS requests
     if (req.method === 'OPTIONS') {
         console.log("Successful Request: Responding to preflight")
-        res.status(200).send();
+        return res.status(200).send();
     }
 
     // Block if no hcaptcha token
     if (req.body.hcaptcha === undefined) {
         console.log("Failed Request: No hcaptcha token!")
         res.setHeader('content-type', 'application/json');
-        res.status(500).send(JSON.stringify({
+        return res.status(500).send(JSON.stringify({
             "status": "500",
             "message": "No hcaptcha token!"
         }));
@@ -49,7 +49,7 @@ app.all('/*', async (req, res) => {
         if (data.success !== true) {
             console.log('Failed Request: Request failed captcha');
             res.setHeader('content-type', 'application/json');
-            res.status(500).send(JSON.stringify({
+            return res.status(500).send(JSON.stringify({
                 "status": "500",
                 "message": "Failed captcha!"
             }));
@@ -60,7 +60,7 @@ app.all('/*', async (req, res) => {
     if (req.body.url === undefined) {
         console.log("Failed Request: Must pass in a URL body tag!")
         res.setHeader('content-type', 'application/json');
-        res.status(500).send(JSON.stringify({
+        return res.status(500).send(JSON.stringify({
             "status": "500",
             "url": "Must pass a URL tag in the body!"
         }));
@@ -70,7 +70,7 @@ app.all('/*', async (req, res) => {
     const response = await fetch(req.body.url).catch(error => {
         console.log("Failed Request: Invalid URL")
         res.setHeader('content-type', 'application/json');
-        res.status(500).send(JSON.stringify({
+        return res.status(500).send(JSON.stringify({
             "status": "500",
             "message": "We were unable to access this URL!"
         }));
@@ -82,7 +82,7 @@ app.all('/*', async (req, res) => {
     if (!response.ok) {
         console.log("Failed Request: Invalid URL")
         res.setHeader('content-type', 'application/json');
-        res.status(500).send(JSON.stringify({
+        return res.status(500).send(JSON.stringify({
             "status": "500",
             "message": "We were unable to access this URL!"
         }));
@@ -138,7 +138,7 @@ app.all('/*', async (req, res) => {
         if (feeds.size == 0) {
             console.log("Failed Request: Unable to find any feeds on site")
             res.setHeader('content-type', 'application/json');
-            res.status(500).send(JSON.stringify({
+            return res.status(500).send(JSON.stringify({
                 "status": "500",
                 "url": "Sorry, we couldn't find any RSS feeds on this site!"
             }));
