@@ -92,7 +92,8 @@ app.all('/*', async (req, res) => {
         }));
     }
 
-    const url = response.url;
+    // Strip non-domain characters
+    const url = response.url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/img);
 
     // Parse through stream
     const parserStream = new WritableStream({
