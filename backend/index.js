@@ -18,9 +18,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.all('/*', async (req, res) => {
+    const debug = " (" + req.headers['Fly-Client-IP'] + ", " + req.headers['Fly-Region'] + ")"
+
     // Block all non-POST or OPTIONS requests
     if (!(req.method === 'POST' || req.method === 'OPTIONS')) {
-        console.log("Failed Request: Request must be POST or OPTIONS")
+        console.log("Failed Request: Request must be POST or OPTIONS" + debug)
         res.setHeader('content-type', 'application/json');
         return res.status(500).send(JSON.stringify({
             "status": "500",
@@ -30,13 +32,13 @@ app.all('/*', async (req, res) => {
 
     // Accept all OPTIONS requests
     if (req.method === 'OPTIONS') {
-        console.log("Successful Request: Responding to preflight")
+        console.log("Successful Request: Responding to preflight" + debug)
         return res.status(200).send();
     }
 
     // Block if no hcaptcha token
     if (req.body.hcaptcha === undefined) {
-        console.log("Failed Request: No hcaptcha token!")
+        console.log("Failed Request: No hcaptcha token!" + debug)
         res.setHeader('content-type', 'application/json');
         return res.status(500).send(JSON.stringify({
             "status": "500",
@@ -47,7 +49,7 @@ app.all('/*', async (req, res) => {
     // Process hcaptcha
     verify(process.env.HCAPTCHA_SECRET, req.body.hcaptcha).then((data) => {
         if (data.success !== true) {
-            console.log('Failed Request: Request failed captcha');
+            console.log('Failed Request: Request failed captcha' + debug);
             res.setHeader('content-type', 'application/json');
             return res.status(500).send(JSON.stringify({
                 "status": "500",
@@ -58,7 +60,7 @@ app.all('/*', async (req, res) => {
 
     // Check if URL has been passed
     if (req.body.url === undefined) {
-        console.log("Failed Request: Must pass in a URL body tag!")
+        console.log("Failed Request: Must pass in a URL body tag!" + debug)
         res.setHeader('content-type', 'application/json');
         return res.status(500).send(JSON.stringify({
             "status": "500",
@@ -68,7 +70,7 @@ app.all('/*', async (req, res) => {
 
     // If error during fetch, return error
     const response = await fetch(req.body.url).catch(error => {
-        console.log("Failed Request: Invalid URL")
+        console.log("Failed Request: Invalid URL" + debug)
         res.setHeader('content-type', 'application/json');
         return res.status(500).send(JSON.stringify({
             "status": "500",
@@ -80,7 +82,7 @@ app.all('/*', async (req, res) => {
 
     // If response not successful, return error
     if (!response.ok) {
-        console.log("Failed Request: Invalid URL")
+        console.log("Failed Request: Invalid URL" + debug)
         res.setHeader('content-type', 'application/json');
         return res.status(500).send(JSON.stringify({
             "status": "500",
@@ -136,7 +138,7 @@ app.all('/*', async (req, res) => {
 
         // If still no feeds, return error that no feeds found
         if (feeds.size == 0) {
-            console.log("Failed Request: Unable to find any feeds on site")
+            console.log("Failed Request: Unable to find any feeds on site" + debug)
             res.setHeader('content-type', 'application/json');
             return res.status(500).send(JSON.stringify({
                 "status": "500",
@@ -153,7 +155,7 @@ app.all('/*', async (req, res) => {
             result["result"].push(feed);
         }
 
-        console.log("Successful Request: Returned " + feeds.size + " result(s)")
+        console.log("Successful Request: Returned " + feeds.size + " result(s)" + debug)
         res.setHeader('content-type', 'application/json');
         res.send(JSON.stringify(result));
     });
