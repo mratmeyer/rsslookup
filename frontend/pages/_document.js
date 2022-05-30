@@ -24,8 +24,8 @@ class MyDocument extends Document {
                 <NextScript />
               </div>
               <div className="text-center">
-                <p className="font-bold">Made with ❤️ in Athens, GA</p>
-                <p className="font-bold">© Copyright <a target="_blank" rel="noreferrer noopener" href="https://www.maxratmeyer.com/?utm_source=rssfinder">Max Ratmeyer</a> 2022</p>
+                <p className="font-bold">Made with <img src="/heart.png" alt="Heart Emoji" className="inline" width="20" height="20"></img> in Athens, GA</p>
+                <p className="font-bold">© Copyright <a className="hover:opacity-75" target="_blank" rel="noreferrer noopener" href="https://www.maxratmeyer.com/?utm_source=rssfinder">Max Ratmeyer</a> 2022</p>
               </div>
             </body>
           </div>
