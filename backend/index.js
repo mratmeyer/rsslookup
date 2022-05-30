@@ -153,6 +153,7 @@ app.all('/*', async (req, res) => {
             result["result"].push(feed);
         }
 
+        console.log("Successful Request: Returned " + feeds.size + " result(s)")
         res.setHeader('content-type', 'application/json');
         res.send(JSON.stringify(result));
     });
