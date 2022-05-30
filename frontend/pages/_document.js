@@ -17,7 +17,7 @@ class MyDocument extends Document {
             <script defer src="https://shynet.maxnet.work/ingress/c852db69-5c95-43cc-8eab-219af4221282/script.js"></script>
         </Head>
         <div className="bg-gray-100">
-          <div className="m-auto max-w-2xl p-8 lg:p-12 min-h-screen">
+          <div className="m-auto max-w-2xl p-6 lg:p-12 min-h-screen">
             <body>
               <div className="mb-8">
                 <Main />
