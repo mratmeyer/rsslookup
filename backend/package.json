@@ -1,7 +1,7 @@
 {
   "name": "rsslookup",
   "version": "1.0.0",
-  "description": "A free tool to find RSS feed for any website.",
+  "description": "A free tool to find the RSS feed for any website.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
