@@ -72,12 +72,7 @@ app.all('/*', async (req, res) => {
 
     // If error during fetch, return error
     const response = await fetch(req.body.url).catch(error => {
-        console.log("Failed Request: Invalid URL" + debug)
-        res.setHeader('content-type', 'application/json');
-        return res.status(500).send(JSON.stringify({
-            "status": "500",
-            "message": "We were unable to access this URL!"
-        }));
+        console.log("Failed Request: Error while fetching URL" + debug)
     });;
 
     const feeds = new Set();
