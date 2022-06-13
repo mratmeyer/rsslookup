@@ -78,7 +78,7 @@ app.all('/*', async (req, res) => {
     const feeds = new Set();
 
     // If response not successful, return error
-    if (!response.ok) {
+    if (response === undefined || !response.ok) {
         console.log("Failed Request: Invalid URL" + debug)
         res.setHeader('content-type', 'application/json');
         return res.status(500).send(JSON.stringify({
