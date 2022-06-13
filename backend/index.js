@@ -70,9 +70,9 @@ app.all('/*', async (req, res) => {
         }));
     }
 
-    // If error during fetch, return error
+    // If error during fetch, reject Promise
     const response = await fetch(req.body.url).catch(error => {
-        console.log("Failed Request: Error while fetching URL" + debug)
+        Promise.reject()
     });;
 
     const feeds = new Set();
