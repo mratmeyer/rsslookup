@@ -26,6 +26,7 @@ class MyDocument extends Document {
               <div className="text-center">
                 <p className="font-bold">Made with <img src="/heart.png" alt="Heart Emoji" className="inline" width="20" height="20"></img> in Athens, GA</p>
                 <p className="font-bold">© Copyright <a className="underline hover:opacity-75" target="_blank" rel="noreferrer noopener" href="https://www.maxratmeyer.com/?utm_source=rsslookup">Max Ratmeyer</a> 2022</p>
+                <p className="font-bold">View source on <a className="underline hover:opacity-75" target="_blank" rel="noreferrer noopener" href="https://github.com/mratmeyer/rsslookup">GitHub</a></p>
               </div>
             </body>
           </div>
