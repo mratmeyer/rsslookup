@@ -65,7 +65,7 @@ export default function Home() {
             size="invisible"
             ref={captchaRef}
           />
-          <div className="flex mt-4 mb-8">
+          <div className="flex mt-4 mb-12">
             <input type="url" onChange={(e) => setUrl(e.target.value)} className="p-3 rounded-md w-full" id="inputText" name="inputText" placeholder="Paste URL here..." value={ url }></input>
             <button className="bg-white w-24 text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75" onClick={ handleSubmit } >Search</button>
           </div>
