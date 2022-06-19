@@ -70,7 +70,7 @@ export default function Home() {
             <button className="bg-white w-24 text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75" onClick={ handleSubmit } >Search</button>
           </div>
         </form>
-        <div className="mb-8">
+        <div className="mb-12">
           {loading 
             ? <div><p>Loading...</p></div>
             : <div>{response != null
