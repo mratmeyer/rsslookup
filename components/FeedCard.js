@@ -1,6 +1,6 @@
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-export default function FeedCard(props) {
+export function FeedCard(props) {
     return <div className="flex bg-white p-4 mb-2 rounded-md shadow-sm">
         <span className="text-slate-700">{ props.feed }</span>
         <CopyToClipboard text={ props.feed } onCopy={() => alert("Copied!")}>
