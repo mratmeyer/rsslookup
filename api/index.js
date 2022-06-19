@@ -1,5 +1,6 @@
 const htmlparser2 = require("htmlparser2");
 import Toucan from 'toucan-js';
+import { errorResponse, successfulResponse } from './utils.js';
 
 apiHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -10,7 +11,7 @@ apiHeaders = {
 
 addEventListener('fetch', event => {
   let sentry = new Toucan({
-    dsn: 'https://a0869e12065c4a11a811e89bc1bcbac6@o1089263.ingest.sentry.io/6514485',
+    dsn: SENTRY_DSN,
     context: event,
     environment: "prod",
   });
@@ -25,49 +26,19 @@ addEventListener('fetch', event => {
 async function handleLookupRequest(request, sentry) {
   // Block all non-POST or OPTIONS requests
   if (!(request.method === 'POST' || request.method === 'OPTIONS')) {
-    sentry.captureMessage("Failed Request: Request must be POST or OPTIONS")
-    return new Response(JSON.stringify(
-      {
-        "status": "500",
-        "message": "Request must be POST or OPTIONS"
-      }),
-      {
-        headers: apiHeaders,
-        status: 500
-      }
-    )
+    return errorResponse("Request must be POST or OPTIONS", sentry)
   }
 
   // Accept all OPTIONS requests
   if (request.method === 'OPTIONS') {
-    sentry.captureMessage("Successful Request: Responding to preflight")
-    return new Response(JSON.stringify(
-      {
-        "status": "200",
-        "message": "Responding to preflight"
-      }),
-      {
-        headers: apiHeaders,
-        status: 200
-      }
-    )
+    return successfulResponse("Responding to preflight", sentry)
   }
 
   const requestJSON = await request.json().catch(SyntaxError)
 
   // Block if no hcaptcha token
   if (requestJSON.hcaptcha === undefined) {
-    sentry.captureMessage("Failed Request: No hcaptcha token!")
-    return new Response(JSON.stringify(
-      {
-        "status": "500",
-        "message": "No hcaptcha token!"
-      }),
-      {
-        headers: apiHeaders,
-        status: 500
-      }
-    )
+    return errorResponse("No hcaptcha token!", sentry)
   }
 
   let hcaptchaStatus
@@ -81,47 +52,17 @@ async function handleLookupRequest(request, sentry) {
     sentry.captureMessage("Error verifying hcaptcha (" + error + ")");
   })
   if (hcaptchaStatus === false) {
-    sentry.captureMessage('Failed Request: Request failed captcha');
-    return new Response(JSON.stringify(
-      {
-        "status": "500",
-        "message": "Failed hcaptcha!"
-      }),
-      {
-        headers: apiHeaders,
-        status: 500
-      }
-    )
+    return errorResponse("Failed hcaptcha", sentry)
   }
 
   // Check if URL has been passed
   if (requestJSON.url === undefined) {
-    sentry.captureMessage("Failed Request: Must pass in a URL JSON body tag!")
-    return new Response(JSON.stringify(
-      {
-        "status": "500",
-        "message": "Must pass a URL tag in the JSON body!"
-      }),
-      {
-        headers: apiHeaders,
-        status: 500
-      }
-    )
+    return errorResponse("Must pass a URL tag in the JSON body!", sentry)
   }
 
   // Check if URL is empty
   if (requestJSON.url === "") {
-    sentry.captureMessage("Failed Request: URL must be non-empty")
-    return new Response(JSON.stringify(
-      {
-        "status": "500",
-        "message": "Please input a URL to use RSS Lookup!"
-      }),
-      {
-        headers: apiHeaders,
-        status: 500
-      }
-    )
+    return errorResponse("Please input a URL", sentry)
   }
 
   // If error during fetch, return error
@@ -131,17 +72,7 @@ async function handleLookupRequest(request, sentry) {
 
   // If response not successful, return error
   if (response === undefined || !response.ok) {
-    sentry.captureMessage("Failed Request: Invalid URL")
-    return new Response(JSON.stringify(
-      {
-        "status": "500",
-        "message": "We were unable to access this URL!"
-      }),
-      {
-        headers: apiHeaders,
-        status: 500
-      }
-    )
+    return errorResponse("We were unable to access this URL!", sentry)
   }
 
   const responseText = await response.text()
@@ -203,17 +134,7 @@ async function handleLookupRequest(request, sentry) {
 
   // If still no feeds, return error that no feeds found
   if (feeds.size == 0) {
-    sentry.captureMessage("Failed Request: Unable to find any feeds on site")
-    return new Response(JSON.stringify(
-      {
-        "status": "500",
-        "message": "Sorry, we couldn't find any RSS feeds on this site!"
-      }),
-      {
-        headers: apiHeaders,
-        status: 500
-      }
-    )
+    return successfulResponse("Sorry, we couldn't find any RSS feeds on this site!", sentry)
   }
 
   const result = {
