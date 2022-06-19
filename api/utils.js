@@ -1,3 +1,11 @@
+const apiHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST,GET,OPTIONS',
+    'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+    'content-type': 'application/json'
+  }
+
+
 export function errorResponse(message, sentry) {
     sentry.captureMessage("Failed Request: " + message)
 
