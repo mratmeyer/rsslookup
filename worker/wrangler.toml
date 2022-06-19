@@ -1,6 +1,6 @@
 compatibility_date = "2022-06-18"
 
-name = "rsslookup-api"
+name = "rsslookup-worker"
 
 main = "./index.js"
 
