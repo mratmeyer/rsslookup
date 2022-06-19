@@ -148,7 +148,7 @@ async function handleLookupRequest(request, sentry) {
 
   // If still no feeds, return error that no feeds found
   if (feeds.size == 0) {
-    return successfulResponse("Sorry, we couldn't find any RSS feeds on this site!", sentry)
+    return errorResponse("Sorry, we couldn't find any RSS feeds on this site!", sentry)
   }
 
 
