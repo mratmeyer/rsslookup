@@ -2,12 +2,17 @@ const htmlparser2 = require("htmlparser2");
 import Toucan from 'toucan-js';
 import { errorResponse, successfulResponse } from './utils.js';
 
-apiHeaders = {
+const apiHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST,GET,OPTIONS',
   'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
   'content-type': 'application/json'
 }
+
+const possiblePaths = [
+  "/feed/",
+  "/rss/"
+]
 
 addEventListener('fetch', event => {
   let sentry = new Toucan({
@@ -29,19 +34,24 @@ async function handleLookupRequest(request, sentry) {
     return errorResponse("Request must be POST or OPTIONS", sentry)
   }
 
+
   // Accept all OPTIONS requests
   if (request.method === 'OPTIONS') {
     return successfulResponse("Responding to preflight", sentry)
   }
 
+
   const requestJSON = await request.json().catch(SyntaxError)
+
 
   // Block if no hcaptcha token
   if (requestJSON.hcaptcha === undefined) {
     return errorResponse("No hcaptcha token!", sentry)
   }
 
+
   let hcaptchaStatus
+
 
   // Process hcaptcha
   await fetch('https://hcaptcha.com/siteverify?secret=' + HCAPTCHA_SECRET + '&response=' + requestJSON.hcaptcha)
@@ -51,24 +61,29 @@ async function handleLookupRequest(request, sentry) {
   .catch(error => {
     sentry.captureMessage("Error verifying hcaptcha (" + error + ")");
   })
+
   if (hcaptchaStatus === false) {
     return errorResponse("Failed hcaptcha", sentry)
   }
+
 
   // Check if URL has been passed
   if (requestJSON.url === undefined) {
     return errorResponse("Must pass a URL tag in the JSON body!", sentry)
   }
 
+
   // Check if URL is empty
   if (requestJSON.url === "") {
     return errorResponse("Please input a URL", sentry)
   }
 
+
   // If error during fetch, return error
   const response = await fetch(requestJSON.url).catch(error => {
     sentry.captureMessage("Error fetching URL (" + error + ")");
   })
+
 
   // If response not successful, return error
   if (response === undefined || !response.ok) {
@@ -77,7 +92,9 @@ async function handleLookupRequest(request, sentry) {
 
   const responseText = await response.text()
 
+
   const feeds = new Set();
+
 
   // Strip non-domain characters
   const url = response.url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/img);
@@ -109,34 +126,33 @@ async function handleLookupRequest(request, sentry) {
       }
     },
   });
+
   parser.write(
     responseText
   );
+
   parser.end();
 
-  // If no feeds have been found yet, check /feed/
-  if (feeds.size == 0) {
-    const feedResponse = await fetch(url + '/feed/');
 
-    if (feedResponse.status == 200) {
-      feeds.add(feedResponse.url);
+  // If no feeds have been found yet, check other possible paths
+  for (path of possiblePaths) {
+    if (feeds.size == 0) {
+      console.log(path)
+      const feedResponse = await fetch(url + path);
+  
+      if (feedResponse.status == 200) {
+        feeds.add(feedResponse.url);
+      }
     }
   }
 
-  // If no feeds have still been found yet, check /rss/
-  if (feeds.size == 0) {
-    const feedResponse = await fetch(url + '/rss/');
-
-    if (feedResponse.status == 200) {
-      feeds.add(feedResponse.url);
-    }
-  }
 
   // If still no feeds, return error that no feeds found
   if (feeds.size == 0) {
     return successfulResponse("Sorry, we couldn't find any RSS feeds on this site!", sentry)
   }
 
+  
   const result = {
     "status": "200",
     "result": []
