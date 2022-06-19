@@ -1,4 +1,5 @@
 const htmlparser2 = require("htmlparser2");
+import Toucan from 'toucan-js';
 
 apiHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -8,17 +9,23 @@ apiHeaders = {
 }
 
 addEventListener('fetch', event => {
-  event.respondWith(handleLookupRequest(event.request))
+  let sentry = new Toucan({
+    dsn: 'https://a0869e12065c4a11a811e89bc1bcbac6@o1089263.ingest.sentry.io/6514485',
+    context: event,
+    environment: "prod",
+  });
+
+  event.respondWith(handleLookupRequest(event.request, sentry))
 })
 
 /**
  * Responds with lookup request
  * @param {Request} request
  */
-async function handleLookupRequest(request) {
+async function handleLookupRequest(request, sentry) {
   // Block all non-POST or OPTIONS requests
   if (!(request.method === 'POST' || request.method === 'OPTIONS')) {
-    console.log("Failed Request: Request must be POST or OPTIONS")
+    sentry.captureMessage("Failed Request: Request must be POST or OPTIONS")
     return new Response(JSON.stringify(
       {
         "status": "500",
@@ -33,7 +40,7 @@ async function handleLookupRequest(request) {
 
   // Accept all OPTIONS requests
   if (request.method === 'OPTIONS') {
-    console.log("Successful Request: Responding to preflight")
+    sentry.captureMessage("Successful Request: Responding to preflight")
     return new Response(JSON.stringify(
       {
         "status": "200",
@@ -50,7 +57,7 @@ async function handleLookupRequest(request) {
 
   // Block if no hcaptcha token
   if (requestJSON.hcaptcha === undefined) {
-    console.log("Failed Request: No hcaptcha token!")
+    sentry.captureMessage("Failed Request: No hcaptcha token!")
     return new Response(JSON.stringify(
       {
         "status": "500",
@@ -71,10 +78,10 @@ async function handleLookupRequest(request) {
     hcaptchaStatus = response.success
   })
   .catch(error => {
-    console.log("Error verifying hcaptcha (" + error + ")");
+    sentry.captureMessage("Error verifying hcaptcha (" + error + ")");
   })
   if (hcaptchaStatus === false) {
-    console.log('Failed Request: Request failed captcha');
+    sentry.captureMessage('Failed Request: Request failed captcha');
     return new Response(JSON.stringify(
       {
         "status": "500",
@@ -89,7 +96,7 @@ async function handleLookupRequest(request) {
 
   // Check if URL has been passed
   if (requestJSON.url === undefined) {
-    console.log("Failed Request: Must pass in a URL JSON body tag!")
+    sentry.captureMessage("Failed Request: Must pass in a URL JSON body tag!")
     return new Response(JSON.stringify(
       {
         "status": "500",
@@ -104,7 +111,7 @@ async function handleLookupRequest(request) {
 
   // Check if URL is empty
   if (requestJSON.url === "") {
-    console.log("Failed Request: URL must be non-empty")
+    sentry.captureMessage("Failed Request: URL must be non-empty")
     return new Response(JSON.stringify(
       {
         "status": "500",
@@ -119,12 +126,12 @@ async function handleLookupRequest(request) {
 
   // If error during fetch, return error
   const response = await fetch(requestJSON.url).catch(error => {
-    console.log("Error fetching URL (" + error + ")");
+    sentry.captureMessage("Error fetching URL (" + error + ")");
   })
 
   // If response not successful, return error
   if (response === undefined || !response.ok) {
-    console.log("Failed Request: Invalid URL")
+    sentry.captureMessage("Failed Request: Invalid URL")
     return new Response(JSON.stringify(
       {
         "status": "500",
@@ -196,7 +203,7 @@ async function handleLookupRequest(request) {
 
   // If still no feeds, return error that no feeds found
   if (feeds.size == 0) {
-    console.log("Failed Request: Unable to find any feeds on site")
+    sentry.captureMessage("Failed Request: Unable to find any feeds on site")
     return new Response(JSON.stringify(
       {
         "status": "500",
@@ -218,7 +225,7 @@ async function handleLookupRequest(request) {
     result["result"].push(feed);
   }
 
-  console.log("Successful Request: Returned " + feeds.size + " result(s)")
+  sentry.captureMessage("Successful Request: Returned " + feeds.size + " result(s)")
   return new Response(JSON.stringify(result),
     {
       headers: apiHeaders,
