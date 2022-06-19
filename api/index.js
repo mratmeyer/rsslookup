@@ -137,7 +137,6 @@ async function handleLookupRequest(request, sentry) {
   // If no feeds have been found yet, check other possible paths
   for (path of possiblePaths) {
     if (feeds.size == 0) {
-      console.log(path)
       const feedResponse = await fetch(url + path);
   
       if (feedResponse.status == 200) {
@@ -152,7 +151,7 @@ async function handleLookupRequest(request, sentry) {
     return successfulResponse("Sorry, we couldn't find any RSS feeds on this site!", sentry)
   }
 
-  
+
   const result = {
     "status": "200",
     "result": []
