@@ -1,0 +1,8 @@
+compatibility_date = "2022-06-18"
+
+name = "rsslookup-api"
+
+main = "./index.js"
+
+
+route = "api.rsslookup.com/*"
