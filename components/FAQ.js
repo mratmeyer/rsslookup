@@ -7,7 +7,7 @@ export function FAQ(props) {
         </div>
         <div>
             <h3 className="text-2xl font-semibold mb-2 leading-tight">Why couldn't RSS Lookup find any feeds?</h3>
-            <p className="text-xl mb-6 leading-normal">RSS Lookup looks for feeds if they exist, but unfortunately many websites do not have an RSS feed configured. In addition, some may have not properly configured their HTML RSS link tags. If you run into a site that RSS Lookup should have found, please <a className="underline" href="mailto:max@rsslookup.com">let me know</a>.</p>
+            <p className="text-xl mb-6 leading-normal">RSS Lookup looks for feeds if they exist, but unfortunately many websites do not have an RSS feed configured. In addition, some may have not properly configured their HTML RSS link tags. If you run into a site that RSS Lookup should have found, please <a className="underline hover:opacity-75" href="mailto:max@rsslookup.com">let me know</a>.</p>
         </div>
         <div>
             <h3 className="text-2xl font-semibold mb-2 leading-tight">What information does this site collect?</h3>

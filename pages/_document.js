@@ -12,7 +12,7 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
             <link rel="preconnect" href="https://fonts.gstatic.com" />
-            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+            <link href="https://fonts.bunny.net/css?family=inter:400,600,700" rel="stylesheet" />
 
             <script defer src="https://shynet.maxnet.work/ingress/c852db69-5c95-43cc-8eab-219af4221282/script.js"></script>
         </Head>
