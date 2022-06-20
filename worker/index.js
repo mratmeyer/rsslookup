@@ -12,7 +12,8 @@ const apiHeaders = {
 const possiblePaths = [
   "/feed/",
   "/rss/",
-  "/feed.xml"
+  "/feed.xml",
+  "/index.xml"
 ]
 
 addEventListener('fetch', event => {
