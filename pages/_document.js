@@ -14,7 +14,7 @@ class MyDocument extends Document {
             <link rel="preconnect" href="https://fonts.gstatic.com" />
             <link href="https://fonts.bunny.net/css?family=inter:400,600,700" rel="stylesheet" />
 
-            <script defer src="https://shynet.maxnet.work/ingress/c852db69-5c95-43cc-8eab-219af4221282/script.js"></script>
+            <script defer src="https://shynet.maxnet.work/ingress/9ab7c1c7-1244-433a-b723-b8e690e50d8c/script.js"></script>
         </Head>
         <div className="bg-gray-100">
           <div className="m-auto max-w-2xl p-6 lg:p-12 min-h-screen">
