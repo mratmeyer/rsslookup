@@ -12,6 +12,8 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
             <link href="https://fonts.bunny.net/css?family=inter:400,600,700" rel="stylesheet" />
+
+            <script defer data-domain="rsslookup.com" src="https://plausible.io/js/script.js"></script>
         </Head>
         <div className="bg-gray-100">
           <div className="m-auto max-w-2xl p-6 lg:p-12 min-h-screen">
