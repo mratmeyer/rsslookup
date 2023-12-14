@@ -6,8 +6,9 @@ import { NextSeo } from 'next-seo';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 import { ErrorMessage } from '../components/ErrorMessage.js'
+import { RSSInfo } from '../components/RSSInfo.js'
 import { FAQ } from '../components/FAQ.js'
-import { FeedCard } from '../components/FeedCard.js'
+import { FeedResult } from '../components/FeedResult.js'
 import { Intro } from '../components/Intro.js'
 
 export default function Home() {
@@ -49,45 +50,51 @@ export default function Home() {
   return (
     <div>
       <NextSeo
-        title="RSS Lookup - Get the RSS feed for any website"
-        description="RSS Lookup is a free tool that lets you find the RSS feed for any website."
+        title="RSS Lookup - Find the RSS feed for any website"
+        description="RSS Lookup is a free tool that lets you find the RSS feed for any website"
         canonical="https://www.rsslookup.com/"
       />
       <Head>
-        <title>RSS Lookup - Get the RSS feed for any website</title>
+        <title>RSS Lookup - Find the RSS feed for any website</title>
       </Head>
       <div id="app">
         <Intro />
-        <form>
-          <HCaptcha
-            sitekey="634ade25-d644-4336-8d55-9c7218af99bb"
-            onVerify={setToken}
-            size="invisible"
-            ref={captchaRef}
-          />
-          <div className="flex mt-4 mb-12">
-            <input type="url" onChange={(e) => setUrl(e.target.value)} className="p-3 rounded-md w-full" id="inputText" name="inputText" placeholder="Paste URL here..." value={ url }></input>
-            <button className="bg-white w-24 text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75" onClick={ handleSubmit } >Search</button>
-          </div>
-        </form>
-        <div className="mb-12">
-          {loading 
-            ? <div><p>Loading...</p></div>
-            : <div>{response != null
-              ? <div>
-                { response.status == 200
-                  ? <div>
-                    {response.result.map((feed) => (
-                      <FeedCard key={ feed } feed={ feed } />
-                    ))}
+        <div className="bg-white shadow-md rounded-lg p-8 mt-4 mb-12">
+          <form>
+            <HCaptcha
+              sitekey="634ade25-d644-4336-8d55-9c7218af99bb"
+              onVerify={setToken}
+              size="invisible"
+              ref={captchaRef}
+            />
+            <div className="flex">
+              <input type="url" onChange={(e) => setUrl(e.target.value)} className="p-3 rounded-md border-solid border-2 border-gray-300 w-full" id="inputText" name="inputText" placeholder="Paste URL here..." value={ url }></input>
+              <button className="bg-gray-200 w-24 text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75" onClick={ handleSubmit } >Search</button>
+            </div>
+          </form>
+          <div>
+            {loading 
+              ? <div><p className="mt-8">Loading...</p></div>
+              : <div>{response != null
+                ? <div>
+                  { response.status == 200
+                    ? <div>
+                      <h2 className="text-2xl font-semibold mt-8 mb-4 leading-tight">Results</h2>
+                      <div>
+                        {response.result.map((feed) => (
+                          <FeedResult key={ feed } feed={ feed } />
+                        ))}
+                      </div>
+                    </div>
+                    : <ErrorMessage message={ response.message } />
+                  }
                   </div>
-                  : <ErrorMessage message={ response.message } />
-                }
-                </div>
-              : <div></div>
-            }</div>
-          }
+                : <div></div>
+              }</div>
+            }
+          </div>
         </div>
+        <RSSInfo />
         <FAQ />
       </div>
     </div>

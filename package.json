@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^1.3.0",
-    "next": "12.1.6",
-    "next-seo": "^5.4.0",
-    "react": "18.1.0",
+    "next": "14.0.4",
+    "next-seo": "^6.4.0",
+    "react": "18.2.0",
     "react-copy-to-clipboard": "^5.1.0",
-    "react-dom": "18.1.0"
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",

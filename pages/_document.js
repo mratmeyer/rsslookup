@@ -13,8 +13,8 @@ class MyDocument extends Document {
         <Head>
             <link href="https://fonts.bunny.net/css?family=inter:400,600,700" rel="stylesheet" />
         </Head>
-        <div className="bg-gray-100">
-          <div className="m-auto max-w-2xl p-6 lg:p-12 min-h-screen">
+        <div className="bg-slate-100">
+          <div className="m-auto max-w-3xl p-6 lg:p-12 min-h-screen">
             <body>
               <div className="mb-8">
                 <Main />
