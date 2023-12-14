@@ -11,7 +11,7 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-            <link href="https://fonts.bunny.net/css?family=inter:400,600,700" rel="stylesheet" />
+          <link href="/fonts/style.css" rel="stylesheet"/>
         </Head>
         <div className="bg-slate-100">
           <div className="m-auto max-w-3xl p-6 lg:p-12 min-h-screen">
