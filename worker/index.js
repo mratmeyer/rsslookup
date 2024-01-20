@@ -94,7 +94,7 @@ async function handleLookupRequest(request) {
     onopentag(name, attributes) {
       if (name === "link") {
         // Look for RSS link tags
-        if (attributes.type === "application/rss+xml" || attributes.type === "application/atom+xml" || attributes.type === "application/rss&#rexml") {
+        if (attributes.type === "application/rss+xml" || attributes.type === "application/atom+xml" || attributes.type === "application/rss&#re;xml") {
           let feedURL = attributes.href
 
           // If feed URL starts with /
