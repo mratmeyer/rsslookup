@@ -12,7 +12,6 @@
     "prettier": "^1.18.2"
   },
   "dependencies": {
-    "htmlparser2": "^8.0.1",
-    "toucan-js": "^2.6.1"
+    "htmlparser2": "^8.0.1"
   }
 }
