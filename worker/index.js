@@ -52,7 +52,7 @@ async function handleLookupRequest(request) {
     hcaptchaStatus = response.success
   })
   .catch(error => {
-    sentry.captureMessage("Error verifying hcaptcha (" + error + ")")
+    return errorResponse("Error verifying hcaptcha (" + error + ")")
   })
 
   if (hcaptchaStatus === false) {
@@ -74,7 +74,7 @@ async function handleLookupRequest(request) {
 
   // If error during fetch, return error
   const response = await fetch(requestJSON.url).catch(error => {
-    sentry.captureMessage("Error fetching URL (" + error + ")")
+    return errorResponse("Error fetching URL (" + error + ")")
   })
 
 
