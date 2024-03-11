@@ -50,12 +50,12 @@ export default function Home() {
   return (
     <div>
       <NextSeo
-        title="RSS Lookup - Find the RSS feed for any website"
-        description="RSS Lookup is a free tool that lets you find the RSS feed for any website"
+        title="RSS Lookup - Find RSS feeds on any URL"
+        description="RSS Lookup is a free, open-source tool that helps you search for RSS feeds on any URL"
         canonical="https://www.rsslookup.com/"
       />
       <Head>
-        <title>RSS Lookup - Find the RSS feed for any website</title>
+        <title>RSS Lookup - Find RSS feeds on any URL</title>
       </Head>
       <div id="app">
         <Intro />
