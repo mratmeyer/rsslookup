@@ -26,9 +26,9 @@ class MyDocument extends Document {
               </div>
 
               <noscript>
-                <img src="https://shynet.maxnet.work/ingress/1847cdec-a434-4f36-8828-af41904ffa35/pixel.gif"></img>
+                <img src="https://shynet.maxnet.work/ingress/0fc2782b-0a62-4417-ae0b-47023a3bc3eb/pixel.gif"></img>
               </noscript>
-              <script defer src="https://shynet.maxnet.work/ingress/1847cdec-a434-4f36-8828-af41904ffa35/script.js"></script>
+              <script defer src="https://shynet.maxnet.work/ingress/0fc2782b-0a62-4417-ae0b-47023a3bc3eb/script.js"></script>
             </body>
           </div>
         </div>
