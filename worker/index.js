@@ -95,24 +95,9 @@ async function handleLookupRequest(request) {
       if (name === "link") {
         // Look for RSS link tags
         if (attributes.type === "application/rss+xml" || attributes.type === "application/atom+xml" || attributes.type === "application/rss&#re;xml") {
-          let feedURL = attributes.href
+          const parsedURL = new URL(attributes.href, response.url)
 
-          // If feed URL starts with /
-          if (feedURL.charAt(0) == '/') {
-            // If URL ends with /, remove it for consistency
-            if (url.slice(-1) === '/') {
-              feedURL = url.slice(0, -1) + feedURL
-            } else {
-              feedURL = url + feedURL
-            }
-          }
-
-          // If URL isn't a valid URL, append domain
-          if (feedURL.search(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/) === -1) {
-            feedURL = url + "/" + feedURL
-          }
-
-          feeds.add(feedURL)
+          feeds.add(parsedURL.toString())
         }
       }
     },
