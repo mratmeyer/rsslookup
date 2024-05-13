@@ -71,9 +71,15 @@ async function handleLookupRequest(request) {
     return errorResponse("Please input a URL")
   }
 
+  
+  const requestMetadata = {
+    headers: new Headers({
+      'User-Agent': 'RSSLookup/1.0.0'
+    })
+  }
 
   // If error during fetch, return error
-  const response = await fetch(requestJSON.url).catch(error => {
+  const response = await fetch(requestJSON.url, requestMetadata).catch(error => {
     return errorResponse("Error fetching URL (" + error + ")")
   })
 
