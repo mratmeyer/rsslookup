@@ -125,6 +125,13 @@ async function handleLookupRequest(request) {
       if (feedResponse.status == 200) {
         feeds.add(feedResponse.url)
       }
+
+      const rootPath = new URL(path, response.url)
+      const rootResponse = await fetch(rootPath)
+  
+      if (rootResponse.status == 200) {
+        feeds.add(rootResponse.url)
+      }
     }
   }
 
