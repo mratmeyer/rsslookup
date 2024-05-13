@@ -8,7 +8,8 @@ const possiblePaths = [
   "/feed/",
   "/rss/",
   "/feed.xml",
-  "/index.xml"
+  "/index.xml",
+  "/feed.rss"
 ]
 
 
