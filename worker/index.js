@@ -5,11 +5,14 @@ const htmlparser2 = require("htmlparser2")
 
 
 const possiblePaths = [
+  "/atom.xml",
   "/feed/",
-  "/rss/",
+  "/feed.rss",
   "/feed.xml",
+  "/index.rss",
   "/index.xml",
-  "/feed.rss"
+  "/rss/",
+  "/rss.xml"
 ]
 
 
