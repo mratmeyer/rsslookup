@@ -10,6 +10,7 @@ import { RSSInfo } from '../components/RSSInfo.js'
 import { FAQ } from '../components/FAQ.js'
 import { FeedResult } from '../components/FeedResult.js'
 import { Intro } from '../components/Intro.js'
+import { FeedbackBanner } from '../components/FeedbackBanner.js'
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -58,6 +59,7 @@ export default function Home() {
         <title>RSS Lookup - Find RSS feeds on any URL</title>
       </Head>
       <div id="app">
+        <FeedbackBanner />
         <Intro />
         <div className="bg-white shadow-md rounded-lg p-8 mt-4 mb-12">
           <form>
