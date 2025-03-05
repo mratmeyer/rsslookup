@@ -18,9 +18,9 @@ export function FeedbackBanner() {
     if (!isVisible) return null;
 
     return (
-        <div className="bg-white mb-8 shadow-md rounded-lg p-5 flex justify-between items-center">
+        <div className="bg-green-100 mb-8 shadow-md rounded-lg p-5 flex justify-between items-center">
             <p className="text-s leading-normal">
-                What features would you love to see in RSS Lookup?{" "}
+                👀 What features would you love to see in RSS Lookup?{" "}
                 <a
                     className="underline hover:opacity-75"
                     target="_blank"
