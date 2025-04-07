@@ -1,5 +1,6 @@
 // List of possible feed paths to scrape if feed not found directly
 const POSSIBLE_FEED_PATHS = [
+    // Absolute paths
     "/atom.xml",
     "/feed",
     "/feed/",
@@ -9,7 +10,19 @@ const POSSIBLE_FEED_PATHS = [
     "/index.xml",
     "/rss",
     "/rss/",
-    "/rss.xml"
+    "/rss.xml",
+
+    // Relative paths
+    "atom.xml",
+    "feed",
+    "feed/",
+    "feed.rss",
+    "feed.xml",
+    "index.rss",
+    "index.xml",
+    "rss",
+    "rss/",
+    "rss.xml"
 ];
 
 
@@ -31,7 +44,8 @@ export async function checkCommonFeedPaths(baseUrl, feedsSet, userAgent) {
             const response = await fetch(potentialFeedUrl, {
                 method: 'GET',
                 headers: { 'User-Agent': userAgent },
-                redirect: 'follow'
+                redirect: 'follow',
+                cache: 'no-store'
             });
 
             const contentType = response.headers.get('content-type') || '';

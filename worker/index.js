@@ -67,8 +67,10 @@ async function handleLookupRequest(request) {
 
         try {
             const fetchOptions = {
+                method: 'GET',
                 headers: { 'User-Agent': USER_AGENT },
-                redirect: 'follow'
+                redirect: 'follow',
+                cache: 'no-store'
             };
             response = await fetch(targetUrl, fetchOptions);
             finalUrl = response.url; // Could be redirected
@@ -90,6 +92,7 @@ async function handleLookupRequest(request) {
 
         // If no feeds found in HTML, check common paths
         if (foundFeeds.size === 0) {
+          await checkCommonFeedPaths(finalUrl, foundFeeds, USER_AGENT);
           await checkCommonFeedPaths(finalUrl, foundFeeds, USER_AGENT);
         }
 
