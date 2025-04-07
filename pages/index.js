@@ -40,9 +40,24 @@ export default function Home() {
         },
         body: JSON.stringify(body),
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((errData) => Promise.reject(errData)); // Try to parse error JSON
+          }
+
+          return response.json();
+        })
         .then((data) => {
           setResponse(data);
+        })
+        .catch((error) => {
+          console.error("API Fetch Error:", error);
+          setResponse({
+            status: "error",
+            message: error.message || "An error occurred while fetching data.",
+          });
+        })
+        .finally(() => {
           setLoading(false);
         });
     }
