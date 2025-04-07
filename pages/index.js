@@ -127,7 +127,7 @@ export default function Home() {
           </form>
           <div>
             {loading ? (
-              <div className="flex justify-center items-center mt-12">
+              <div className="flex justify-center items-center mt-12 mb-6">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="animate-spin h-8 w-8"
@@ -150,7 +150,7 @@ export default function Home() {
                 </svg>
               </div>
             ) : (
-              <div>
+              <div className="mb-6">
                 {response != null ? (
                   <div>
                     {response.status == "200" ? (
