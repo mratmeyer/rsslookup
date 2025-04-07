@@ -43,10 +43,7 @@ async function handleLookupRequest(request) {
     const cloudflareToken = requestJSON.cloudflareToken
     const ip = request.headers.get('CF-Connecting-IP')
     if (!cloudflareToken) {
-      return errorResponse(
-        'Cloudflare Turnstile token missing.',
-        400,
-      )
+      return errorResponse('Cloudflare Turnstile token missing.', 400)
     }
     const isVerified = await verifyCloudflare(cloudflareToken, ip)
     if (!isVerified) {

@@ -1,7 +1,6 @@
 const CLOUDFLARE_VERIFY_URL =
   'https://challenges.cloudflare.com/turnstile/v0/siteverify'
 
-
 /**
  * Verifies a Cloudflare Turnstile token.
  * @param {string} token - The turnstile token from the client.
