@@ -59,6 +59,7 @@ async function handleLookupRequest(request) {
     if (!targetUrl) {
       return errorResponse("Missing 'url' field in JSON body.", 400)
     }
+
     try {
       // Basic validation: can it be parsed as a URL?
       new URL(targetUrl)
