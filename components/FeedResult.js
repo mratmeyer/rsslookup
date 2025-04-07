@@ -1,6 +1,5 @@
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import toast from 'react-hot-toast';
-
+import toast from "react-hot-toast";
 
 export function FeedResult(props) {
   return (

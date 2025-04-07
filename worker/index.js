@@ -42,14 +42,17 @@ async function handleLookupRequest(request) {
     // Validate captcha's
     const hcaptchaToken = requestJSON.hcaptcha
     const cloudflareToken = requestJSON.cloudflareToken
-    const ip = request.headers.get("CF-Connecting-IP")
+    const ip = request.headers.get('CF-Connecting-IP')
     if (!hcaptchaToken && !cloudflareToken) {
-      return errorResponse('hCaptcha or Cloudflare Turnstile token missing.', 400)
+      return errorResponse(
+        'hCaptcha or Cloudflare Turnstile token missing.',
+        400,
+      )
     }
     const isHcaptchaVerified = await verifyHCaptcha(hcaptchaToken)
     const isCloudflareVerified = await verifyCloudflare(cloudflareToken, ip)
     if (!(isHcaptchaVerified || isCloudflareVerified)) {
-    // if (!isVerified) {
+      // if (!isVerified) {
       return errorResponse('Captcha verification failed.', 403)
       // return errorResponse('hCaptcha verification failed.', 403)
     }

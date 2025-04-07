@@ -1,5 +1,6 @@
 const HCAPTCHA_VERIFY_URL = 'https://hcaptcha.com/siteverify'
-const CLOUDFLARE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
+const CLOUDFLARE_VERIFY_URL =
+  'https://challenges.cloudflare.com/turnstile/v0/siteverify'
 
 /**
  * Verifies an hCaptcha token.
@@ -37,14 +38,16 @@ export async function verifyHCaptcha(token) {
  */
 export async function verifyCloudflare(token, ip) {
   if (!CLOUDFLARE_TURNSTILE_SECRET) {
-    console.error('CLOUDFLARE_TURNSTILE_SECRET is not set in environment variables.')
+    console.error(
+      'CLOUDFLARE_TURNSTILE_SECRET is not set in environment variables.',
+    )
     return false
   }
 
   const params = new URLSearchParams()
   params.append('secret', CLOUDFLARE_TURNSTILE_SECRET)
   params.append('response', token)
-  params.append("remoteip", ip);
+  params.append('remoteip', ip)
 
   try {
     const response = await fetch(CLOUDFLARE_VERIFY_URL, {

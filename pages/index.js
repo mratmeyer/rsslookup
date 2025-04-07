@@ -1,9 +1,9 @@
 import Head from "next/head";
-import { useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 
 import { NextSeo } from "next-seo";
 
-import HCaptcha from "@hcaptcha/react-hcaptcha";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 import { ErrorMessage } from "../components/ErrorMessage.js";
 import { RSSInfo } from "../components/RSSInfo.js";
@@ -25,12 +25,28 @@ export default function Home() {
     captchaRef.current.execute();
   };
 
+  const handleTurnstileSuccess = useCallback((token) => {
+    console.log("Turnstile verification successful, token received.");
+    setToken(token);
+  }, []);
+
+  const handleTurnstileError = () => {
+    console.error("Turnstile challenge failed to load or execute.");
+    toast.error("Captcha challenge failed. Please try loading the page again.");
+  };
+
+  const handleTurnstileExpire = () => {
+    console.warn("Turnstile challenge expired.");
+    toast.error("Captcha challenge expired. Please submit again.");
+  };
+
   useEffect(() => {
     if (token) {
+      setResponse(null);
       setLoading(true);
 
       const body = {
-        hcaptcha: token,
+        cloudflareToken: token,
         url: url,
       };
 
@@ -60,13 +76,15 @@ export default function Home() {
         })
         .finally(() => {
           setLoading(false);
+          setToken(null);
+          captchaRef.current?.reset()
         });
     }
-  }, [token]);
+  }, [token, url]);
 
   return (
     <div>
-      <Toaster/>
+      <Toaster />
       <NextSeo
         title="RSS Lookup - Find RSS feeds on any URL"
         description="RSS Lookup is a free, open-source tool that helps you search for RSS feeds on any URL"
@@ -78,12 +96,17 @@ export default function Home() {
       <div id="app">
         <Intro />
         <div className="bg-white shadow-md rounded-lg p-8 mt-4 mb-12">
-          <form>
-            <HCaptcha
-              sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY}
-              onVerify={setToken}
-              size="invisible"
+          <form onSubmit={handleSubmit}>
+            <Turnstile
               ref={captchaRef}
+              siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY}
+              onSuccess={handleTurnstileSuccess}
+              onError={handleTurnstileError}
+              onExpire={handleTurnstileExpire}
+              options={{
+                  execution: 'execute',
+                  appearance: 'interaction-only'
+              }}
             />
             <div className="flex">
               <input
@@ -97,7 +120,6 @@ export default function Home() {
               ></input>
               <button
                 className="bg-gray-200 w-24 text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75"
-                onClick={handleSubmit}
               >
                 Search
               </button>
@@ -105,17 +127,33 @@ export default function Home() {
           </form>
           <div>
             {loading ? (
-                <div className="flex justify-center items-center mt-12">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="animate-spin h-8 w-8" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-100" cx="12" cy="12" r="10" stroke="white" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                </div>
-              ) : (
+              <div className="flex justify-center items-center mt-12">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="animate-spin h-8 w-8"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-100"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="white"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              </div>
+            ) : (
               <div>
                 {response != null ? (
                   <div>
-                    {response.status == 200 ? (
+                    {response.status == "200" ? (
                       <div>
                         <h2 className="text-2xl font-semibold mt-8 mb-4 leading-tight">
                           Results
