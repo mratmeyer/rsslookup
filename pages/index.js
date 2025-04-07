@@ -105,10 +105,12 @@ export default function Home() {
           </form>
           <div>
             {loading ? (
-              <div>
-                <p className="mt-8">Loading...</p>
-              </div>
-            ) : (
+                <div className="flex justify-center items-center mt-12">
+                  <div
+                    className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-500"
+                  ></div>
+                </div>
+              ) : (
               <div>
                 {response != null ? (
                   <div>
