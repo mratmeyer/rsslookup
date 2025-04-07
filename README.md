@@ -11,7 +11,7 @@ RSS Lookup is a free, open-source tool designed to find the RSS feed associated 
 - **Simple Interface:** Clean, easy-to-use single-page application.
 - **HTML Meta Tag Detection:** Finds feeds specified using standard `<link rel="alternate" type="application/rss+xml">` (and Atom) tags.
 - **Common Path Fallback:** Checks conventional paths like `/feed`, `/rss.xml`, `/atom.xml` if no tags are found.
-- **Abuse Prevention:** Integrates hCaptcha to protect the backend service.
+- **Abuse Prevention:** Integrates Cloudflare Turnstile to protect the backend service.
 - **User-Friendly Results:** Displays found feed URLs clearly and easily copiable.
 - **Modern Tech:** Built with Next.js for the frontend and Cloudflare Workers for a fast, serverless backend.
 
@@ -32,7 +32,7 @@ Follow these instructions to set up and run the project locally or deploy your o
 - [npm](https://www.npmjs.com/) (usually included with Node.js)
 - [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/): Install globally with `npm install -g wrangler`
 - A Cloudflare account (for deploying the worker)
-- An [hCaptcha](https://www.hcaptcha.com/) account (for site key and secret)
+- A [Cloudflare Turnstile](https://www.cloudflare.com/application-services/products/turnstile/) account (for site key and secret)
 
 ### Setup
 
@@ -53,17 +53,17 @@ Follow these instructions to set up and run the project locally or deploy your o
       # The URL of your deployed Cloudflare Worker API
       NEXT_PUBLIC_API_URL=[https://api.example.com](https://api.example.com)
 
-      # Your hCaptcha Site Key (public)
-      NEXT_PUBLIC_HCAPTCHA_SITE_KEY=YOUR_HCAPTCHA_SITE_KEY
+      # Your Cloudflare Turnstile Site Key (public)
+      NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY=YOUR_CLOUDFLARE_TURNSTILE_SITE_KEY
       ```
 
-    - **Backend:** You'll need to set the `HCAPTCHA_SECRET` as a secret for your Cloudflare Worker.
+    - **Backend:** You'll need to set the `CLOUDFLARE_TURNSTILE_SECRET` as a secret for your Cloudflare Worker.
       - Run this command within the `worker/` directory after logging in with Wrangler:
         ```bash
         # Run inside the worker/ directory
-        npx wrangler secret put HCAPTCHA_SECRET
+        npx wrangler secret put CLOUDFLARE_TURNSTILE_SECRET
         ```
-      - Wrangler will prompt you to enter your hCaptcha secret key.
+      - Wrangler will prompt you to enter your Cloudflare Turnstile secret key.
 
 3.  **Install Dependencies:**
 
@@ -93,8 +93,8 @@ Follow these instructions to set up and run the project locally or deploy your o
 2.  **Run the Backend Worker Locally:**
     ```bash
     # In the worker/ directory
-    # Make sure you've set the HCAPTCHA_SECRET locally for testing if needed,
-    # or mock the verifyHCaptcha function for local dev without captcha checks.
+    # Make sure you've set the CLOUDFLARE_TURNSTILE_SECRET locally for testing if needed,
+    # or mock the verifyCloudflare function for local dev without turnstile checks.
     npx wrangler dev
     ```
     The worker will run locally. Update `NEXT_PUBLIC_API_URL` in your frontend `.env.local` to point to the local worker URL (e.g., `http://localhost:8787`) for local end-to-end testing.
@@ -117,7 +117,7 @@ Follow these instructions to set up and run the project locally or deploy your o
       # In the worker/ directory
       npx wrangler deploy
       ```
-    - Remember to set the `HCAPTCHA_SECRET` in your deployed worker's environment using `wrangler secret put`.
+    - Remember to set the `CLOUDFLARE_TURNSTILE_SECRET` in your deployed worker's environment using `wrangler secret put`.
 
 ## Available Scripts
 

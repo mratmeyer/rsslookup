@@ -125,7 +125,7 @@ export default function Home() {
               }}
             />
           </form>
-          <div>
+          <div className="-mt-6">
             {loading ? (
               <div className="flex justify-center items-center mt-12 mb-6">
                 <svg
