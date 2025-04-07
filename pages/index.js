@@ -95,7 +95,7 @@ export default function Home() {
       </Head>
       <div id="app">
         <Intro />
-        <div className="bg-white shadow-md rounded-lg p-8 mt-4 mb-12">
+        <div className="bg-white shadow-md rounded-lg pt-8 pb-2 px-8 mt-4 mb-12">
           <form onSubmit={handleSubmit}>
             <div className="flex">
               <input
