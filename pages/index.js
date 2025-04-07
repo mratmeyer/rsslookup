@@ -123,7 +123,7 @@ export default function Home() {
               }}
             />
           </form>
-          <div className="-mt-6">
+          <div>
             {loading ? (
               <div className="flex justify-center items-center mt-12 mb-6">
                 <svg
@@ -148,7 +148,7 @@ export default function Home() {
                 </svg>
               </div>
             ) : (
-              <div className="pt-6 mb-6">
+              <div className="mt-6 mb-6">
                 {response != null ? (
                   <div>
                     {response.status == "200" ? (
