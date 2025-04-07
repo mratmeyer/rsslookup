@@ -1,12 +1,12 @@
 module.exports = {
-    purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
-    theme: {
-      fontFamily: {
-       'sans': ['Inter']
-      }
+  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    fontFamily: {
+      sans: ["Inter"],
     },
-    variants: {
-      extend: {},
-    },
-    plugins: [],
-}
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};
