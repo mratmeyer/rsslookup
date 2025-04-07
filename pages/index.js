@@ -10,7 +10,7 @@ import { RSSInfo } from "../components/RSSInfo.js";
 import { FAQ } from "../components/FAQ.js";
 import { FeedResult } from "../components/FeedResult.js";
 import { Intro } from "../components/Intro.js";
-import { Toaster } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -19,6 +19,9 @@ export default function Home() {
 
   const [token, setToken] = useState(null);
   const captchaRef = useRef(null);
+
+  // Ref to track if URL parameter check has been done
+  const didProcessUrlParam = useRef(false); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +44,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (token) {
+    if (token && url) {
       setResponse(null);
       setLoading(true);
 
@@ -81,6 +84,34 @@ export default function Home() {
         });
     }
   }, [token, url]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !didProcessUrlParam.current) {
+      didProcessUrlParam.current = true; // Mark as processed
+
+      const searchParams = new URLSearchParams(window.location.search);
+      const urlParam = searchParams.get('url');
+
+      if (urlParam) {
+        console.log("URL parameter found:", urlParam);
+        const decodedUrl = decodeURIComponent(urlParam);
+        setUrl(decodedUrl);
+
+        // Automatically trigger the captcha/search process
+        const timer = setTimeout(() => {
+            if (captchaRef.current) {
+                console.log("Auto-triggering captcha for URL parameter...");
+                captchaRef.current.execute();
+            } else {
+                console.warn("Captcha ref not ready for auto-trigger yet.");
+            }
+        }, 1000);
+
+        return () => clearTimeout(timer); 
+      }
+    }
+  }, []);
+
 
   return (
     <div>
@@ -148,9 +179,9 @@ export default function Home() {
                 </svg>
               </div>
             ) : (
-              <div className="mt-6 mb-6">
+              <div>
                 {response != null ? (
-                  <div>
+                  <div className="mb-6 mt-6">
                     {response.status == "200" ? (
                       <div>
                         <h2 className="text-2xl font-semibold mt-8 mb-4 leading-tight">
