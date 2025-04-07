@@ -3,7 +3,7 @@ import {
   optionsResponse,
   resultResponse,
 } from './utils/apiUtils.js'
-import { verifyHCaptcha, verifyCloudflare } from './utils/captchaUtils.js'
+import { verifyCloudflare } from './utils/captchaUtils.js'
 import { parseHtmlForFeeds } from './utils/parserUtils.js'
 import { checkCommonFeedPaths } from './utils/scraperUtils.js'
 
@@ -40,21 +40,17 @@ async function handleLookupRequest(request) {
     }
 
     // Validate captcha's
-    const hcaptchaToken = requestJSON.hcaptcha
     const cloudflareToken = requestJSON.cloudflareToken
     const ip = request.headers.get('CF-Connecting-IP')
-    if (!hcaptchaToken && !cloudflareToken) {
+    if (!cloudflareToken) {
       return errorResponse(
-        'hCaptcha or Cloudflare Turnstile token missing.',
+        'Cloudflare Turnstile token missing.',
         400,
       )
     }
-    const isHcaptchaVerified = await verifyHCaptcha(hcaptchaToken)
-    const isCloudflareVerified = await verifyCloudflare(cloudflareToken, ip)
-    if (!(isHcaptchaVerified || isCloudflareVerified)) {
-      // if (!isVerified) {
-      return errorResponse('Captcha verification failed.', 403)
-      // return errorResponse('hCaptcha verification failed.', 403)
+    const isVerified = await verifyCloudflare(cloudflareToken, ip)
+    if (!isVerified) {
+      return errorResponse('Cloudflare Turnstile verification failed.', 403)
     }
 
     // Validate URL input
