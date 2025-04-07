@@ -77,7 +77,7 @@ export default function Home() {
         .finally(() => {
           setLoading(false);
           setToken(null);
-          captchaRef.current?.reset()
+          captchaRef.current?.reset();
         });
     }
   }, [token, url]);
@@ -107,9 +107,7 @@ export default function Home() {
                 placeholder="Paste URL here..."
                 value={url}
               ></input>
-              <button
-                className="bg-gray-200 w-24 text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75"
-              >
+              <button className="bg-gray-200 w-24 text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75">
                 Search
               </button>
             </div>
@@ -120,8 +118,8 @@ export default function Home() {
               onError={handleTurnstileError}
               onExpire={handleTurnstileExpire}
               options={{
-                execution: 'execute',
-                appearance: 'interaction-only'
+                execution: "execute",
+                appearance: "interaction-only",
               }}
             />
           </form>
@@ -150,7 +148,7 @@ export default function Home() {
                 </svg>
               </div>
             ) : (
-              <div className="mt-6 mb-6">
+              <div className="pt-6 mb-6">
                 {response != null ? (
                   <div>
                     {response.status == "200" ? (
