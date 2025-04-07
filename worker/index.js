@@ -93,7 +93,6 @@ async function handleLookupRequest(request) {
         // If no feeds found in HTML, check common paths
         if (foundFeeds.size === 0) {
           await checkCommonFeedPaths(finalUrl, foundFeeds, USER_AGENT);
-          await checkCommonFeedPaths(finalUrl, foundFeeds, USER_AGENT);
         }
 
         // Return final results
