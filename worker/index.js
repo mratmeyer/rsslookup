@@ -69,13 +69,12 @@ async function handleLookupRequest(request) {
             const fetchOptions = {
                 method: 'GET',
                 headers: { 'User-Agent': USER_AGENT },
-                redirect: 'follow',
-                cache: 'no-store'
+                redirect: 'follow'
             };
             response = await fetch(targetUrl, fetchOptions);
             finalUrl = response.url; // Could be redirected
 
-            if (!response.ok) {
+            if (!(response.ok || response.status === 304)) {
                 return errorResponse(`Unable to access URL: Status ${response.status}`, 502);
             }
             responseText = await response.text();

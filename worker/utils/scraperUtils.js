@@ -44,12 +44,11 @@ export async function checkCommonFeedPaths(baseUrl, feedsSet, userAgent) {
             const response = await fetch(potentialFeedUrl, {
                 method: 'GET',
                 headers: { 'User-Agent': userAgent },
-                redirect: 'follow',
-                cache: 'no-store'
+                redirect: 'follow'
             });
 
             const contentType = response.headers.get('content-type') || '';
-            if (response.ok && (contentType.includes('xml') || contentType.includes('rss') || contentType.includes('atom'))) {
+            if ((response.ok || response.status === 304) && (contentType.includes('xml') || contentType.includes('rss') || contentType.includes('atom'))) {
                 return response.url;
             }
 
