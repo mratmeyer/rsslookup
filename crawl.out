@@ -1,0 +1,495 @@
+Scanning directory: /Users/mratmeyer/workdir/rsslookup
+Excluding files: .DS_Store, LICENSE, walker.py, crawl.out, .package-lock.json, package-lock.json
+Excluding directories: public, node_modules, .git, worker, .next
+--------------------
+---tailwind.config.js
+module.exports = {
+  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    fontFamily: {
+      sans: ["Inter"],
+    },
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};
+
+---next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: "export",
+  reactStrictMode: true,
+};
+
+module.exports = nextConfig;
+
+---README.md
+# RSS Lookup
+
+RSS Lookup is a free tool to find the RSS feed for any website. The frontend is a single page app built using Next.js, and the backend is a Cloudflare Worker.
+
+To check out RSS Lookup in production, go to [www.rsslookup.com](https://www.rsslookup.com/).
+
+## Installation and Project Structure
+
+Currently, the Next.js frontend lives in the root project folder, and the Cloudflare Worker helper lives in the `worker` folder.
+
+To install the frontend,
+
+1. Install the node dependencies with `npm ci`
+2. Build the Next.js app with `npm run build`
+3. The output is a static export that lives in the `out` folder
+
+To set up the worker,
+
+1. Install the node dependencies with `npm ci`
+2. Modify the `wrangler.toml` file with the correct route
+3. Test the worker in a dev environment with `npx wrangler dev`
+4. Deploy the worker into prod with `npx wrangler deploy`
+
+---.gitignore
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+---package.json
+{
+  "name": "rsslookup",
+  "version": "1.0.0",
+  "description": "A free tool to find the RSS feed for any website.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@hcaptcha/react-hcaptcha": "^1.3.0",
+    "next": "14.0.4",
+    "next-seo": "^6.4.0",
+    "react": "18.2.0",
+    "react-copy-to-clipboard": "^5.1.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.2",
+    "eslint": "8.15.0",
+    "eslint-config-next": "12.1.6",
+    "eslint-config-prettier": "^10.1.1",
+    "postcss": "^8.4.8",
+    "prettier": "^3.5.3",
+    "tailwindcss": "^3.0.23"
+  }
+}
+
+---postcss.config.js
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+
+---.eslintrc.json
+{
+  "extends": "next/core-web-vitals"
+}
+
+---styles/tailwind.css
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+---components/.eslintrc
+{
+    "extends": "next",
+    "rules": {
+      "react/no-unescaped-entities": "off"
+    }
+}
+
+---components/FAQ.js
+export function FAQ(props) {
+  return (
+    <div className="mb-12">
+      <h2 className="text-3xl font-semibold mb-8 leading-tight">
+        Frequently asked questions
+      </h2>
+      <div>
+        <h3 className="text-2xl font-semibold mb-2 leading-tight">
+          What does RSS Lookup do?
+        </h3>
+        <p className="text-xl mb-6 leading-normal">
+          RSS Lookup is a free tool that finds the RSS feed associated with a
+          website. When you use RSS Lookup, it fetches the site in the
+          background and looks for any relevant RSS HTML tags. If it can't find
+          the feed in the HTML metadata, it searches a couple common feed paths
+          to make sure you find the feed if it exists.
+        </p>
+      </div>
+      <div>
+        <h3 className="text-2xl font-semibold mb-2 leading-tight">
+          Why couldn't RSS Lookup find any feeds?
+        </h3>
+        <p className="text-xl mb-6 leading-normal">
+          RSS Lookup looks for feeds if they exist, but unfortunately many
+          websites do not have an RSS feed configured. In addition, some may
+          have not properly configured their HTML RSS link tags. If you run into
+          a site that RSS Lookup should have found, please{" "}
+          <a
+            className="underline hover:opacity-75"
+            href="https://www.maxratmeyer.com/?utm_source=rsslookup-contact"
+          >
+            let me know
+          </a>
+          .
+        </p>
+      </div>
+      <div>
+        <h3 className="text-2xl font-semibold mb-2 leading-tight">
+          What information does this site collect?
+        </h3>
+        <p className="text-xl mb-6 leading-normal">
+          This site is a side project I set up in a couple days- it's not meant
+          to collect a bunch of data. Besides my self-hosted analytics system
+          for general site viewer data and information from Hcaptcha to prevent
+          abuse, I don't keep track of specific URLs requested using RSS Lookup.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+---components/FeedResult.js
+import { CopyToClipboard } from "react-copy-to-clipboard";
+
+export function FeedResult(props) {
+  return (
+    <CopyToClipboard text={props.feed} onCopy={() => alert("Copied!")}>
+      <div className="flex bg-gray-100 p-4 mb-2 rounded-md shadow-sm hover:opacity-75 cursor-pointer">
+        <span className="text-slate-700">{props.feed}</span>
+        <button className="ml-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 stroke-slate-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+            />
+          </svg>
+        </button>
+      </div>
+    </CopyToClipboard>
+  );
+}
+
+---components/RSSInfo.js
+export function RSSInfo(props) {
+  return (
+    <div className="mb-12 bg-blue-100 shadow-md rounded-lg p-8">
+      <h2 className="text-3xl font-semibold mb-8 leading-tight">
+        What are RSS feeds?
+      </h2>
+      <p className="text-xl mb-6 leading-normal">
+        The web is filled with dynamic content that is always changing. RSS
+        feeds were created decades ago to standardize the way we pull new
+        content like articles and blog posts from across the internet.
+      </p>
+      <p className="text-xl mb-6 leading-normal">
+        There's not much you can do with an RSS feed URL on its own, but there
+        are many RSS clients and services you can use.
+      </p>
+    </div>
+  );
+}
+
+---components/Intro.js
+export function Intro(props) {
+  return (
+    <div>
+      <h1 className="text-6xl font-semibold mb-8 leading-tight">
+        <img
+          src="/magnifying-glass.png"
+          alt="Magnifying Glass Emoji"
+          className="inline mr-3"
+          width="50"
+          height="50"
+        ></img>
+        RSS Lookup
+      </h1>
+      <h2 className="text-3xl font-semibold mb-8 leading-tight">
+        A free, open-source tool to find RSS feeds on any URL
+      </h2>
+      <p className="text-xl mb-8 leading-normal">
+        Can't find the RSS feed for a website or blog? Paste the URL below and
+        we'll try and find it!
+      </p>
+    </div>
+  );
+}
+
+---components/ErrorMessage.js
+export function ErrorMessage(props) {
+  return (
+    <div className="bg-white rounded-md bg-red-300 p-3 px-4">
+      <span>
+        <b>Error:</b> {props.message}
+      </span>
+    </div>
+  );
+}
+
+---pages/_app.js
+import "tailwindcss/tailwind.css";
+// import { Inter } from 'next/font/google'
+
+// const inter = Inter({ subsets: ['latin'] })
+
+function MyApp({ Component, pageProps }) {
+  return <Component {...pageProps} />;
+}
+
+export default MyApp;
+
+---pages/index.js
+import Head from "next/head";
+import { useEffect, useState, useRef } from "react";
+
+import { NextSeo } from "next-seo";
+
+import HCaptcha from "@hcaptcha/react-hcaptcha";
+
+import { ErrorMessage } from "../components/ErrorMessage.js";
+import { RSSInfo } from "../components/RSSInfo.js";
+import { FAQ } from "../components/FAQ.js";
+import { FeedResult } from "../components/FeedResult.js";
+import { Intro } from "../components/Intro.js";
+
+export default function Home() {
+  const [url, setUrl] = useState("");
+  const [response, setResponse] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const [token, setToken] = useState(null);
+  const captchaRef = useRef(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    captchaRef.current.execute();
+  };
+
+  useEffect(() => {
+    if (token) {
+      setLoading(true);
+
+      const body = {
+        hcaptcha: token,
+        url: url,
+      };
+
+      fetch(process.env.NEXT_PUBLIC_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setResponse(data);
+          setLoading(false);
+        });
+    }
+  }, [token]);
+
+  return (
+    <div>
+      <NextSeo
+        title="RSS Lookup - Find RSS feeds on any URL"
+        description="RSS Lookup is a free, open-source tool that helps you search for RSS feeds on any URL"
+        canonical="https://www.rsslookup.com/"
+      />
+      <Head>
+        <title>RSS Lookup - Find RSS feeds on any URL</title>
+      </Head>
+      <div id="app">
+        <Intro />
+        <div className="bg-white shadow-md rounded-lg p-8 mt-4 mb-12">
+          <form>
+            <HCaptcha
+              sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY}
+              onVerify={setToken}
+              size="invisible"
+              ref={captchaRef}
+            />
+            <div className="flex">
+              <input
+                type="url"
+                onChange={(e) => setUrl(e.target.value)}
+                className="p-3 rounded-md border-solid border-2 border-gray-300 w-full"
+                id="inputText"
+                name="inputText"
+                placeholder="Paste URL here..."
+                value={url}
+              ></input>
+              <button
+                className="bg-gray-200 w-24 text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75"
+                onClick={handleSubmit}
+              >
+                Search
+              </button>
+            </div>
+          </form>
+          <div>
+            {loading ? (
+              <div>
+                <p className="mt-8">Loading...</p>
+              </div>
+            ) : (
+              <div>
+                {response != null ? (
+                  <div>
+                    {response.status == 200 ? (
+                      <div>
+                        <h2 className="text-2xl font-semibold mt-8 mb-4 leading-tight">
+                          Results
+                        </h2>
+                        <div>
+                          {response.result.map((feed) => (
+                            <FeedResult key={feed} feed={feed} />
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <ErrorMessage message={response.message} />
+                    )}
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+        <RSSInfo />
+        <FAQ />
+      </div>
+    </div>
+  );
+}
+
+---pages/_document.js
+import Document, { Html, Head, Main, NextScript } from "next/document";
+import Link from "next/link";
+
+class MyDocument extends Document {
+  static async getInitialProps(ctx) {
+    const initialProps = await Document.getInitialProps(ctx);
+    return { ...initialProps };
+  }
+
+  render() {
+    return (
+      <Html lang="en">
+        <Head>
+          <link href="/fonts/style.css" rel="stylesheet" />
+        </Head>
+        <div className="bg-slate-100">
+          <div className="m-auto max-w-3xl p-6 lg:p-12 min-h-screen">
+            <body>
+              <div className="mb-8">
+                <Main />
+                <NextScript />
+              </div>
+              <div className="text-center">
+                <p className="font-bold">
+                  Made with{" "}
+                  <img
+                    src="/heart.png"
+                    alt="Heart Emoji"
+                    className="inline"
+                    width="20"
+                    height="20"
+                  ></img>{" "}
+                  in Atlanta by{" "}
+                  <a
+                    className="underline hover:opacity-75"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    href="https://www.maxratmeyer.com/?utm_source=rsslookup"
+                  >
+                    Max
+                  </a>
+                </p>
+                <p className="font-bold">
+                  View source on{" "}
+                  <a
+                    className="underline hover:opacity-75"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    href="https://github.com/mratmeyer/rsslookup"
+                  >
+                    GitHub
+                  </a>
+                </p>
+              </div>
+
+              <noscript>
+                <img src="https://shynet.maxnet.work/ingress/0fc2782b-0a62-4417-ae0b-47023a3bc3eb/pixel.gif"></img>
+              </noscript>
+              <script
+                defer
+                src="https://shynet.maxnet.work/ingress/0fc2782b-0a62-4417-ae0b-47023a3bc3eb/script.js"
+              ></script>
+            </body>
+          </div>
+        </div>
+      </Html>
+    );
+  }
+}
+
+export default MyDocument;
+
+--------------------
+Scan complete.

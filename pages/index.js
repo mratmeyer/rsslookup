@@ -10,6 +10,7 @@ import { RSSInfo } from "../components/RSSInfo.js";
 import { FAQ } from "../components/FAQ.js";
 import { FeedResult } from "../components/FeedResult.js";
 import { Intro } from "../components/Intro.js";
+import { Toaster } from "react-hot-toast";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -65,6 +66,7 @@ export default function Home() {
 
   return (
     <div>
+      <Toaster/>
       <NextSeo
         title="RSS Lookup - Find RSS feeds on any URL"
         description="RSS Lookup is a free, open-source tool that helps you search for RSS feeds on any URL"
