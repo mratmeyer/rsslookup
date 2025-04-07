@@ -150,7 +150,7 @@ export default function Home() {
                 </svg>
               </div>
             ) : (
-              <div className="mb-6">
+              <div className="mt-6 mb-6">
                 {response != null ? (
                   <div>
                     {response.status == "200" ? (
