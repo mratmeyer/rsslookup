@@ -1,6 +1,6 @@
 {
   "name": "rsslookup-worker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "RSS Lookup Workers Backend",
   "main": "index.js",
   "scripts": {
