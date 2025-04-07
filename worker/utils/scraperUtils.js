@@ -1,6 +1,7 @@
 // List of possible feed paths to scrape if feed not found directly
 const POSSIBLE_FEED_PATHS = [
   // Absolute paths
+  '/atom',
   '/atom.xml',
   '/feed',
   '/feed/',
@@ -13,6 +14,7 @@ const POSSIBLE_FEED_PATHS = [
   '/rss.xml',
 
   // Relative paths
+  'atom',
   'atom.xml',
   'feed',
   'feed/',
