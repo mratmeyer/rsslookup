@@ -10,6 +10,8 @@ import { RSSInfo } from "../components/RSSInfo.js";
 import { FAQ } from "../components/FAQ.js";
 import { FeedResult } from "../components/FeedResult.js";
 import { Intro } from "../components/Intro.js";
+import { BookmarkletBanner } from "../components/BookmarkletNotification.js"
+
 import { toast, Toaster } from "react-hot-toast";
 
 export default function Home() {
@@ -105,7 +107,7 @@ export default function Home() {
             } else {
                 console.warn("Captcha ref not ready for auto-trigger yet.");
             }
-        }, 1000);
+        }, 100);
 
         return () => clearTimeout(timer); 
       }
@@ -125,6 +127,7 @@ export default function Home() {
         <title>RSS Lookup - Find RSS feeds on any URL</title>
       </Head>
       <div id="app">
+        <BookmarkletBanner />
         <Intro />
         <div className="bg-white shadow-md rounded-lg pt-8 pb-2 px-8 mt-4 mb-12">
           <form onSubmit={handleSubmit}>
