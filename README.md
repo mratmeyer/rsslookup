@@ -30,7 +30,7 @@ Follow these instructions to set up and run the project locally or deploy your o
 
 * [Node.js](https://nodejs.org/) (LTS version recommended, e.g., >= 18)
 * [npm](https://www.npmjs.com/) (usually included with Node.js)
-* [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install/): Install globally with `npm install -g wrangler`
+* [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/): Install globally with `npm install -g wrangler`
 * A Cloudflare account (for deploying the worker)
 * An [hCaptcha](https://www.hcaptcha.com/) account (for site key and secret)
 
