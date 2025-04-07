@@ -10,7 +10,7 @@ import { RSSInfo } from "../components/RSSInfo.js";
 import { FAQ } from "../components/FAQ.js";
 import { FeedResult } from "../components/FeedResult.js";
 import { Intro } from "../components/Intro.js";
-import { BookmarkletBanner } from "../components/BookmarkletNotification.js"
+import { BookmarkletBanner } from "../components/BookmarkletNotification.js";
 
 import { toast, Toaster } from "react-hot-toast";
 
@@ -23,7 +23,7 @@ export default function Home() {
   const captchaRef = useRef(null);
 
   // Ref to track if URL parameter check has been done
-  const didProcessUrlParam = useRef(false); 
+  const didProcessUrlParam = useRef(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -88,11 +88,11 @@ export default function Home() {
   }, [token, url]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !didProcessUrlParam.current) {
+    if (typeof window !== "undefined" && !didProcessUrlParam.current) {
       didProcessUrlParam.current = true; // Mark as processed
 
       const searchParams = new URLSearchParams(window.location.search);
-      const urlParam = searchParams.get('url');
+      const urlParam = searchParams.get("url");
 
       if (urlParam) {
         console.log("URL parameter found:", urlParam);
@@ -101,19 +101,18 @@ export default function Home() {
 
         // Automatically trigger the captcha/search process
         const timer = setTimeout(() => {
-            if (captchaRef.current) {
-                console.log("Auto-triggering captcha for URL parameter...");
-                captchaRef.current.execute();
-            } else {
-                console.warn("Captcha ref not ready for auto-trigger yet.");
-            }
+          if (captchaRef.current) {
+            console.log("Auto-triggering captcha for URL parameter...");
+            captchaRef.current.execute();
+          } else {
+            console.warn("Captcha ref not ready for auto-trigger yet.");
+          }
         }, 100);
 
-        return () => clearTimeout(timer); 
+        return () => clearTimeout(timer);
       }
     }
   }, []);
-
 
   return (
     <div>

@@ -52,14 +52,6 @@ class MyDocument extends Document {
                   </a>
                 </p>
               </div>
-
-              <noscript>
-                <img src="https://shynet.maxnet.work/ingress/0fc2782b-0a62-4417-ae0b-47023a3bc3eb/pixel.gif"></img>
-              </noscript>
-              <script
-                defer
-                src="https://shynet.maxnet.work/ingress/0fc2782b-0a62-4417-ae0b-47023a3bc3eb/script.js"
-              ></script>
             </body>
           </div>
         </div>
