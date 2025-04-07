@@ -97,16 +97,6 @@ export default function Home() {
         <Intro />
         <div className="bg-white shadow-md rounded-lg p-8 mt-4 mb-12">
           <form onSubmit={handleSubmit}>
-            <Turnstile
-              ref={captchaRef}
-              siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY}
-              onSuccess={handleTurnstileSuccess}
-              onError={handleTurnstileError}
-              onExpire={handleTurnstileExpire}
-              options={{
-                  execution: 'execute'
-              }}
-            />
             <div className="flex">
               <input
                 type="url"
@@ -123,6 +113,17 @@ export default function Home() {
                 Search
               </button>
             </div>
+            <Turnstile
+              ref={captchaRef}
+              siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY}
+              onSuccess={handleTurnstileSuccess}
+              onError={handleTurnstileError}
+              onExpire={handleTurnstileExpire}
+              options={{
+                execution: 'execute',
+                appearance: 'interaction-only'
+              }}
+            />
           </form>
           <div>
             {loading ? (
