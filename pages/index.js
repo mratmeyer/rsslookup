@@ -104,8 +104,7 @@ export default function Home() {
               onError={handleTurnstileError}
               onExpire={handleTurnstileExpire}
               options={{
-                  execution: 'execute',
-                  appearance: 'interaction-only'
+                  execution: 'execute'
               }}
             />
             <div className="flex">
