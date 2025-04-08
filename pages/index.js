@@ -22,9 +22,6 @@ export default function Home() {
   const [token, setToken] = useState(null);
   const captchaRef = useRef(null);
 
-  // Ref to track if URL parameter check has been done
-  const didProcessUrlParam = useRef(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -90,29 +87,33 @@ export default function Home() {
   }, [token, url]);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && !didProcessUrlParam.current) {
-      didProcessUrlParam.current = true; // Mark as processed
-
+    if (typeof window !== 'undefined') {
       const searchParams = new URLSearchParams(window.location.search);
-      const urlParam = searchParams.get("url");
-
+      const urlParam = searchParams.get('url');
       if (urlParam) {
-        console.log("URL parameter found:", urlParam);
         const decodedUrl = decodeURIComponent(urlParam);
-        setUrl(decodedUrl);
+        setUrl(currentUrl => currentUrl !== decodedUrl ? decodedUrl : currentUrl);
+      }
+    }
+  }, []);
 
-        // Automatically trigger the captcha/search process
-        const timer = setTimeout(() => {
-          if (captchaRef.current) {
-            console.log("Auto-triggering captcha for URL parameter...");
-            setLoading(true);
-            captchaRef.current.execute();
-          } else {
-            console.warn("Captcha ref not ready for auto-trigger yet.");
-          }
-        }, 100);
+  const handleTurnstileLoad = useCallback(() => {
+    console.log('Turnstile widget loaded.');
 
-        return () => clearTimeout(timer);
+    const searchParams = new URLSearchParams(window.location.search);
+    const urlParam = searchParams.get('url');
+
+    if (urlParam) {
+      if (captchaRef.current && typeof captchaRef.current.execute === 'function') {
+        console.log('Turnstile ready and URL param present, executing automatically...');
+
+        setResponse(null);
+        setLoading(true);
+
+        captchaRef.current.execute();
+      } else {
+        console.error("Turnstile loaded, URL param found, but ref/execute invalid!");
+        setLoading(false);
       }
     }
   }, []);
@@ -157,6 +158,7 @@ export default function Home() {
               onSuccess={handleTurnstileSuccess}
               onError={handleTurnstileError}
               onExpire={handleTurnstileExpire}
+              onLoad={handleTurnstileLoad}
               options={{
                 execution: "execute",
                 appearance: "interaction-only",
