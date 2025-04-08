@@ -27,6 +27,7 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     captchaRef.current.execute();
   };
 
@@ -38,17 +39,18 @@ export default function Home() {
   const handleTurnstileError = () => {
     console.error("Turnstile challenge failed to load or execute.");
     toast.error("Captcha challenge failed. Please try loading the page again.");
+    setLoading(false);
   };
 
   const handleTurnstileExpire = () => {
     console.warn("Turnstile challenge expired.");
     toast.error("Captcha challenge expired. Please submit again.");
+    setLoading(false);
   };
 
   useEffect(() => {
     if (token && url) {
       setResponse(null);
-      setLoading(true);
 
       const body = {
         cloudflareToken: token,
@@ -104,6 +106,7 @@ export default function Home() {
           if (captchaRef.current) {
             console.log("Auto-triggering captcha for URL parameter...");
             captchaRef.current.execute();
+            setLoading(true);
           } else {
             console.warn("Captcha ref not ready for auto-trigger yet.");
           }
