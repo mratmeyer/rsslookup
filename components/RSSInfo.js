@@ -1,6 +1,6 @@
 export function RSSInfo(props) {
   return (
-    <div className="mb-12 bg-blue-100 shadow-md rounded-lg p-8">
+    <div className="mb-12 bg-white shadow-md rounded-xl p-8">
       <h2 className="text-3xl font-semibold mb-8 leading-tight">
         What are RSS feeds?
       </h2>

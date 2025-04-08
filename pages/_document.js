@@ -13,7 +13,7 @@ class MyDocument extends Document {
         <Head>
           <link href="/fonts/style.css" rel="stylesheet" />
         </Head>
-        <div className="bg-slate-100">
+        <div className="bg-slate-50">
           <div className="m-auto max-w-3xl p-6 lg:p-12 min-h-screen">
             <body>
               <div className="mb-8">

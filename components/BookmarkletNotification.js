@@ -18,7 +18,7 @@ export function BookmarkletBanner() {
   if (!isVisible) return null;
 
   return (
-    <div className="bg-green-100 mb-8 shadow-md rounded-lg p-5 flex justify-between items-center">
+    <div className="bg-slate-200 mb-8 shadow-md rounded-lg p-5 flex justify-between items-center">
       <p className="text-s leading-normal">
         RSS Lookup now has a bookmarklet! Drag this link into your bookmarks
         bar, and search RSS feeds on any site straight from your browser.{" "}
