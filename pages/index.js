@@ -105,8 +105,8 @@ export default function Home() {
         const timer = setTimeout(() => {
           if (captchaRef.current) {
             console.log("Auto-triggering captcha for URL parameter...");
-            captchaRef.current.execute();
             setLoading(true);
+            captchaRef.current.execute();
           } else {
             console.warn("Captcha ref not ready for auto-trigger yet.");
           }
@@ -144,7 +144,8 @@ export default function Home() {
                 value={url}
               ></input>
               <button
-                className="bg-gray-200 w-24 text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75"
+                className="bg-gray-200 w-24 text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75 disabled:opacity-50 
+             disabled:cursor-not-allowed"
                 disabled={loading}
               >
                 Search
