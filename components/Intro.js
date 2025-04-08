@@ -11,7 +11,7 @@ export function Intro(props) {
         ></img>
         <span>RSS Lookup</span>
       </h1>
-      <h2 className="bg-gradient-to-b from-orange-600 to-red-700 bg-clip-text text-transparent text-6xl font-semibold mb-8 leading-tight">
+      <h2 className="bg-gradient-to-b from-orange-600 to-red-700 bg-clip-text text-transparent text-5xl md:text-6xl font-semibold mb-8 leading-tight">
         A free, open-source tool to find RSS feeds on any URL
       </h2>
       <p className="text-xl text-slate-800 font-semibold mb-8 leading-normal">
