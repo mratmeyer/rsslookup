@@ -158,7 +158,7 @@ export default function Home() {
               onSuccess={handleTurnstileSuccess}
               onError={handleTurnstileError}
               onExpire={handleTurnstileExpire}
-              onLoad={handleTurnstileLoad}
+              onWidgetLoad={handleTurnstileLoad}
               options={{
                 execution: "execute",
                 appearance: "interaction-only",
