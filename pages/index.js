@@ -140,7 +140,10 @@ export default function Home() {
                 placeholder="Paste URL here..."
                 value={url}
               ></input>
-              <button className="bg-gray-200 w-24 text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75">
+              <button
+                className="bg-gray-200 w-24 text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75"
+                disabled={loading}
+              >
                 Search
               </button>
             </div>
