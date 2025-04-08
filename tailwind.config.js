@@ -4,6 +4,11 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    extend: {
+      lineHeight: {
+        'hero': '1.15',
+      },
+    },
     fontFamily: {
       sans: ["Inter"],
     },
