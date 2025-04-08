@@ -1,7 +1,7 @@
 export function Intro(props) {
   return (
     <div>
-      <h1 className="text-4xl text-slate-700 font-semibold mb-8 leading-tight">
+      <h1 className="text-4xl leading-[1.15] text-slate-700 font-semibold mb-8 leading-tight">
         <img
           src="/magnifying-glass.png"
           alt="Magnifying Glass Emoji"
