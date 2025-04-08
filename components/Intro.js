@@ -1,7 +1,7 @@
 export function Intro(props) {
   return (
     <div>
-      <h1 className="text-4xl leading-hero text-slate-700 font-semibold mb-8 leading-tight">
+      <h1 className="text-4xl text-slate-700 font-semibold mb-8">
         <img
           src="/magnifying-glass.png"
           alt="Magnifying Glass Emoji"
@@ -11,7 +11,7 @@ export function Intro(props) {
         ></img>
         <span>RSS Lookup</span>
       </h1>
-      <h2 className="bg-gradient-to-b from-orange-600 to-red-700 bg-clip-text text-transparent text-5xl md:text-6xl font-semibold mb-8 leading-tight">
+      <h2 className="!leading-hero bg-gradient-to-b from-orange-600 to-red-700 bg-clip-text text-transparent text-5xl md:text-6xl font-semibold mb-8">
         A free, open-source tool to find RSS feeds on any URL
       </h2>
       <p className="text-xl text-slate-800 font-semibold mb-8 leading-normal">
