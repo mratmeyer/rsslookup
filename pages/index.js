@@ -176,7 +176,7 @@ export default function Home() {
           </form>
           <div>
             {loading ? (
-              <div className="flex justify-center items-center mt-12 mb-6">
+              <div className="flex justify-center items-center mt-12 mb-6 pb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="animate-spin h-8 w-8"
