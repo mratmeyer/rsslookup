@@ -141,7 +141,7 @@ export default function Home() {
       <div id="app">
         <BookmarkletBanner />
         <Intro />
-        <div className="bg-white shadow-md rounded-xl pt-6 pb-6 px-5 mt-4 mb-12">
+        <div className="bg-white shadow-md rounded-xl pt-6 pb-0 px-5 mt-4 mb-12">
           <form onSubmit={handleSubmit}>
             <div className="flex">
               <input
