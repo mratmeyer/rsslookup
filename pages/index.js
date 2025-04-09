@@ -132,7 +132,7 @@ export default function Home() {
       <div id="app">
         <BookmarkletBanner />
         <Intro />
-        <div className="bg-white shadow-lg rounded-xl pt-8 pb-2 px-8 mt-4 mb-12">
+        <div className="bg-white shadow-md rounded-xl pt-6 pb-6 px-6 mt-4 mb-12">
           <form onSubmit={handleSubmit}>
             <div className="flex">
               <input
@@ -145,7 +145,7 @@ export default function Home() {
                 value={url}
               ></input>
               <button
-                className="bg-gradient-to-b to-orange-700 from-red-800 w-24 text-white text-lg shadow-sm rounded-md font-semibold ml-2 hover:opacity-75 disabled:opacity-50 
+                className="bg-gradient-to-b to-orange-700 from-red-800 w-28 text-white text-md shadow-sm rounded-md font-semibold ml-2 hover:opacity-75 disabled:opacity-50 
              disabled:cursor-not-allowed"
                 disabled={loading}
               >
