@@ -87,32 +87,41 @@ export default function Home() {
   }, [token, url]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const searchParams = new URLSearchParams(window.location.search);
-      const urlParam = searchParams.get('url');
+      const urlParam = searchParams.get("url");
       if (urlParam) {
         const decodedUrl = decodeURIComponent(urlParam);
-        setUrl(currentUrl => currentUrl !== decodedUrl ? decodedUrl : currentUrl);
+        setUrl((currentUrl) =>
+          currentUrl !== decodedUrl ? decodedUrl : currentUrl,
+        );
       }
     }
   }, []);
 
   const handleTurnstileLoad = useCallback(() => {
-    console.log('Turnstile widget loaded.');
+    console.log("Turnstile widget loaded.");
 
     const searchParams = new URLSearchParams(window.location.search);
-    const urlParam = searchParams.get('url');
+    const urlParam = searchParams.get("url");
 
     if (urlParam) {
-      if (captchaRef.current && typeof captchaRef.current.execute === 'function') {
-        console.log('Turnstile ready and URL param present, executing automatically...');
+      if (
+        captchaRef.current &&
+        typeof captchaRef.current.execute === "function"
+      ) {
+        console.log(
+          "Turnstile ready and URL param present, executing automatically...",
+        );
 
         setResponse(null);
         setLoading(true);
 
         captchaRef.current.execute();
       } else {
-        console.error("Turnstile loaded, URL param found, but ref/execute invalid!");
+        console.error(
+          "Turnstile loaded, URL param found, but ref/execute invalid!",
+        );
         setLoading(false);
       }
     }
@@ -132,7 +141,7 @@ export default function Home() {
       <div id="app">
         <BookmarkletBanner />
         <Intro />
-        <div className="bg-white shadow-md rounded-xl pt-6 pb-0 px-6 mt-4 mb-12">
+        <div className="bg-white shadow-md rounded-xl pt-6 pb-6 px-5 mt-4 mb-12">
           <form onSubmit={handleSubmit}>
             <div className="flex">
               <input

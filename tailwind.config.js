@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       lineHeight: {
-        'hero': '1.15',
+        hero: "1.15",
       },
     },
     fontFamily: {

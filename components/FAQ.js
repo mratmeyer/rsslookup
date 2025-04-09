@@ -40,8 +40,8 @@ export function FAQ(props) {
         </h3>
         <p className="text-xl mb-6 leading-normal">
           This site is a side project I set up in a couple days- it's not meant
-          to collect a bunch of data. Besides information from Cloudflare
-          Turnstile to prevent abuse, I don't keep track of specific URLs
+          to collect a bunch of data. Besides information Cloudflare Turnstile
+          collects to prevent abuse, I don't keep track of specific URLs
           requested using RSS Lookup.
         </p>
       </div>
