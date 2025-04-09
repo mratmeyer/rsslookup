@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 
 export function FeedResult(props) {
   return (
-    <CopyToClipboard text={props.feed} onCopy={() => toast("Copied!")}>
+    <CopyToClipboard text={props.feed} onCopy={() => toast.success("Copied!")}>
       <div className="flex bg-gray-100 p-4 mb-2 rounded-md shadow-sm hover:opacity-75 cursor-pointer">
         <span className="text-slate-700">{props.feed}</span>
         <button className="ml-1">
