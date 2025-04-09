@@ -199,9 +199,9 @@ export default function Home() {
                 </svg>
               </div>
             ) : (
-              <div className="pb-3">
+              <div>
                 {response != null ? (
-                  <div>
+                  <div className="pb-3">
                     {response.status == "200" ? (
                       <div>
                         <h2 className="text-2xl font-semibold mt-8 mb-4 leading-tight">
