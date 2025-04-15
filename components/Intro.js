@@ -9,7 +9,7 @@ export function Intro(props) {
           width="42"
           height="42"
         ></img>
-        <h1 className="text-4xl text-orange-900 font-semibold pt-[2px]">
+        <h1 className="text-4xl bg-gradient-to-b from-orange-600 to-orange-400 bg-clip-text text-transparent font-semibold pt-[2px]">
           RSS Lookup
         </h1>
       </div>

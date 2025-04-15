@@ -1,7 +1,7 @@
 export function FAQ(props) {
   return (
     <div className="mb-12">
-      <h2 className="text-4xl font-semibold mb-8 leading-tight">
+      <h2 className="text-3xl font-semibold mb-8 leading-tight">
         Frequently asked questions
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
