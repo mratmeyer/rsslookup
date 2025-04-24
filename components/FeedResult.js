@@ -1,4 +1,3 @@
-// FILE: FeedResult.js
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import toast from "react-hot-toast";
 

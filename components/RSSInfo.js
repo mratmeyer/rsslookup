@@ -1,4 +1,3 @@
-// FILE: RSSInfo.js
 export function RSSInfo(props) {
   return (
     <div className="mb-12">
