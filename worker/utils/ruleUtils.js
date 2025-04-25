@@ -1,4 +1,4 @@
-import { cleanURL } from './urlUtils';
+import { cleanURL } from './urlUtils.js';
 
 
 /**
