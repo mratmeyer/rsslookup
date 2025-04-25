@@ -44,7 +44,7 @@ export function FAQ(props) {
           <p className="text-l leading-relaxed text-slate-700">
             This site is a side project I set up in a couple days- it's not meant
             to collect a bunch of data. Besides information Cloudflare Turnstile
-            collects to prevent abuse and anonymous analytics collect by Plausible,
+            collects to prevent abuse and anonymous analytics collected by Plausible,
             I don't keep track of specific URLs requested using RSS Lookup.
           </p>
         </div>

@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 export function FeedResult(props) {
   return (
     <CopyToClipboard text={props.feed} onCopy={() => toast.success("Copied!")}>
-      <div className="group flex items-center justify-between border border-slate-200 p-4 rounded-lg shadow-sm hover:border-slate-300 hover:shadow-md cursor-pointer transition duration-150 ease-in-out">
+      <div className="bg-white group flex items-center justify-between border border-slate-200 p-4 rounded-lg shadow-sm hover:border-slate-300 hover:shadow-md cursor-pointer transition duration-150 ease-in-out">
         <span className="text-slate-700 text-sm font-medium truncate overflow-hidden mr-2">
           {props.feed}
         </span>
