@@ -87,6 +87,6 @@ export function parseURLforRules(fullURL, hostname, feedsSet) {
             }
         }
     } catch (error) {
-        console.error(`Error in parseURLforRules for URL`);
+        console.error(`Error in parseURLforRules for URL ${error}`);
     }
 }
