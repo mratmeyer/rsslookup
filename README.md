@@ -11,6 +11,7 @@ RSS Lookup is a free, open-source tool designed to find the RSS feed associated 
 - **Simple Interface:** Clean, easy-to-use single-page application.
 - **HTML Meta Tag Detection:** Finds feeds specified using standard `<link rel="alternate" type="application/rss+xml">` (and Atom) tags.
 - **Common Path Fallback:** Checks conventional paths like `/feed`, `/rss.xml`, `/atom.xml` if no tags are found.
+- **Popular Site Integration:** Rules to natively supports popular sites like YouTube, StackExchange, and Reddit.
 - **Abuse Prevention:** Integrates Cloudflare Turnstile to protect the backend service.
 - **User-Friendly Results:** Displays found feed URLs clearly and easily copiable.
 - **Modern Tech:** Built with Next.js for the frontend and Cloudflare Workers for a fast, serverless backend.
