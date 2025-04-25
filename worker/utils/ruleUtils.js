@@ -5,7 +5,10 @@
  * @param {Set<string>} feedsSet - The Set to add found feed URLs to.
  */
 export function parseURLforRules(fullURL, hostname, feedsSet) {
-  if (hostname == 'reddit.com' || hostname == 'www.reddit.com') {
-    feedsSet.add(fullURL + ".rss")
+  if (hostname == 'www.reddit.com') {
+    let filter = urlString.replace(/#.*$/, ''); // Remove fragment identifiers
+    filter = filter.replace(/\?.*$/, ''); // Remove query parameters
+    filter = filter.replace(/\/$/, ''); // Remove trailing slash
+    feedsSet.add(filter + ".rss")
   }
 }
