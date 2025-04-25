@@ -14,12 +14,13 @@ export function parseURLforRules(fullURL, hostname, feedsSet) {
 
         let urlObject;
         let path = '';
+        let origin = '';
         try {
             urlObject = new URL(cleanedURL);
             path = urlObject.pathname;
+            origin = urlObject.origin;
         } catch(e) {
-            console.warn(`Could not create URL object from cleaned URL: ${cleanedURL}`);
-            path = cleanedURL.includes('/') ? cleanedURL.substring(cleanedURL.indexOf('/', cleanedURL.indexOf('//') + 2)) : '/';
+            console.error(`Error in parsing the cleaned URL in ruleUtils`);
         }
 
 
@@ -60,6 +61,11 @@ export function parseURLforRules(fullURL, hostname, feedsSet) {
         }
         // Rule: Stack Exchange Sites
         else if (hostname.endsWith('stackexchange.com') || ['stackoverflow.com', 'serverfault.com', 'superuser.com', 'askubuntu.com', 'stackapps.com'].includes(hostname)) {
+            if (!origin) {
+                console.warn(`Skipping Stack Exchange rules for because origin could not be determined.`);
+                return;
+            }
+            
             // Rule for Tag pages: /questions/tagged/tag-name
             const tagMatch = path.match(/^\/questions\/tagged\/([\w.+-]+)/);
             if (tagMatch && tagMatch[1]) {
@@ -81,6 +87,6 @@ export function parseURLforRules(fullURL, hostname, feedsSet) {
             }
         }
     } catch (error) {
-        console.error(`Error in parseURLforRules for URL "${fullURL}":`, error);
+        console.error(`Error in parseURLforRules for URL`);
     }
 }
