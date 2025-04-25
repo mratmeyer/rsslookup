@@ -22,6 +22,8 @@ export default function Home() {
   const captchaRef = useRef(null);
 
   const handleSubmit = async (e) => {
+    window.plausible('lookup')
+
     e.preventDefault();
     setLoading(true);
     captchaRef.current.execute();
@@ -105,6 +107,8 @@ export default function Home() {
     const urlParam = searchParams.get("url");
 
     if (urlParam) {
+      window.plausible('bookmarklet')
+
       if (
         captchaRef.current &&
         typeof captchaRef.current.execute === "function"
