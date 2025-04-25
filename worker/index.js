@@ -3,9 +3,12 @@ import {
   optionsResponse,
   resultResponse,
 } from './utils/apiUtils.js'
+
 import { verifyCloudflare } from './utils/captchaUtils.js'
-import { parseHtmlForFeeds } from './utils/parserUtils.js'
+
 import { checkCommonFeedPaths } from './utils/scraperUtils.js'
+import { parseHtmlForFeeds } from './utils/parserUtils.js'
+import { parseURLforRules } from './utils/ruleUtils.js'
 
 const USER_AGENT = 'RSSLookup/1.0.1 (https://github.com/mratmeyer/rsslookup)'
 
@@ -56,9 +59,11 @@ async function handleLookupRequest(request) {
       return errorResponse("Missing 'url' field in JSON body.", 400)
     }
 
+    let parsedURL;
+
     try {
       // Basic validation: can it be parsed as a URL?
-      new URL(targetUrl)
+      parsedURL = new URL(targetUrl)
     } catch (_) {
       return errorResponse('Invalid URL format provided.', 400)
     }
@@ -90,6 +95,9 @@ async function handleLookupRequest(request) {
 
     // Find feeds
     const foundFeeds = new Set()
+
+    // Parse URL for hardcoded rules
+    parseURLforRules(finalUrl, parsedURL.hostname, foundFeeds)
 
     // Parse HTML for <link> tags
     parseHtmlForFeeds(responseText, finalUrl, foundFeeds)
