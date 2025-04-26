@@ -26,7 +26,7 @@ export function parseURLforRules(fullURL, hostname, feedsSet) {
 
         // Rule: Reddit
         if (hostname === 'www.reddit.com' || hostname === 'reddit.com') {
-            if (path == '') { // If root domain, add the trailing slash
+            if (path == '/') { // If root domain, add the trailing slash
                 feedsSet.add(cleanedURL + "/.rss");
             } else {
                 feedsSet.add(cleanedURL + ".rss");
