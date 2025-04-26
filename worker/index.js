@@ -73,6 +73,12 @@ async function handleLookupRequest(request) {
     let responseText
     let finalUrl
 
+    // Find feeds
+    const foundFeeds = new Set()
+
+    // Parse URL for hardcoded rules
+    parseURLforRules(finalUrl, parsedURL.hostname, foundFeeds)
+
     try {
       const fetchOptions = {
         method: 'GET',
@@ -82,7 +88,7 @@ async function handleLookupRequest(request) {
       response = await fetch(targetUrl, fetchOptions)
       finalUrl = response.url // Could be redirected
 
-      if (!(response.ok || response.status === 304)) {
+      if (!(response.ok || response.status === 304 || foundFeeds.size > 0)) {
         return errorResponse(
           `Unable to access URL: Status ${response.status}`,
           502,
@@ -92,12 +98,6 @@ async function handleLookupRequest(request) {
     } catch (error) {
       return errorResponse(`Error fetching URL: ${error.message}`, 502)
     }
-
-    // Find feeds
-    const foundFeeds = new Set()
-
-    // Parse URL for hardcoded rules
-    parseURLforRules(finalUrl, parsedURL.hostname, foundFeeds)
 
     // Parse HTML for <link> tags
     parseHtmlForFeeds(responseText, finalUrl, foundFeeds)
