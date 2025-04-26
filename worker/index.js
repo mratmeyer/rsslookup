@@ -96,7 +96,9 @@ async function handleLookupRequest(request) {
       }
       responseText = await response.text()
     } catch (error) {
-      return errorResponse(`Error fetching URL: ${error.message}`, 502)
+      if (foundFeeds.size == 0) { // If rules found matches, then ignore the fetch error
+        return errorResponse(`Error fetching URL: ${error.message}`, 502)
+      }
     }
 
     // Parse HTML for <link> tags
