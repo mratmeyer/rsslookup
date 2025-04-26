@@ -77,7 +77,7 @@ async function handleLookupRequest(request) {
     const foundFeeds = new Set()
 
     // Parse URL for hardcoded rules
-    parseURLforRules(finalUrl, parsedURL.hostname, foundFeeds)
+    parseURLforRules(targetUrl, parsedURL.hostname, foundFeeds)
 
     try {
       const fetchOptions = {
