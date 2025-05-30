@@ -22,12 +22,23 @@ export default function Home() {
   const captchaRef = useRef(null);
 
   const handleSubmit = async (e) => {
-    window.plausible('lookup')
-
+    window.plausible('lookup');
     e.preventDefault();
+
+    // Format the URL to ensure it starts with "https://"
+    let formattedUrl = url.trim();
+    if (!formattedUrl.startsWith('https://')) {
+      // Remove any existing protocol for robustness
+      formattedUrl = formattedUrl.replace(/^(https?:\/\/)?/, '');
+      formattedUrl = 'https://' + formattedUrl;
+    }
+
+    setUrl(formattedUrl);
+
     setLoading(true);
     captchaRef.current.execute();
   };
+
 
    const handleTurnstileSuccess = useCallback((token) => {
     console.log("Turnstile verification successful, token received.");
