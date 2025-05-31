@@ -27,7 +27,7 @@ export function BookmarkletBanner() {
             className="underline hover:opacity-75 text-orange-700 hover:text-orange-900"
             target="_blank"
             rel="noopener noreferrer"
-            href="javascript:(function(){var currentUrl=window.location.href; var encodedUrl=encodeURIComponent(currentUrl); var targetUrl='https://www.rsslookup.com/?url='+encodedUrl; var newTab=window.open(targetUrl,'_blank'); if(newTab){newTab.focus();}else{alert('Please allow pop-ups for RSS Lookup bookmarklet.');}})();"
+            href="javascript:(function(){var currentUrl=window.location.href; var encodedUrl=encodeURIComponent(currentUrl); var targetUrl='https://www.rsslookup.com/?url='+encodedUrl; var newTab=window.open(targetUrl,'_blank','noreferrer'); if(newTab){newTab.focus();}else{alert('Please allow pop-ups for RSS Lookup bookmarklet.');}})();"
           >
             Find RSS Feeds
           </a>
