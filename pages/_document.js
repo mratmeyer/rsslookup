@@ -12,7 +12,7 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <link href="/fonts/style.css" rel="stylesheet" />
-          <script defer data-domain="rsslookup.com" data-api="https://eventeater.maxnet.work/api/event" src="https://eventeater.maxnet.work/js/script.js"></script>
+          <script defer data-domain="rsslookup.com" src="https://abacus.maxnet.work/js/script.tagged-events.js"></script>
           <script
             dangerouslySetInnerHTML={{
               __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`,
