@@ -63,6 +63,15 @@ export function parseURLforRules(fullURL, hostname, feedsSet) {
                 feedsSet.add(`${cleanedURL}/tags.atom`); // Tags feed
             }
         }
+        // Rule: Steam Games (Store Page)
+        else if (hostname === 'store.steampowered.com') {
+            // Matches /app/{app_id}/ and /news/app/{app_id}
+            const appIdMatch = path.match(/^\/(news\/)?app\/(\d+)(\/|$)/)
+            if (appIdMatch) {
+                const appId = appIdMatch[2];
+                feedsSet.add(`https://store.steampowered.com/feeds/news/app/${appId}/`)
+            }
+        }
         // Rule: Stack Exchange Sites
         else if (hostname.endsWith('stackexchange.com') || ['stackoverflow.com', 'serverfault.com', 'superuser.com', 'askubuntu.com', 'stackapps.com'].includes(hostname)) {
             if (!origin) {
