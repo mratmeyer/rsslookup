@@ -52,6 +52,24 @@ export function parseURLforRules(fullURL, hostname, feedsSet) {
                     feedsSet.add(`https://www.youtube.com/feeds/videos.xml?playlist_id=${playlistId}`);
                 }
             } catch (e) {}
+            
+            // Feeds for hidden playlist URLs (certain prefixes followed by a channel's id yields a playlist_id)
+            // Reference: https://wiki.archiveteam.org/index.php/YouTube/Technical_details
+            for (const url of feedsSet.values()){
+              try {
+                  const feedUrlObject = new URL(url);
+                  const channelIdDirty = feedUrlObject.searchParams.get('channel_id');
+                  if (!channelIdDirty || !channelIdDirty.startsWith('UC'))continue; 
+                  const channelId = channelIdDirty.substring(2);
+                  const custom_playlists = [ // Reference: https://stackoverflow.com/questions/71192605/how-do-i-get-youtube-shorts-from-youtube-api-data-v3/76602819#76602819
+                      'UULF', // Videos
+                      'UULV', // Live Streams
+                      'UUSH' // Shorts
+                  ];
+                  custom_playlists.map((prefix)=>feedsSet.add(`https://www.youtube.com/feeds/videos.xml?playlist_id=${prefix}${channelId}`))
+                  break;
+              } catch (e) {}
+            }
         }
         // Rule: GitHub Repositories (Commits & Releases)
         else if (hostname === 'github.com') {

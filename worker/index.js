@@ -76,9 +76,6 @@ async function handleLookupRequest(request) {
     // Find feeds
     const foundFeeds = new Set()
 
-    // Parse URL for hardcoded rules
-    parseURLforRules(targetUrl, parsedURL.hostname, foundFeeds)
-
     try {
       const fetchOptions = {
         method: 'GET',
@@ -108,6 +105,9 @@ async function handleLookupRequest(request) {
     if (foundFeeds.size === 0) {
       await checkCommonFeedPaths(finalUrl, foundFeeds, USER_AGENT)
     }
+
+     // Parse URL for hardcoded rules
+    parseURLforRules(targetUrl, parsedURL.hostname, foundFeeds)
 
     // Return final results
     if (foundFeeds.size === 0) {
