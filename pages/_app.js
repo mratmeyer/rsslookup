@@ -1,13 +1,13 @@
 import "tailwindcss/tailwind.css";
 // import { Inter } from 'next/font/google'
-import Fathom from "../components/Fathom";
+import Umami from "../components/Umami";
 
 // const inter = Inter({ subsets: ['latin'] })
 
 function MyApp({ Component, pageProps }) {
   return (
     <>
-      <Fathom />
+      <Umami />
       <Component {...pageProps} />
     </>
   );

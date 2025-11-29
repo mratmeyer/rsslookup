@@ -12,7 +12,7 @@ import { FeedResult } from "../components/FeedResult.js";
 import { Intro } from "../components/Intro.js";
 import { BookmarkletBanner } from "../components/BookmarkletNotification.js";
 import { toast, Toaster } from "react-hot-toast";
-import { trackEvent } from "../components/Fathom.js";
+import { trackEvent } from "../components/Umami.js";
 
 
 export default function Home() {
