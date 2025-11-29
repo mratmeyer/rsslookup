@@ -225,7 +225,7 @@ export default function Home() {
                         </h2>
                         <div className="space-y-3">
                           {response.result.map((feed) => (
-                            <FeedResult key={feed} feed={feed} />
+                            <FeedResult key={feed.url} feed={feed} />
                           ))}
                         </div>
                       </div>

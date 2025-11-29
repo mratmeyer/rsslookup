@@ -2,12 +2,21 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import toast from "react-hot-toast";
 
 export function FeedResult(props) {
+  const { url, title } = props.feed;
+
   return (
-    <CopyToClipboard text={props.feed} onCopy={() => toast.success("Copied!")}>
+    <CopyToClipboard text={url} onCopy={() => toast.success("Copied!")}>
       <div className="bg-white group flex items-center justify-between border border-slate-200 p-4 rounded-lg shadow-sm hover:border-slate-300 hover:shadow-md cursor-pointer transition duration-150 ease-in-out">
-        <span className="text-slate-700 text-sm font-medium truncate overflow-hidden mr-2">
-          {props.feed}
-        </span>
+        <div className="flex flex-col min-w-0 mr-2">
+          {title && (
+            <span className="text-slate-500 text-xs mb-1 truncate">
+              {title}
+            </span>
+          )}
+          <span className="text-slate-700 text-sm font-medium truncate">
+            {url}
+          </span>
+        </div>
         <button className="ml-2 flex-shrink-0 p-1 -mr-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
