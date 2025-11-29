@@ -3,6 +3,10 @@ name = "rsslookup"
 compatibility_date = "2025-03-25"
 compatibility_flags = ["nodejs_compat"]
 
+routes = [
+  { pattern = "www.rsslookup.com/*", zone_name = "rsslookup.com" }
+]
+
 [assets]
 directory = ".open-next/assets"
 binding = "ASSETS"
