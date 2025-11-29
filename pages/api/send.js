@@ -5,12 +5,20 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Get the real client IP
+  const clientIp = req.headers['x-forwarded-for']?.split(',')[0]?.trim() 
+    || req.headers['x-real-ip'] 
+    || req.socket?.remoteAddress 
+    || '';
+
   try {
     const response = await fetch(UMAMI_COLLECT_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'User-Agent': req.headers['user-agent'] || '',
+        'X-Forwarded-For': clientIp,
+        'X-Real-IP': clientIp,
       },
       body: JSON.stringify(req.body),
     });

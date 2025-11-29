@@ -1,5 +1,4 @@
 const UMAMI_SCRIPT_URL = 'https://cloud.umami.is/script.js';
-const UMAMI_ENDPOINT = 'https://cloud.umami.is';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -13,13 +12,7 @@ export default async function handler(req, res) {
       return res.status(response.status).json({ error: 'Failed to fetch script' });
     }
 
-    let script = await response.text();
-    
-    // Rewrite the Umami endpoint to use our proxy
-    script = script.replace(
-      new RegExp(UMAMI_ENDPOINT.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
-      ''
-    );
+    const script = await response.text();
 
     res.setHeader('Content-Type', 'application/javascript');
     res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache for 24 hours
