@@ -12,12 +12,6 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <link href="/fonts/style.css" rel="stylesheet" />
-          <script defer data-domain="rsslookup.com" src="https://abacus.maxnet.work/js/script.js"></script>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`,
-            }}
-          />
         </Head>
         <body className="bg-slate-50 text-slate-800">
           <div className="m-auto max-w-3xl p-6 lg:p-12 min-h-screen border-t-2 border-orange-500">

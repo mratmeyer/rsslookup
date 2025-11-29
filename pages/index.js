@@ -12,6 +12,7 @@ import { FeedResult } from "../components/FeedResult.js";
 import { Intro } from "../components/Intro.js";
 import { BookmarkletBanner } from "../components/BookmarkletNotification.js";
 import { toast, Toaster } from "react-hot-toast";
+import { trackEvent } from "../components/Fathom.js";
 
 
 export default function Home() {
@@ -22,7 +23,7 @@ export default function Home() {
   const captchaRef = useRef(null);
 
   const handleSubmit = async (e) => {
-    window.plausible('lookup')
+    trackEvent('lookup');
 
     e.preventDefault();
     setLoading(true);
@@ -50,30 +51,27 @@ export default function Home() {
     if (token && url) {
       setResponse(null);
 
-      const body = {
-        cloudflareToken: token,
-        url: url,
-      };
-
-      fetch(process.env.NEXT_PUBLIC_API_URL, {
+      fetch("/api/lookup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify({
+          url: url,
+          cloudflareToken: token,
+        }),
       })
         .then((response) => {
           if (!response.ok) {
-            return response.json().then((errData) => Promise.reject(errData)); // Try to parse error JSON
+            return response.json().then((errData) => Promise.reject(errData));
           }
-
           return response.json();
         })
         .then((data) => {
           setResponse(data);
         })
         .catch((error) => {
-          console.error("API Fetch Error:", error);
+          console.error("API Error:", error);
           setResponse({
             status: "error",
             message: error.message || "An error occurred while fetching data.",
@@ -107,7 +105,7 @@ export default function Home() {
     const urlParam = searchParams.get("url");
 
     if (urlParam) {
-      window.plausible('bookmarklet')
+      trackEvent('bookmarklet');
 
       if (
         captchaRef.current &&
