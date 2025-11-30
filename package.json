@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
+    "test": "vitest",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY=0x4AAAAAABDQq80FHjTvJcsr opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
@@ -31,6 +32,7 @@
     "postcss": "^8.4.8",
     "prettier": "^3.5.3",
     "tailwindcss": "^3.0.23",
+    "vitest": "^4.0.14",
     "wrangler": "^4.51.0"
   }
 }
