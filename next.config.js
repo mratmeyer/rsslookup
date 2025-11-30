@@ -9,7 +9,7 @@ const nextConfig = {
       },
       {
         source: '/u/api/send',
-        destination: 'https://cloud.umami.is/api/send',
+        destination: '/api/u/send',
       },
     ];
   },
