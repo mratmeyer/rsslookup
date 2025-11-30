@@ -4,8 +4,9 @@ const UmamiComponent = () => {
   return (
     <Script
       defer
-      src="https://cloud.umami.is/script.js"
+      src="/u/script.js"
       data-website-id="a8f55736-8547-49f3-a40d-dc2845f232e9"
+      data-host-url="/u"
     />
   );
 };
