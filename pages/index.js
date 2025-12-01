@@ -135,14 +135,14 @@ export default function Home() {
         toastOptions={{
           success: {
             style: {
-              background: '#F0FFF4',
-              color: '#2F855A',
+              background: 'rgb(var(--success))',
+              color: 'rgb(var(--success-foreground))',
             },
           },
           error: {
              style: {
-              background: '#FFF5F5',
-              color: '#C53030',
+              background: 'rgb(var(--destructive))',
+              color: 'rgb(var(--destructive-foreground))',
             },
           }
         }}

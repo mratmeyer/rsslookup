@@ -40,6 +40,9 @@
     /* URL Badge Specifics */
     --url-background: 248 250 252; /* slate-50 */
     --url-foreground: 30 41 59; /* slate-800 */
+
+    --success: 240 255 244; /* green-50-ish */
+    --success-foreground: 47 133 90; /* green-800-ish */
   }
 
   @media (prefers-color-scheme: dark) {
@@ -80,6 +83,9 @@
       /* Lighter than secondary (950) and card (900) */
       --url-background: 30 41 59; /* slate-800 */ 
       --url-foreground: 226 232 240; /* slate-200 - High contrast like original */
+
+      --success: 6 78 59; /* emerald-900 */
+      --success-foreground: 209 250 229; /* emerald-100 */
     }
   }
 }
