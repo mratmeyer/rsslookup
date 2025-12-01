@@ -1,5 +1,85 @@
 @tailwind base;
-
 @tailwind components;
-
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 248 250 252; /* slate-50 */
+    --foreground: 30 41 59; /* slate-800 */
+    --foreground-heading: 15 23 42; /* slate-900 */
+
+    --card: 255 255 255; /* white */
+    --card-foreground: 30 41 59; /* slate-800 */
+
+    --primary: 234 88 12; /* orange-600 */
+    --primary-foreground: 255 255 255; /* white */
+    --primary-hover: 194 65 12; /* orange-700 */
+
+    --secondary: 241 245 249; /* slate-100 */
+    --secondary-foreground: 30 41 59; /* slate-800 */
+
+    --muted: 100 116 139; /* slate-500 */
+    --muted-foreground: 71 85 105; /* slate-600 */
+
+    --border: 226 232 240; /* slate-200 */
+    --input: 255 255 255; /* white */
+    --input-border: 203 213 225; /* slate-300 */
+    
+    --destructive: 254 242 242; /* red-50 */
+    --destructive-foreground: 153 27 27; /* red-800 */
+    --destructive-border: 252 165 165; /* red-300 */
+    --destructive-icon: 220 38 38; /* red-600 */
+    
+    --banner-background: 255 247 237; /* orange-50 */
+    --banner-foreground: 124 45 18; /* orange-900 */
+    --banner-border: 255 237 213; /* orange-100 */
+
+    /* Additional helpful vars */
+    --ring: 249 115 22; /* orange-500 */
+    
+    /* URL Badge Specifics */
+    --url-background: 248 250 252; /* slate-50 */
+    --url-foreground: 30 41 59; /* slate-800 */
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: 2 6 23; /* slate-950 */
+      --foreground: 148 163 184; /* slate-400 */
+      --foreground-heading: 241 245 249; /* slate-100 */
+
+      --card: 15 23 42; /* slate-900 */
+      --card-foreground: 226 232 240; /* slate-200 */
+
+      --primary: 249 115 22; /* orange-500 */
+      --primary-foreground: 255 255 255; /* white */
+      --primary-hover: 234 88 12; /* orange-600 */
+
+      --secondary: 30 41 59; /* slate-800 */
+      --secondary-foreground: 226 232 240; /* slate-200 */
+
+      --muted: 51 65 85; /* slate-700 */
+      --muted-foreground: 148 163 184; /* slate-400 */
+
+      --border: 30 41 59; /* slate-800 */
+      --input: 15 23 42; /* slate-900 */
+      --input-border: 51 65 85; /* slate-700 */
+      
+      --destructive: 69 10 10; /* red-950 */
+      --destructive-foreground: 254 202 202; /* red-200 */
+      --destructive-border: 127 29 29; /* red-900 */
+      --destructive-icon: 248 113 113; /* red-400 */
+
+      --banner-background: 67 20 7; /* orange-950 */
+      --banner-foreground: 255 237 213; /* orange-100 */
+      --banner-border: 154 52 18; /* orange-800 */
+      
+      --ring: 249 115 22; /* orange-500 */
+
+      /* URL Badge Specifics - Dark Mode */
+      /* Lighter than secondary (950) and card (900) */
+      --url-background: 30 41 59; /* slate-800 */ 
+      --url-foreground: 226 232 240; /* slate-200 - High contrast like original */
+    }
+  }
+}

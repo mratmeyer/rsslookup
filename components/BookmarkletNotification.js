@@ -18,15 +18,15 @@ export function BookmarkletBanner() {
   if (!isVisible) return null;
 
   return (
-    <div className="bg-orange-50/50 border border-orange-100 text-orange-900 mb-12 shadow-sm rounded-xl p-6 pr-14 flex flex-col sm:flex-row items-start sm:items-center gap-6 relative">
+    <div className="bg-banner border border-banner-border text-banner-foreground mb-12 shadow-sm rounded-xl p-6 pr-14 flex flex-col sm:flex-row items-start sm:items-center gap-6 relative">
       <div className="flex-1">
-        <h3 className="font-bold text-lg mb-2 text-orange-900">New! Bookmarklet</h3>
-        <p className="text-base leading-relaxed text-orange-800">
+        <h3 className="font-bold text-lg mb-2 text-banner-foreground">New! Bookmarklet</h3>
+        <p className="text-base leading-relaxed text-banner-foreground/90">
           Drag the button below into your bookmarks bar to search RSS feeds on any site.
         </p>
       </div>
       <a
-        className="inline-flex items-center justify-center bg-white border border-orange-200 px-4 py-3 rounded-xl text-orange-700 font-bold text-sm hover:bg-orange-50 hover:border-orange-300 hover:shadow-md transition-all duration-200 shadow-sm cursor-grab active:cursor-grabbing w-full sm:w-auto whitespace-nowrap"
+        className="inline-flex items-center justify-center bg-card border border-banner-border px-4 py-3 rounded-xl text-primary font-bold text-sm hover:bg-primary/10 hover:border-primary/50 hover:shadow-md transition-all duration-200 shadow-sm cursor-grab active:cursor-grabbing w-full sm:w-auto whitespace-nowrap"
         target="_blank"
         rel="noopener noreferrer"
         href="javascript:(function(){var currentUrl=window.location.href; var encodedUrl=encodeURIComponent(currentUrl); var targetUrl='https://www.rsslookup.com/?url='+encodedUrl; var newTab=window.open(targetUrl,'_blank','noreferrer'); if(newTab){newTab.focus();}else{alert('Please allow pop-ups for RSS Lookup bookmarklet.');}})();"
@@ -36,7 +36,7 @@ export function BookmarkletBanner() {
       </a>
       <button
         onClick={handleDismiss}
-        className="absolute top-3 right-3 text-orange-300 hover:text-orange-500 transition-colors p-2 rounded-lg hover:bg-orange-100/50"
+        className="absolute top-3 right-3 text-banner-border hover:text-primary transition-colors p-2 rounded-lg hover:bg-primary/10"
         aria-label="Dismiss bookmarklet notification"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

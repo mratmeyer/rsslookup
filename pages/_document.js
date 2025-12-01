@@ -13,14 +13,14 @@ class MyDocument extends Document {
         <Head>
           <link href="/fonts/style.css" rel="stylesheet" />
         </Head>
-        <body className="bg-slate-50 text-slate-800">
+        <body className="bg-background text-foreground">
           <div className="m-auto max-w-3xl p-6 lg:p-12 min-h-screen">
             <div className="mb-12">
               <Main />
               <NextScript />
             </div>
 
-            <div className="text-center text-sm text-slate-500 font-medium space-y-2 pb-8">
+            <div className="text-center text-sm text-muted-foreground font-medium space-y-2 pb-8">
               <p>
                 Made with{" "}
                 <img
@@ -32,7 +32,7 @@ class MyDocument extends Document {
                 ></img>{" "}
                 in Atlanta by{" "}
                 <a
-                  className="hover:text-orange-600 transition-colors duration-200"
+                  className="hover:text-primary transition-colors duration-200"
                   target="_blank"
                   rel="noreferrer noopener"
                   href="https://www.maxratmeyer.com/?utm_source=rsslookup"
@@ -43,7 +43,7 @@ class MyDocument extends Document {
               <p>
                 View source on{" "}
                 <a
-                  className="hover:text-orange-600 transition-colors duration-200"
+                  className="hover:text-primary transition-colors duration-200"
                   target="_blank"
                   rel="noreferrer noopener"
                   href="https://github.com/mratmeyer/rsslookup"
@@ -53,7 +53,7 @@ class MyDocument extends Document {
               </p>
               <p>
                 <a
-                  className="hover:text-orange-600 transition-colors duration-200"
+                  className="hover:text-primary transition-colors duration-200"
                   target="_blank"
                   rel="noreferrer noopener"
                   href="https://share.maxnet.work/rsslookup/terms.pdf"
@@ -62,7 +62,7 @@ class MyDocument extends Document {
                 </a>
                 <span className="mx-2">&middot;</span>
                 <a
-                  className="hover:text-orange-600 transition-colors duration-200"
+                  className="hover:text-primary transition-colors duration-200"
                   target="_blank"
                   rel="noreferrer noopener"
                   href="https://share.maxnet.work/rsslookup/privacy.pdf"

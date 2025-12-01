@@ -1,10 +1,10 @@
 export function RSSInfo(props) {
   return (
-    <div className="mb-16 border-t border-slate-200 pt-12">
-      <h2 className="text-3xl font-bold mb-6 leading-tight text-slate-900 tracking-tight">
+    <div className="mb-16 border-t border-border pt-12">
+      <h2 className="text-3xl font-bold mb-6 leading-tight text-foreground-heading tracking-tight">
         What are RSS feeds?
       </h2>
-      <div className="prose prose-lg prose-slate text-slate-600">
+      <div className="prose prose-lg prose-slate text-muted-foreground">
         <p className="mb-4 leading-relaxed">
           The web is filled with dynamic content that is always changing. RSS
           feeds were created decades ago to standardize the way we pull new

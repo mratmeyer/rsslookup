@@ -164,14 +164,14 @@ export default function Home() {
               <input
                 type="url"
                 onChange={(e) => setUrl(e.target.value)}
-                className="p-4 text-lg rounded-xl border border-slate-300 w-full h-16 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none transition duration-200 ease-in-out shadow-sm"
+                className="p-4 text-lg rounded-xl border border-input-border bg-input text-foreground w-full h-16 focus:border-ring focus:ring-4 focus:ring-ring/20 outline-none transition duration-200 ease-in-out shadow-sm"
                 id="inputText"
                 name="inputText"
                 placeholder="Paste URL here..."
                 value={url}
               />
               <button
-                className="bg-orange-600 hover:bg-orange-700 w-full sm:w-32 h-16 flex-shrink-0 text-white text-lg shadow-md rounded-xl font-bold px-6 transition duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+                className="bg-primary hover:bg-primary-hover w-full sm:w-32 h-16 flex-shrink-0 text-primary-foreground text-lg shadow-md rounded-xl font-bold px-6 transition duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
                 disabled={loading}
               >
                 Search
@@ -195,7 +195,7 @@ export default function Home() {
               <div className="flex justify-center items-center my-10">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="animate-spin h-8 w-8 text-orange-600"
+                  className="animate-spin h-8 w-8 text-primary"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
@@ -220,7 +220,7 @@ export default function Home() {
                   <div className="pb-6">
                     {response.status == "200" ? (
                       <div>
-                        <h2 className="text-xl font-bold mt-8 mb-5 leading-tight text-slate-900">
+                        <h2 className="text-xl font-bold mt-8 mb-5 leading-tight text-foreground-heading">
                           Found {response.result.length} {response.result.length === 1 ? 'Feed' : 'Feeds'}
                         </h2>
                         <div className="space-y-4">

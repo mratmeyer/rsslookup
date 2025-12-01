@@ -1,4 +1,4 @@
-import "tailwindcss/tailwind.css";
+import "../styles/tailwind.css";
 // import { Inter } from 'next/font/google'
 import Umami from "../components/Umami";
 

@@ -13,10 +13,10 @@ export function Intro(props) {
           RSS Lookup
         </h1>
       </div>
-      <h2 className="!leading-tight text-slate-900 text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">
+      <h2 className="!leading-tight text-foreground-heading text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">
         A free, open-source tool to find RSS feeds on any URL
       </h2>
-      <p className="text-xl text-slate-600 font-normal mb-10 leading-relaxed max-w-2xl">
+      <p className="text-xl text-muted-foreground font-normal mb-10 leading-relaxed max-w-2xl">
         Can't find the RSS feed for a website or blog? Paste the URL below and
         we'll try and find it!
       </p>
