@@ -45,7 +45,7 @@
   @media (prefers-color-scheme: dark) {
     :root {
       --background: 2 6 23; /* slate-950 */
-      --foreground: 148 163 184; /* slate-400 */
+      --foreground: 226 232 240; /* slate-200 */
       --foreground-heading: 241 245 249; /* slate-100 */
 
       --card: 15 23 42; /* slate-900 */
@@ -58,8 +58,8 @@
       --secondary: 30 41 59; /* slate-800 */
       --secondary-foreground: 226 232 240; /* slate-200 */
 
-      --muted: 51 65 85; /* slate-700 */
-      --muted-foreground: 148 163 184; /* slate-400 */
+      --muted: 30 41 59; /* slate-800 */
+      --muted-foreground: 203 213 225; /* slate-300 */
 
       --border: 30 41 59; /* slate-800 */
       --input: 15 23 42; /* slate-900 */
@@ -70,9 +70,9 @@
       --destructive-border: 127 29 29; /* red-900 */
       --destructive-icon: 248 113 113; /* red-400 */
 
-      --banner-background: 67 20 7; /* orange-950 */
-      --banner-foreground: 255 237 213; /* orange-100 */
-      --banner-border: 154 52 18; /* orange-800 */
+      --banner-background: 30 41 59; /* slate-800 */
+      --banner-foreground: 253 186 116; /* orange-300 */
+      --banner-border: 51 65 85; /* slate-700 */
       
       --ring: 249 115 22; /* orange-500 */
 

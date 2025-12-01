@@ -36,7 +36,7 @@ export function BookmarkletBanner() {
       </a>
       <button
         onClick={handleDismiss}
-        className="absolute top-3 right-3 text-banner-border hover:text-primary transition-colors p-2 rounded-lg hover:bg-primary/10"
+        className="absolute top-3 right-3 text-banner-foreground/50 hover:text-primary transition-colors p-2 rounded-lg hover:bg-primary/10"
         aria-label="Dismiss bookmarklet notification"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
