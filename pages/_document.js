@@ -14,25 +14,25 @@ class MyDocument extends Document {
           <link href="/fonts/style.css" rel="stylesheet" />
         </Head>
         <body className="bg-slate-50 text-slate-800">
-          <div className="m-auto max-w-3xl p-6 lg:p-12 min-h-screen border-t-2 border-orange-500">
+          <div className="m-auto max-w-3xl p-6 lg:p-12 min-h-screen">
             <div className="mb-12">
               <Main />
               <NextScript />
             </div>
 
-            <div className="text-center text-sm text-slate-600 font-medium">
-              <p className="mb-1">
+            <div className="text-center text-sm text-slate-500 font-medium space-y-2 pb-8">
+              <p>
                 Made with{" "}
                 <img
                   src="/heart.png"
                   alt="Heart Emoji"
-                  className="inline align-middle"
-                  width="18"
-                  height="18"
+                  className="inline align-middle opacity-80"
+                  width="16"
+                  height="16"
                 ></img>{" "}
                 in Atlanta by{" "}
                 <a
-                  className="underline hover:text-orange-600 transition duration-150 ease-in-out"
+                  className="hover:text-orange-600 transition-colors duration-200"
                   target="_blank"
                   rel="noreferrer noopener"
                   href="https://www.maxratmeyer.com/?utm_source=rsslookup"
@@ -40,10 +40,10 @@ class MyDocument extends Document {
                   Max
                 </a>
               </p>
-              <p className="mb-1">
+              <p>
                 View source on{" "}
                 <a
-                  className="underline hover:text-orange-600 transition duration-150 ease-in-out"
+                  className="hover:text-orange-600 transition-colors duration-200"
                   target="_blank"
                   rel="noreferrer noopener"
                   href="https://github.com/mratmeyer/rsslookup"
@@ -53,16 +53,16 @@ class MyDocument extends Document {
               </p>
               <p>
                 <a
-                  className="underline hover:text-orange-600 transition duration-150 ease-in-out"
+                  className="hover:text-orange-600 transition-colors duration-200"
                   target="_blank"
                   rel="noreferrer noopener"
                   href="https://share.maxnet.work/rsslookup/terms.pdf"
                 >
                   Terms
                 </a>
-                &nbsp;
+                <span className="mx-2">&middot;</span>
                 <a
-                  className="underline hover:text-orange-600 transition duration-150 ease-in-out"
+                  className="hover:text-orange-600 transition-colors duration-200"
                   target="_blank"
                   rel="noreferrer noopener"
                   href="https://share.maxnet.work/rsslookup/privacy.pdf"

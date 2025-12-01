@@ -160,18 +160,18 @@ export default function Home() {
         <Intro />
         <div className="mb-12">
           <form onSubmit={handleSubmit}>
-            <div className="flex items-center">
+            <div className="flex flex-col sm:flex-row items-stretch gap-3">
               <input
                 type="url"
                 onChange={(e) => setUrl(e.target.value)}
-                className="p-3 py-3 rounded-lg border-solid border-2 border-slate-300 w-full focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition duration-150 ease-in-out"
+                className="p-4 text-lg rounded-xl border border-slate-300 w-full h-16 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none transition duration-200 ease-in-out shadow-sm"
                 id="inputText"
                 name="inputText"
                 placeholder="Paste URL here..."
                 value={url}
               />
               <button
-                className="bg-gradient-to-b to-orange-700 from-red-800 w-28 flex-shrink-0 text-white text-md shadow-sm rounded-lg font-semibold ml-2 px-4 py-3 transition duration-150 ease-in-out hover:opacity-85 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] active:brightness-95"
+                className="bg-orange-600 hover:bg-orange-700 w-full sm:w-32 h-16 flex-shrink-0 text-white text-lg shadow-md rounded-xl font-bold px-6 transition duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
                 disabled={loading}
               >
                 Search
@@ -220,10 +220,10 @@ export default function Home() {
                   <div className="pb-6">
                     {response.status == "200" ? (
                       <div>
-                        <h2 className="text-2xl font-semibold mt-6 mb-4 leading-tight">
-                          Results
+                        <h2 className="text-xl font-bold mt-8 mb-5 leading-tight text-slate-900">
+                          Found {response.result.length} {response.result.length === 1 ? 'Feed' : 'Feeds'}
                         </h2>
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                           {response.result.map((feed) => (
                             <FeedResult key={feed.url} feed={feed} />
                           ))}

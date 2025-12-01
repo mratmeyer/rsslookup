@@ -1,18 +1,20 @@
 export function RSSInfo(props) {
   return (
-    <div className="mb-12">
-      <h2 className="text-3xl font-semibold mb-5 leading-tight">
+    <div className="mb-16 border-t border-slate-200 pt-12">
+      <h2 className="text-3xl font-bold mb-6 leading-tight text-slate-900 tracking-tight">
         What are RSS feeds?
       </h2>
-      <p className="text-l mb-4 leading-relaxed text-slate-700">
-        The web is filled with dynamic content that is always changing. RSS
-        feeds were created decades ago to standardize the way we pull new
-        content like articles and blog posts from across the internet.
-      </p>
-      <p className="text-l leading-relaxed text-slate-700">
-        There's not much you can do with an RSS feed URL on its own, but there
-        are many RSS clients and services you can use.
-      </p>
+      <div className="prose prose-lg prose-slate text-slate-600">
+        <p className="mb-4 leading-relaxed">
+          The web is filled with dynamic content that is always changing. RSS
+          feeds were created decades ago to standardize the way we pull new
+          content like articles and blog posts from across the internet.
+        </p>
+        <p className="leading-relaxed">
+          There's not much you can do with an RSS feed URL on its own, but there
+          are many RSS clients and services you can use to subscribe to them.
+        </p>
+      </div>
     </div>
   );
 }
