@@ -47,41 +47,41 @@
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --background: 2 6 23; /* slate-950 */
+      --background: 15 23 42; /* slate-900 */
       --foreground: 226 232 240; /* slate-200 */
       --foreground-heading: 241 245 249; /* slate-100 */
 
-      --card: 15 23 42; /* slate-900 */
+      --card: 30 41 59; /* slate-800 */
       --card-foreground: 226 232 240; /* slate-200 */
 
       --primary: 249 115 22; /* orange-500 */
       --primary-foreground: 255 255 255; /* white */
       --primary-hover: 234 88 12; /* orange-600 */
 
-      --secondary: 30 41 59; /* slate-800 */
+      --secondary: 51 65 85; /* slate-700 */
       --secondary-foreground: 226 232 240; /* slate-200 */
 
-      --muted: 30 41 59; /* slate-800 */
+      --muted: 51 65 85; /* slate-700 */
       --muted-foreground: 203 213 225; /* slate-300 */
 
-      --border: 30 41 59; /* slate-800 */
-      --input: 15 23 42; /* slate-900 */
-      --input-border: 51 65 85; /* slate-700 */
+      --border: 51 65 85; /* slate-700 */
+      --input: 30 41 59; /* slate-800 */
+      --input-border: 71 85 105; /* slate-600 */
       
-      --destructive: 69 10 10; /* red-950 */
+      --destructive: 127 29 29; /* red-900 */
       --destructive-foreground: 254 202 202; /* red-200 */
-      --destructive-border: 127 29 29; /* red-900 */
+      --destructive-border: 153 27 27; /* red-800 */
       --destructive-icon: 248 113 113; /* red-400 */
 
-      --banner-background: 30 41 59; /* slate-800 */
+      --banner-background: 51 65 85; /* slate-700 */
       --banner-foreground: 253 186 116; /* orange-300 */
-      --banner-border: 51 65 85; /* slate-700 */
+      --banner-border: 71 85 105; /* slate-600 */
       
       --ring: 249 115 22; /* orange-500 */
 
       /* URL Badge Specifics - Dark Mode */
       /* Lighter than secondary (950) and card (900) */
-      --url-background: 30 41 59; /* slate-800 */ 
+      --url-background: 51 65 85; /* slate-700 */ 
       --url-foreground: 226 232 240; /* slate-200 - High contrast like original */
 
       --success: 6 78 59; /* emerald-900 */
