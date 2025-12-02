@@ -1,5 +1,9 @@
 import Script from 'next/script';
 
+/**
+ * Umami analytics script component.
+ * Use as default import for the script tag, use named import for trackEvent.
+ */
 const UmamiComponent = () => {
   return (
     <Script
@@ -13,10 +17,13 @@ const UmamiComponent = () => {
 
 export default UmamiComponent;
 
-// Export trackEvent for use in other components
-export const trackEvent = (eventName) => {
+/**
+ * Track a custom event in Umami analytics.
+ * @param {string} eventName - The name of the event to track.
+ */
+export function trackEvent(eventName) {
   if (typeof window !== 'undefined' && window.umami) {
     window.umami.track(eventName);
   }
-};
+}
 

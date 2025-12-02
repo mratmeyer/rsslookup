@@ -1,5 +1,4 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import Link from "next/link";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -23,13 +22,14 @@ class MyDocument extends Document {
             <div className="text-center text-sm text-muted-foreground font-medium space-y-2 pb-8">
               <p>
                 Made with{" "}
+                {/* Using <img> instead of next/image as _document.js doesn't support the Image component */}
                 <img
                   src="/heart.png"
                   alt="Heart Emoji"
                   className="inline align-middle opacity-80"
                   width="16"
                   height="16"
-                ></img>{" "}
+                />{" "}
                 in Atlanta by{" "}
                 <a
                   className="hover:text-primary transition-colors duration-200"

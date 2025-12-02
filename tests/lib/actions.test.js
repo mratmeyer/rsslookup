@@ -48,14 +48,14 @@ describe('lookupFeeds', () => {
     it('returns 400 when Cloudflare token is missing', async () => {
       const result = await lookupFeeds('https://example.com', null);
 
-      expect(result.status).toBe('400');
+      expect(result.status).toBe(400);
       expect(result.message).toBe('Cloudflare Turnstile token missing.');
     });
 
     it('returns 400 when Cloudflare token is empty string', async () => {
       const result = await lookupFeeds('https://example.com', '');
 
-      expect(result.status).toBe('400');
+      expect(result.status).toBe(400);
       expect(result.message).toBe('Cloudflare Turnstile token missing.');
     });
 
@@ -64,7 +64,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'invalid-token');
 
-      expect(result.status).toBe('403');
+      expect(result.status).toBe(403);
       expect(result.message).toBe('Cloudflare Turnstile verification failed.');
     });
 
@@ -73,7 +73,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds(null, 'valid-token');
 
-      expect(result.status).toBe('400');
+      expect(result.status).toBe(400);
       expect(result.message).toBe("Missing 'url' field.");
     });
 
@@ -82,7 +82,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('', 'valid-token');
 
-      expect(result.status).toBe('400');
+      expect(result.status).toBe(400);
       expect(result.message).toBe("Missing 'url' field.");
     });
 
@@ -91,7 +91,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('not-a-valid-url', 'valid-token');
 
-      expect(result.status).toBe('400');
+      expect(result.status).toBe(400);
       expect(result.message).toBe('Invalid URL format provided.');
     });
 
@@ -100,7 +100,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('example.com', 'valid-token');
 
-      expect(result.status).toBe('400');
+      expect(result.status).toBe(400);
       expect(result.message).toBe('Invalid URL format provided.');
     });
   });
@@ -121,7 +121,7 @@ describe('lookupFeeds', () => {
 
         const result = await lookupFeeds('https://www.reddit.com/', 'valid-token');
 
-        expect(result.status).toBe('200');
+        expect(result.status).toBe(200);
         expect(result.result).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
@@ -139,7 +139,7 @@ describe('lookupFeeds', () => {
 
         const result = await lookupFeeds('https://www.reddit.com/r/programming', 'valid-token');
 
-        expect(result.status).toBe('200');
+        expect(result.status).toBe(200);
         expect(result.result).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
@@ -157,7 +157,7 @@ describe('lookupFeeds', () => {
 
         const result = await lookupFeeds('https://reddit.com/r/javascript', 'valid-token');
 
-        expect(result.status).toBe('200');
+        expect(result.status).toBe(200);
         expect(result.result).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
@@ -177,7 +177,7 @@ describe('lookupFeeds', () => {
 
         const result = await lookupFeeds('https://www.youtube.com/channel/UCvjgEDvShRsAy4JhCp7ZnDw', 'valid-token');
 
-        expect(result.status).toBe('200');
+        expect(result.status).toBe(200);
         expect(result.result).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
@@ -195,7 +195,7 @@ describe('lookupFeeds', () => {
 
         const result = await lookupFeeds('https://www.youtube.com/user/testuser', 'valid-token');
 
-        expect(result.status).toBe('200');
+        expect(result.status).toBe(200);
         expect(result.result).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
@@ -213,7 +213,7 @@ describe('lookupFeeds', () => {
 
         const result = await lookupFeeds('https://www.youtube.com/playlist?list=PLtest123', 'valid-token');
 
-        expect(result.status).toBe('200');
+        expect(result.status).toBe(200);
         expect(result.result).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
@@ -233,7 +233,7 @@ describe('lookupFeeds', () => {
 
         const result = await lookupFeeds('https://github.com/facebook/react', 'valid-token');
 
-        expect(result.status).toBe('200');
+        expect(result.status).toBe(200);
         expect(result.result).toHaveLength(3);
         expect(result.result).toEqual(
           expect.arrayContaining([
@@ -261,7 +261,7 @@ describe('lookupFeeds', () => {
         const result = await lookupFeeds('https://github.com/facebook/react/issues', 'valid-token');
 
         // Should not find GitHub rule feeds since it's a subpage
-        expect(result.status).toBe('404');
+        expect(result.status).toBe(404);
       });
     });
 
@@ -273,7 +273,7 @@ describe('lookupFeeds', () => {
 
         const result = await lookupFeeds('https://stackoverflow.com/questions/tagged/javascript', 'valid-token');
 
-        expect(result.status).toBe('200');
+        expect(result.status).toBe(200);
         expect(result.result).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
@@ -291,7 +291,7 @@ describe('lookupFeeds', () => {
 
         const result = await lookupFeeds('https://stackoverflow.com/questions/12345/some-question', 'valid-token');
 
-        expect(result.status).toBe('200');
+        expect(result.status).toBe(200);
         expect(result.result).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
@@ -309,7 +309,7 @@ describe('lookupFeeds', () => {
 
         const result = await lookupFeeds('https://stackoverflow.com/users/12345/username', 'valid-token');
 
-        expect(result.status).toBe('200');
+        expect(result.status).toBe(200);
         expect(result.result).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
@@ -327,7 +327,7 @@ describe('lookupFeeds', () => {
 
         const result = await lookupFeeds('https://askubuntu.com/questions/tagged/networking', 'valid-token');
 
-        expect(result.status).toBe('200');
+        expect(result.status).toBe(200);
         expect(result.result).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
@@ -366,7 +366,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       expect(result.result).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
@@ -394,7 +394,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       expect(result.result).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
@@ -420,7 +420,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com/news/', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       expect(result.result).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
@@ -446,7 +446,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       expect(result.result).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
@@ -474,7 +474,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       expect(result.result).toHaveLength(3);
     });
 
@@ -494,7 +494,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('404');
+      expect(result.status).toBe(404);
     });
 
     it('ignores link tags without href attribute', async () => {
@@ -513,7 +513,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('404');
+      expect(result.status).toBe(404);
     });
   });
 
@@ -547,7 +547,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       expect(result.result).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
@@ -579,7 +579,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('404');
+      expect(result.status).toBe(404);
       expect(result.message).toBe('No feeds found on this site.');
     });
 
@@ -604,7 +604,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       expect(result.result).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
@@ -634,7 +634,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       // Should only fetch the main URL and the feed title, not common paths
       const calledUrls = fetchMock.mock.calls.map(call => call[0]);
       expect(calledUrls).not.toContain('https://example.com/feed.xml');
@@ -655,7 +655,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('502');
+      expect(result.status).toBe(502);
       expect(result.message).toContain('Error fetching URL');
     });
 
@@ -666,7 +666,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('502');
+      expect(result.status).toBe(502);
       expect(result.message).toContain('Unable to access URL: Status 403');
     });
 
@@ -677,7 +677,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('502');
+      expect(result.status).toBe(502);
       expect(result.message).toContain('Unable to access URL: Status 500');
     });
 
@@ -693,7 +693,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('404');
+      expect(result.status).toBe(404);
       expect(result.message).toBe('No feeds found on this site.');
     });
 
@@ -703,7 +703,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://github.com/facebook/react', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       expect(result.result).toHaveLength(3);
       expect(result.result).toEqual(
         expect.arrayContaining([
@@ -732,7 +732,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       // Feed URL should be resolved relative to the final redirected URL
       expect(result.result).toEqual(
         expect.arrayContaining([
@@ -763,7 +763,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
     });
   });
 
@@ -800,7 +800,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       expect(result.result[0].title).toBe('My Awesome Blog');
     });
 
@@ -827,7 +827,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       expect(result.result[0].title).toBe('Atom Blog Feed');
     });
 
@@ -838,7 +838,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://github.com/owner/repo', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       // Hardcoded titles should be used, not fetched
       expect(result.result).toEqual(
         expect.arrayContaining([
@@ -870,7 +870,7 @@ describe('lookupFeeds', () => {
 
       const result = await lookupFeeds('https://example.com', 'valid-token');
 
-      expect(result.status).toBe('200');
+      expect(result.status).toBe(200);
       expect(result.result[0].title).toBeNull();
     });
   });

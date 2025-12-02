@@ -1,13 +1,16 @@
-export function Intro(props) {
+import Image from "next/image";
+
+export function Intro() {
   return (
     <div className="mb-10">
       <div className="flex flex-row mb-8 items-center gap-4">
-        <img
+        <Image
           src="/icons/rsslookup_128.jpg"
           alt="RSS Lookup Icon"
           className="inline rounded-2xl shadow-md"
-          width="48"
-          height="48"
+          width={48}
+          height={48}
+          unoptimized
         />
         <h1 className="text-3xl bg-gradient-to-r from-orange-700 to-orange-500 dark:from-orange-500 dark:to-orange-400 bg-clip-text text-transparent font-bold tracking-tight">
           RSS Lookup

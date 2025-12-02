@@ -31,18 +31,15 @@ export default function Home() {
   };
 
    const handleTurnstileSuccess = useCallback((token) => {
-    console.log("Turnstile verification successful, token received.");
     setToken(token);
   }, []);
 
   const handleTurnstileError = () => {
-    console.error("Turnstile challenge failed to load or execute.");
     toast.error("Captcha challenge failed. Please try loading the page again.");
     setLoading(false);
   };
 
   const handleTurnstileExpire = () => {
-    console.warn("Turnstile challenge expired.");
     toast.error("Captcha challenge expired. Please submit again.");
     setLoading(false);
   };
@@ -71,7 +68,6 @@ export default function Home() {
           setResponse(data);
         })
         .catch((error) => {
-          console.error("API Error:", error);
           setResponse({
             status: "error",
             message: error.message || "An error occurred while fetching data.",
@@ -99,8 +95,6 @@ export default function Home() {
   }, []);
 
   const handleTurnstileLoad = useCallback(() => {
-    console.log("Turnstile widget loaded.");
-
     const searchParams = new URLSearchParams(window.location.search);
     const urlParam = searchParams.get("url");
 
@@ -111,18 +105,11 @@ export default function Home() {
         captchaRef.current &&
         typeof captchaRef.current.execute === "function"
       ) {
-        console.log(
-          "Turnstile ready and URL param present, executing automatically...",
-        );
-
         setResponse(null);
         setLoading(true);
 
         captchaRef.current.execute();
       } else {
-        console.error(
-          "Turnstile loaded, URL param found, but ref/execute invalid!",
-        );
         setLoading(false);
       }
     }
@@ -161,6 +148,7 @@ export default function Home() {
         <div className="mb-12">
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col sm:flex-row items-stretch gap-3">
+              <label htmlFor="inputText" className="sr-only">Enter URL to search</label>
               <input
                 type="url"
                 onChange={(e) => setUrl(e.target.value)}
@@ -198,6 +186,8 @@ export default function Home() {
                   className="animate-spin h-8 w-8 text-primary"
                   fill="none"
                   viewBox="0 0 24 24"
+                  aria-label="Loading"
+                  role="status"
                 >
                   <circle
                     className="opacity-25"
@@ -218,7 +208,7 @@ export default function Home() {
               <div>
                 {response != null ? (
                   <div className="pb-6">
-                    {response.status == "200" ? (
+                    {response.status === 200 ? (
                       <div>
                         <h2 className="text-xl font-bold mt-8 mb-5 leading-tight text-foreground-heading">
                           Found {response.result.length} {response.result.length === 1 ? 'Feed' : 'Feeds'}

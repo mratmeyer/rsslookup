@@ -1,4 +1,4 @@
-export function FAQ(props) {
+export function FAQ() {
   return (
     <div className="mb-20">
       <h2 className="text-3xl font-bold mb-10 leading-tight text-foreground-heading tracking-tight">

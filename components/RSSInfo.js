@@ -1,4 +1,4 @@
-export function RSSInfo(props) {
+export function RSSInfo() {
   return (
     <div className="mb-16 border-t border-border pt-12">
       <h2 className="text-3xl font-bold mb-6 leading-tight text-foreground-heading tracking-tight">

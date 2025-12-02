@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+
+const BOOKMARKLET_CODE = "javascript:(function(){var currentUrl=window.location.href; var encodedUrl=encodeURIComponent(currentUrl); var targetUrl='https://www.rsslookup.com/?url='+encodedUrl; var newTab=window.open(targetUrl,'_blank','noreferrer'); if(newTab){newTab.focus();}else{alert('Please allow pop-ups for RSS Lookup bookmarklet.');}})();";
 
 export function BookmarkletBanner() {
   const [isVisible, setIsVisible] = useState(true);
+  const linkRef = useRef(null);
 
   useEffect(() => {
     const dismissed = localStorage.getItem("bookmarklet-notif-04-07-2025");
@@ -9,6 +12,13 @@ export function BookmarkletBanner() {
       setIsVisible(false);
     }
   }, []);
+
+  // Set href dynamically to avoid React warning about javascript: URLs
+  useEffect(() => {
+    if (linkRef.current) {
+      linkRef.current.href = BOOKMARKLET_CODE;
+    }
+  }, [isVisible]);
 
   const handleDismiss = () => {
     setIsVisible(false);
@@ -26,10 +36,9 @@ export function BookmarkletBanner() {
         </p>
       </div>
       <a
+        ref={linkRef}
         className="inline-flex items-center justify-center bg-card border border-banner-border px-4 py-3 rounded-xl text-primary font-bold text-sm hover:bg-primary/10 hover:border-primary/50 hover:shadow-md transition-all duration-200 shadow-sm cursor-grab active:cursor-grabbing w-full sm:w-auto whitespace-nowrap"
-        target="_blank"
-        rel="noopener noreferrer"
-        href="javascript:(function(){var currentUrl=window.location.href; var encodedUrl=encodeURIComponent(currentUrl); var targetUrl='https://www.rsslookup.com/?url='+encodedUrl; var newTab=window.open(targetUrl,'_blank','noreferrer'); if(newTab){newTab.focus();}else{alert('Please allow pop-ups for RSS Lookup bookmarklet.');}})();"
+        href="#"
         onClick={(e) => e.preventDefault()}
       >
         Find RSS Feeds
