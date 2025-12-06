@@ -14,15 +14,14 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
-    "@marsidev/react-turnstile": "^1.1.0",
-    "@opennextjs/cloudflare": "^1.14.0",
-    "htmlparser2": "^8.0.1",
-    "next": "14.2",
+    "@marsidev/react-turnstile": "^1.3.1",
+    "@opennextjs/cloudflare": "^1.14.4",
+    "htmlparser2": "^10.0.0",
+    "next": "15.5.7",
     "next-seo": "^6.4.0",
-    "react": "18.2.0",
-    "react-copy-to-clipboard": "^5.1.0",
-    "react-dom": "18.2.0",
-    "react-hot-toast": "^2.5.2"
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "react-hot-toast": "^2.6.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",
