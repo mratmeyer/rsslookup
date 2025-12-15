@@ -1,4 +1,3 @@
-main = ".open-next/worker.js"
 name = "rsslookup"
 compatibility_date = "2025-03-25"
 compatibility_flags = ["nodejs_compat"]
@@ -8,6 +7,5 @@ routes = [
 ]
 
 [assets]
-directory = ".open-next/assets"
+directory = "dist/client"
 binding = "ASSETS"
-
