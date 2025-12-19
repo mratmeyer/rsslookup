@@ -55,9 +55,12 @@ export async function lookupFeeds(
   // Find feeds - Map of URL -> title (null if title needs to be fetched)
   const foundFeeds: FeedsMap = new Map();
 
-  let response;
-  let responseText;
-  let finalUrl;
+  // Run rules initially to handle "salvage" cases where fetch might fail
+  parseURLforRules(url, parsedURL.hostname, foundFeeds);
+
+  let response: Response | undefined;
+  let responseText: string | undefined;
+  let finalUrl: string | undefined;
 
   try {
     const fetchOptions = {
@@ -68,13 +71,17 @@ export async function lookupFeeds(
     response = await fetch(url, fetchOptions);
     finalUrl = response.url; // Could be redirected
 
-    if (!(response.ok || response.status === 304 || foundFeeds.size > 0)) {
-      return {
-        status: 502,
-        message: `Unable to access URL: Status ${response.status}`,
-      };
+    if (!(response.ok || response.status === 304)) {
+      if (foundFeeds.size === 0) {
+        return {
+          status: 502,
+          message: `Unable to access URL: Status ${response.status}`,
+        };
+      }
+      // If we have feeds from rules, fall through (responseText remains undefined)
+    } else {
+      responseText = await response.text();
     }
-    responseText = await response.text();
   } catch (error) {
     if (foundFeeds.size === 0) {
       // If rules found matches, then ignore the fetch error
@@ -95,7 +102,9 @@ export async function lookupFeeds(
     await checkCommonFeedPaths(finalUrl, foundFeeds, USER_AGENT);
   }
 
-  // Parse URL for hardcoded rules (these have pre-defined titles)
+  // Parse URL for hardcoded rules again
+  // This is necessary because some rules (like YouTube playlist discovery) depend on feeds
+  // that might have been discovered during HTML parsing.
   parseURLforRules(url, parsedURL.hostname, foundFeeds);
 
   // Return final results

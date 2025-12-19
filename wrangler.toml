@@ -1,6 +1,7 @@
 name = "rsslookup"
-compatibility_date = "2025-03-25"
+compatibility_date = "2025-04-01"
 compatibility_flags = ["nodejs_compat"]
+main = "worker/index.ts"
 
 routes = [
   { pattern = "www.rsslookup.com/*", zone_name = "rsslookup.com" }

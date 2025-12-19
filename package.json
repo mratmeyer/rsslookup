@@ -1,10 +1,11 @@
 {
   "name": "rsslookup",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "type": "module",
   "description": "A free tool to find the RSS feed for any website.",
   "scripts": {
     "dev": "vite",
+    "dev:wrangler": "vite build --mode wrangler && wrangler dev",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint src/",
@@ -13,10 +14,10 @@
     "deploy": "vite build && wrangler deploy"
   },
   "dependencies": {
-    "@cloudflare/vite-plugin": "^1.17.1",
+    "@cloudflare/vite-plugin": "^1.19.0",
     "@marsidev/react-turnstile": "^1.4.0",
-    "@tanstack/react-router": "^1.141.2",
-    "@tanstack/react-start": "^1.141.3",
+    "@tanstack/react-router": "^1.141.6",
+    "@tanstack/react-start": "^1.141.7",
     "@vitejs/plugin-react": "^5.1.2",
     "dotenv": "^17.2.3",
     "htmlparser2": "^10.0.0",

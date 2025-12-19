@@ -10,3 +10,12 @@ export interface LookupResponse {
 }
 
 export type FeedsMap = Map<string, string | null>;
+
+/**
+ * Cloudflare Worker Environment bindings
+ */
+export interface CloudflareEnv {
+  ASSETS: Fetcher;
+  CLOUDFLARE_TURNSTILE_SECRET?: string;
+  [key: string]: unknown;
+}

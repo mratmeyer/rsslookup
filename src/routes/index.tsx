@@ -11,10 +11,11 @@ import { RSSInfo } from "~/components/RSSInfo";
 import { FAQ } from "~/components/FAQ";
 import { trackEvent } from "~/components/Umami";
 import { lookupFeedsServerFn } from "~/lib/server-functions";
+import { config } from "~/lib/config";
 import type { LookupResponse } from "~/lib/types";
 
-// Turnstile site key - from environment variable
-const TURNSTILE_SITE_KEY = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY;
+// Turnstile site key - from config
+const TURNSTILE_SITE_KEY = config.turnstile.siteKey;
 
 export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>) => ({
