@@ -55,12 +55,9 @@ export async function lookupFeeds(
   // Find feeds - Map of URL -> title (null if title needs to be fetched)
   const foundFeeds: FeedsMap = new Map();
 
-  // Parse URL for hardcoded rules (these have pre-defined titles)
-  parseURLforRules(url, parsedURL.hostname, foundFeeds);
-
-  let response: Response | undefined;
-  let responseText: string | undefined;
-  let finalUrl: string | undefined;
+  let response;
+  let responseText;
+  let finalUrl;
 
   try {
     const fetchOptions = {
@@ -97,6 +94,9 @@ export async function lookupFeeds(
   if (foundFeeds.size === 0 && finalUrl) {
     await checkCommonFeedPaths(finalUrl, foundFeeds, USER_AGENT);
   }
+
+  // Parse URL for hardcoded rules (these have pre-defined titles)
+  parseURLforRules(url, parsedURL.hostname, foundFeeds);
 
   // Return final results
   if (foundFeeds.size === 0) {
