@@ -10,17 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as USendRouteImport } from './routes/u/send'
 import { Route as USplatRouteImport } from './routes/u/$'
+import { Route as UApiSendRouteImport } from './routes/u/api/send'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const USendRoute = USendRouteImport.update({
-  id: '/u/send',
-  path: '/u/send',
   getParentRoute: () => rootRouteImport,
 } as any)
 const USplatRoute = USplatRouteImport.update({
@@ -28,35 +23,40 @@ const USplatRoute = USplatRouteImport.update({
   path: '/u/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UApiSendRoute = UApiSendRouteImport.update({
+  id: '/u/api/send',
+  path: '/u/api/send',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/u/$': typeof USplatRoute
-  '/u/send': typeof USendRoute
+  '/u/api/send': typeof UApiSendRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/u/$': typeof USplatRoute
-  '/u/send': typeof USendRoute
+  '/u/api/send': typeof UApiSendRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/u/$': typeof USplatRoute
-  '/u/send': typeof USendRoute
+  '/u/api/send': typeof UApiSendRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/u/$' | '/u/send'
+  fullPaths: '/' | '/u/$' | '/u/api/send'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/u/$' | '/u/send'
-  id: '__root__' | '/' | '/u/$' | '/u/send'
+  to: '/' | '/u/$' | '/u/api/send'
+  id: '__root__' | '/' | '/u/$' | '/u/api/send'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   USplatRoute: typeof USplatRoute
-  USendRoute: typeof USendRoute
+  UApiSendRoute: typeof UApiSendRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -68,18 +68,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/u/send': {
-      id: '/u/send'
-      path: '/u/send'
-      fullPath: '/u/send'
-      preLoaderRoute: typeof USendRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/u/$': {
       id: '/u/$'
       path: '/u/$'
       fullPath: '/u/$'
       preLoaderRoute: typeof USplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/u/api/send': {
+      id: '/u/api/send'
+      path: '/u/api/send'
+      fullPath: '/u/api/send'
+      preLoaderRoute: typeof UApiSendRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -88,17 +88,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   USplatRoute: USplatRoute,
-  USendRoute: USendRoute,
+  UApiSendRoute: UApiSendRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
