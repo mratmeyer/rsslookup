@@ -84,6 +84,24 @@ describe("lookupFeeds", () => {
       expect(result.message).toBe("Cloudflare Turnstile verification failed.");
     });
 
+    it("passes client IP to Cloudflare verification when provided", async () => {
+      mockVerifyCloudflare.mockResolvedValue(true);
+      const testIP = "1.2.3.4";
+
+      await lookupFeeds(
+        "https://example.com",
+        "valid-token",
+        TEST_SECRET,
+        testIP
+      );
+
+      expect(mockVerifyCloudflare).toHaveBeenCalledWith(
+        "valid-token",
+        TEST_SECRET,
+        testIP
+      );
+    });
+
     it("returns 400 when URL is missing", async () => {
       mockVerifyCloudflare.mockResolvedValue(true);
 

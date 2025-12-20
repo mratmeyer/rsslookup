@@ -1,4 +1,4 @@
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, getWebRequest } from "@tanstack/react-start";
 import { lookupFeeds } from "./actions";
 import { config } from "./config";
 
@@ -14,6 +14,17 @@ export const lookupFeedsServerFn = createServerFn()
       };
     }
 
-    const result = await lookupFeeds(data.url, data.cloudflareToken, turnstileSecret);
+    const request = getWebRequest();
+    const clientIP =
+      request?.headers.get("cf-connecting-ip") ||
+      request?.headers.get("x-forwarded-for")?.split(",")[0] ||
+      null;
+
+    const result = await lookupFeeds(
+      data.url,
+      data.cloudflareToken,
+      turnstileSecret,
+      clientIP
+    );
     return result;
   });

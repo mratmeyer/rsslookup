@@ -10,12 +10,14 @@ import type { LookupResponse, FeedsMap } from "./types";
  * @param url - The URL to search for feeds.
  * @param cloudflareToken - The Cloudflare Turnstile token for verification.
  * @param turnstileSecret - The Cloudflare Turnstile secret key.
+ * @param ip - The IP address of the client (optional).
  * @returns The lookup response with feeds or error.
  */
 export async function lookupFeeds(
   url: string,
   cloudflareToken: string,
-  turnstileSecret: string
+  turnstileSecret: string,
+  ip: string | null = null
 ): Promise<LookupResponse> {
   // Validate captcha token
   if (!cloudflareToken) {
@@ -25,7 +27,7 @@ export async function lookupFeeds(
     };
   }
 
-  const isVerified = await verifyCloudflare(cloudflareToken, turnstileSecret);
+  const isVerified = await verifyCloudflare(cloudflareToken, turnstileSecret, ip);
   if (!isVerified) {
     return {
       status: 403,
