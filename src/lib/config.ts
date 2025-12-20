@@ -2,8 +2,14 @@
  * Central configuration for the application.
  * Accesses environment variables in a platform-agnostic way.
  */
-const getEnv = (key: string, fallback = ""): string => {
-  return (import.meta.env[key] || (typeof process !== "undefined" ? process.env[key] : fallback) || fallback) as string;
+const getEnv = (key: string): string => {
+  if (typeof import.meta !== "undefined" && import.meta.env?.[key]) {
+    return import.meta.env[key] as string;
+  }
+  if (typeof process !== "undefined" && process.env?.[key]) {
+    return process.env[key] as string;
+  }
+  return "";
 };
 
 /**
@@ -12,10 +18,12 @@ const getEnv = (key: string, fallback = ""): string => {
  */
 export const config = {
   turnstile: {
-    siteKey: getEnv("VITE_CLOUDFLARE_TURNSTILE_SITE_KEY"),
-    secret: getEnv("CLOUDFLARE_TURNSTILE_SECRET"),
+    get siteKey() {
+      return getEnv("VITE_CLOUDFLARE_TURNSTILE_SITE_KEY");
+    },
+    get secret() {
+      return getEnv("CLOUDFLARE_TURNSTILE_SECRET");
+    },
   },
-  isProd: import.meta.env.PROD,
-  isWrangler: import.meta.env.MODE === "wrangler",
 };
 

@@ -28,9 +28,3 @@ yarn-error.log*
 # tanstack start / vite
 *.timestamp*.js
 .vinxi
-
-# environment files
-.env
-.env.local
-.env.production
-.env*.local

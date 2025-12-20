@@ -14,6 +14,12 @@ export default {
     env: CloudflareEnv,
     ctx: ExecutionContext
   ): Promise<Response> {
+    // Polyfill process.env so it's available globally during the request
+    // @ts-ignore
+    globalThis.process = globalThis.process || {};
+    // @ts-ignore
+    globalThis.process.env = { ...globalThis.process.env, ...env };
+
     const url = new URL(request.url);
     const shortcut = handleURLShortcut(url.pathname);
     if (shortcut) return shortcut;
