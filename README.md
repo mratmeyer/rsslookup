@@ -14,18 +14,18 @@ RSS Lookup is a free, open-source tool designed to find the RSS feed associated 
 - **Popular Site Integration:** Rules to natively supports popular sites like YouTube, StackExchange, and Reddit.
 - **Abuse Prevention:** Integrates Cloudflare Turnstile to protect the backend service.
 - **User-Friendly Results:** Displays found feed URLs clearly and easily copiable.
-- **Modern Tech:** Built with Next.js with integrated API routes for a seamless full-stack experience.
+- **Modern Tech:** Built with TanStack Start, Vite, and Cloudflare Workers for a seamless full-stack experience at the edge.
 
 ## Project Structure
 
-This repository contains a full-stack Next.js application:
+This repository contains a full-stack application built with TanStack Start:
 
-- `pages/`: Next.js pages (frontend)
-- `components/`: React components
-- `lib/`: Server-side utilities for RSS feed lookup
-- `pages/api/`: API routes for server-side feed lookup
-- `styles/`: CSS and Tailwind styles
+- `src/routes/`: File-based routing (frontend & API)
+- `src/components/`: React components
+- `src/lib/`: Shared utilities and server functions
+- `src/styles/`: CSS and Tailwind styles
 - `public/`: Static assets
+- `worker/`: Cloudflare Worker entry point
 
 ## Getting Started
 
@@ -48,13 +48,13 @@ Follow these instructions to set up and run the project locally or deploy your o
 
 2.  **Environment Variables:**
 
-    Create a file named `.env.local` in the **root** directory. Add the following variables:
+    Create a file named `.env` in the **root** directory. Add the following variables:
 
     ```dotenv
-    # .env.local
+    # .env
 
     # Your Cloudflare Turnstile Site Key (public - used by frontend)
-    NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY=YOUR_CLOUDFLARE_TURNSTILE_SITE_KEY
+    VITE_CLOUDFLARE_TURNSTILE_SITE_KEY=YOUR_CLOUDFLARE_TURNSTILE_SITE_KEY
 
     # Your Cloudflare Turnstile Secret Key (server-side only)
     CLOUDFLARE_TURNSTILE_SECRET=YOUR_CLOUDFLARE_TURNSTILE_SECRET_KEY
@@ -76,6 +76,12 @@ npm run dev
 
 The application will be available at `http://localhost:3000` (or another port if 3000 is busy).
 
+**Preview with Wrangler (Cloudflare Worker environment):**
+
+```bash
+npm run dev:wrangler
+```
+
 ### Building & Deploying
 
 **Build the Application:**
@@ -84,21 +90,25 @@ The application will be available at `http://localhost:3000` (or another port if
 npm run build
 ```
 
-**Deployment Options:**
+**Deployment:**
 
-This Next.js application uses API routes and requires a server runtime. Recommended deployment platforms:
+This application is configured for Cloudflare Workers.
 
-- **Vercel:** Native Next.js support with automatic Server Action handling
-- **Cloudflare Pages:** Use `@cloudflare/next-on-pages` adapter for edge deployment
-- **Self-hosted:** Run with `npm start` on a Node.js server
+To deploy to Cloudflare:
 
-For Cloudflare Pages deployment, set the `CLOUDFLARE_TURNSTILE_SECRET` environment variable in your Cloudflare Pages dashboard settings.
+```bash
+npm run deploy
+```
+
+Make sure to set the `CLOUDFLARE_TURNSTILE_SECRET` and `VITE_CLOUDFLARE_TURNSTILE_SITE_KEY` environment variables in your Cloudflare dashboard/settings.
 
 ## Available Scripts
 
-- `npm run dev`: Starts the Next.js development server.
+- `npm run dev`: Starts the Vite development server.
+- `npm run dev:wrangler`: Builds and starts the development server with Wrangler.
 - `npm run build`: Builds the application for production.
-- `npm run start`: Starts a production server.
+- `npm run preview`: Locally preview the production build.
+- `npm run deploy`: Builds and deploys the application to Cloudflare Workers.
 - `npm run lint`: Runs ESLint to check for code style issues.
 - `npm run format`: Runs Prettier to format the code.
 
