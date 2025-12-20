@@ -1,4 +1,5 @@
-import { createServerFn, getWebRequest } from "@tanstack/react-start";
+import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import { lookupFeeds } from "./actions";
 import { config } from "./config";
 
@@ -14,7 +15,7 @@ export const lookupFeedsServerFn = createServerFn()
       };
     }
 
-    const request = getWebRequest();
+    const request = getRequest();
     const clientIP =
       request?.headers.get("cf-connecting-ip") ||
       request?.headers.get("x-forwarded-for")?.split(",")[0] ||
