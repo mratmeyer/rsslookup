@@ -23,7 +23,6 @@ export function FeedResult({ feed }: FeedResultProps) {
     try {
       await navigator.clipboard.writeText(url);
       setIsCopied(true);
-      toast.success("Copied!");
     } catch {
       toast.error("Failed to copy");
     }
