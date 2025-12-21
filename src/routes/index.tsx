@@ -149,17 +149,40 @@ function HomePage() {
               <input
                 type="url"
                 onChange={(e) => setUrl(e.target.value)}
-                className="p-4 text-lg rounded-xl border border-input-border bg-input text-foreground w-full h-16 focus:border-ring focus:ring-4 focus:ring-ring/20 outline-none transition duration-200 ease-in-out shadow-sm"
+                className="p-4 text-lg rounded-2xl border border-input-border bg-input text-foreground w-full h-16 focus:border-ring focus:ring-4 focus:ring-ring/20 outline-none transition duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50"
                 id="inputText"
                 name="inputText"
                 placeholder="Paste URL here..."
                 value={url}
               />
               <button
-                className="bg-primary hover:bg-primary-hover w-full sm:w-32 h-16 flex-shrink-0 text-primary-foreground text-lg shadow-md rounded-xl font-bold px-6 transition duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+                className="bg-primary hover:bg-primary-hover w-full sm:w-36 h-16 flex-shrink-0 text-primary-foreground text-lg shadow-md rounded-2xl font-bold px-6 transition-all duration-200 ease-in-out disabled:opacity-80 disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2"
                 disabled={loading}
               >
-                Search
+                {loading ? (
+                  <svg
+                    className="animate-spin h-6 w-6 text-current"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                ) : (
+                  "Search"
+                )}
               </button>
             </div>
             <div className="absolute top-full left-0 w-full flex justify-center mt-4 z-50">
@@ -178,56 +201,29 @@ function HomePage() {
             </div>
           </form>
           <div className="mt-6">
-            {loading ? (
-              <div className="flex justify-center items-center my-10">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="animate-spin h-8 w-8 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  aria-label="Loading"
-                  role="status"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              </div>
-            ) : (
-              <div>
-                {response != null ? (
-                  <div className="pb-6">
-                    {response.status === 200 && response.result ? (
-                      <div>
-                        <h2 className="text-xl font-bold mt-8 mb-5 leading-tight text-foreground-heading">
-                          Found {response.result.length}{" "}
-                          {response.result.length === 1 ? "Feed" : "Feeds"}
-                        </h2>
-                        <div className="space-y-4">
-                          {response.result.map((feed) => (
-                            <FeedResult key={feed.url} feed={feed} />
-                          ))}
-                        </div>
+            <div>
+              {response != null ? (
+                <div className="pb-6">
+                  {response.status === 200 && response.result ? (
+                    <div>
+                      <h2 className="text-xl font-bold mt-8 mb-5 leading-tight text-foreground-heading">
+                        Found {response.result.length}{" "}
+                        {response.result.length === 1 ? "Feed" : "Feeds"}
+                      </h2>
+                      <div className="space-y-4">
+                        {response.result.map((feed) => (
+                          <FeedResult key={feed.url} feed={feed} />
+                        ))}
                       </div>
-                    ) : (
-                      <ErrorMessage message={response.message || "Unknown error"} />
-                    )}
-                  </div>
-                ) : (
-                  <div className="h-1"></div>
-                )}
-              </div>
-            )}
+                    </div>
+                  ) : (
+                    <ErrorMessage message={response.message || "Unknown error"} />
+                  )}
+                </div>
+              ) : (
+                <div className="h-1"></div>
+              )}
+            </div>
           </div>
         </div>
         <RSSInfo />

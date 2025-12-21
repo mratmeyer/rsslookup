@@ -20,7 +20,7 @@ export function FeedResult({ feed }: FeedResultProps) {
   return (
     <div
       onClick={handleCopy}
-      className="bg-card group flex items-center justify-between border border-border p-5 rounded-xl shadow-sm hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 cursor-pointer transition duration-200 ease-in-out"
+      className="bg-card group flex items-center justify-between border border-border p-5 rounded-2xl shadow-sm hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 cursor-pointer transition duration-200 ease-in-out"
     >
       <div className="flex flex-col min-w-0 mr-4">
         {title && (

@@ -29,7 +29,7 @@ export function BookmarkletBanner() {
   if (!isVisible) return null;
 
   return (
-    <div className="bg-banner border border-banner-border text-banner-foreground mb-12 shadow-sm rounded-xl p-6 pr-14 flex flex-col sm:flex-row items-start sm:items-center gap-6 relative">
+    <div className="bg-banner border border-banner-border text-banner-foreground mb-12 shadow-sm rounded-2xl p-6 pr-14 flex flex-col sm:flex-row items-start sm:items-center gap-6 relative">
       <div className="flex-1">
         <h3 className="font-bold text-lg mb-2 text-banner-foreground">
           New! Bookmarklet
@@ -49,7 +49,7 @@ export function BookmarkletBanner() {
       </a>
       <button
         onClick={handleDismiss}
-        className="absolute top-3 right-3 text-banner-foreground/50 hover:text-primary transition-colors p-2 rounded-lg hover:bg-primary/10"
+        className="absolute top-3 right-3 text-banner-foreground/50 hover:text-primary transition-colors p-2 rounded-full hover:bg-primary/10"
         aria-label="Dismiss bookmarklet notification"
       >
         <svg
