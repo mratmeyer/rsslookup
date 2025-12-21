@@ -156,7 +156,7 @@ function HomePage() {
                 value={url}
               />
               <button
-                className="bg-primary hover:bg-primary-hover disabled:hover:bg-primary w-full sm:w-36 h-16 flex-shrink-0 text-primary-foreground text-lg shadow-md rounded-2xl font-bold px-6 transition-all duration-200 ease-in-out disabled:opacity-80 disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2"
+                className="bg-primary [@media(hover:hover)]:hover:bg-primary-hover disabled:hover:bg-primary w-full sm:w-36 h-16 flex-shrink-0 text-primary-foreground text-lg shadow-md rounded-2xl font-bold px-6 transition-all duration-200 ease-in-out disabled:opacity-80 disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2"
                 disabled={loading}
               >
                 {loading ? (
