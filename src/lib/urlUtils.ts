@@ -17,6 +17,11 @@ export function cleanURL(urlString: string): string {
  * @returns A redirect response if the path matches, otherwise null.
  */
 export function handleURLShortcut(pathname: string): Response | null {
+  // // Must start with /http to be a shortcut candidate
+  if (!pathname || !pathname.toLowerCase().startsWith("/http")) {
+    return null;
+  }
+
   // Match /http:/... or /https:/... (handles normalization)
   const match = pathname.match(/^\/(https?):\/+(.*)/i);
 
