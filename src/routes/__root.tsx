@@ -22,6 +22,13 @@ export const Route = createRootRoute({
       { rel: "icon", href: "/favicon.ico" },
       { rel: "stylesheet", href: appCss },
       { rel: "stylesheet", href: "/fonts/style.css" },
+      {
+        rel: "preload",
+        href: "/fonts/inter-v2-latin-400-600-700.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
+      },
     ],
     scripts: [
       {
