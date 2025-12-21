@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import type { FeedResult as FeedResultType } from "~/lib/types";
 
@@ -7,10 +8,21 @@ interface FeedResultProps {
 
 export function FeedResult({ feed }: FeedResultProps) {
   const { url, title } = feed;
+  const [isCopied, setIsCopied] = useState(false);
+
+  useEffect(() => {
+    if (isCopied) {
+      const timer = setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isCopied]);
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(url);
+      setIsCopied(true);
       toast.success("Copied!");
     } catch {
       toast.error("Failed to copy");
@@ -32,10 +44,12 @@ export function FeedResult({ feed }: FeedResultProps) {
           {url}
         </span>
       </div>
-      <button className="ml-2 flex-shrink-0 p-2 bg-secondary rounded-lg group-hover:bg-primary/10 transition-colors duration-200">
+      <button className="ml-2 flex-shrink-0 p-2 bg-secondary rounded-lg group-hover:bg-primary/10 transition-colors duration-200 relative w-9 h-9 flex items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 stroke-muted-foreground group-hover:stroke-primary transition duration-200 ease-in-out"
+          className={`h-5 w-5 stroke-muted-foreground group-hover:stroke-primary transition-all duration-200 ease-in-out absolute ${
+            isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
+          }`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -45,6 +59,22 @@ export function FeedResult({ feed }: FeedResultProps) {
             strokeLinecap="round"
             strokeLinejoin="round"
             d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+          />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={`h-5 w-5 stroke-green-500 transition-all duration-200 ease-in-out absolute ${
+            isCopied ? "scale-100 opacity-100" : "scale-0 opacity-0"
+          }`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M5 13l4 4L19 7"
           />
         </svg>
       </button>
