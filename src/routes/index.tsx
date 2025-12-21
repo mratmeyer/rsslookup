@@ -141,7 +141,7 @@ function HomePage() {
         <BookmarkletBanner />
         <Intro />
         <div className="mb-12">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="relative">
             <div className="flex flex-col sm:flex-row items-stretch gap-3">
               <label htmlFor="inputText" className="sr-only">
                 Enter URL to search
@@ -162,18 +162,20 @@ function HomePage() {
                 Search
               </button>
             </div>
-            <Turnstile
-              ref={captchaRef}
-              siteKey={TURNSTILE_SITE_KEY}
-              onSuccess={handleTurnstileSuccess}
-              onError={handleTurnstileError}
-              onExpire={handleTurnstileExpire}
-              onWidgetLoad={handleTurnstileLoad}
-              options={{
-                execution: "execute",
-                appearance: "interaction-only",
-              }}
-            />
+            <div className="absolute top-full left-0 w-full flex justify-center mt-4 z-50">
+              <Turnstile
+                ref={captchaRef}
+                siteKey={TURNSTILE_SITE_KEY}
+                onSuccess={handleTurnstileSuccess}
+                onError={handleTurnstileError}
+                onExpire={handleTurnstileExpire}
+                onWidgetLoad={handleTurnstileLoad}
+                options={{
+                  execution: "execute",
+                  appearance: "interaction-only",
+                }}
+              />
+            </div>
           </form>
           <div className="mt-6">
             {loading ? (
