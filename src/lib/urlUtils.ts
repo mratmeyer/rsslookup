@@ -35,13 +35,8 @@ export function normalizeURLParamEncoding(urlString: string): string | null {
     return null;
   }
 
-  // Re-encode using URLSearchParams (which properly encodes special characters)
-  const normalizedParams = new URLSearchParams();
-  for (const [key, value] of params.entries()) {
-    normalizedParams.set(key, value);
-  }
-  const normalizedQuery = normalizedParams.toString();
-  const normalizedUrl = `${path}?${normalizedQuery}`;
+  // Re-encode using URLSearchParams.toString() which properly encodes special characters
+  const normalizedUrl = `${path}?${params.toString()}`;
 
   // Only return if the encoding actually changed
   if (normalizedUrl !== urlString) {
@@ -57,7 +52,7 @@ export function normalizeURLParamEncoding(urlString: string): string | null {
  * @returns A redirect response if the path matches, otherwise null.
  */
 export function handleURLShortcut(pathname: string): Response | null {
-  // // Must start with /http to be a shortcut candidate
+  // Must start with /http to be a shortcut candidate
   if (!pathname || !pathname.toLowerCase().startsWith("/http")) {
     return null;
   }
