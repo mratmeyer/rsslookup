@@ -18,9 +18,10 @@ import type { LookupResponse } from "~/lib/types";
 const TURNSTILE_SITE_KEY = config.turnstile.siteKey;
 
 export const Route = createFileRoute("/")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    url: (search.url as string) || undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    // Pass through search params as-is to prevent router normalization loops
+    return search as { url?: string };
+  },
 
   head: () => ({
     meta: [
@@ -106,8 +107,18 @@ function HomePage() {
     }
   }, [urlParam]);
 
-  const handleTurnstileLoad = useCallback(() => {
+  const hasAutoExecutedRef = useRef(false);
+
+  useEffect(() => {
+    // Reset auto-execution flag when urlParam changes to a new value
     if (urlParam) {
+      hasAutoExecutedRef.current = false;
+    }
+  }, [urlParam]);
+
+  const handleTurnstileLoad = useCallback(() => {
+    if (urlParam && !hasAutoExecutedRef.current) {
+      hasAutoExecutedRef.current = true;
       trackEvent("bookmarklet");
 
       if (
