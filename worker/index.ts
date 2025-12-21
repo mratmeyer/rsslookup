@@ -5,7 +5,7 @@
 
 /// <reference types="@cloudflare/workers-types" />
 
-import { handleURLShortcut } from "../src/lib/urlUtils";
+import { handleURLShortcut, normalizeURLParamEncoding } from "../src/lib/urlUtils";
 import type { CloudflareEnv } from "../src/lib/types";
 
 export default {
@@ -21,8 +21,19 @@ export default {
     globalThis.process.env = { ...globalThis.process.env, ...env };
 
     const url = new URL(request.url);
+    
+    // Handle URL shortcut redirects (e.g., /https://example.com -> /?url=...)
     const shortcut = handleURLShortcut(url.pathname);
     if (shortcut) return shortcut;
+
+    // Normalize URL param encoding to prevent TanStack Router redirect loops
+    const normalizedUrl = normalizeURLParamEncoding(url.pathname + url.search);
+    if (normalizedUrl) {
+      return new Response(null, {
+        status: 302,
+        headers: { Location: normalizedUrl },
+      });
+    }
 
     // Import the bundled TanStack Start handler
     const { default: handler } = await import(
