@@ -31,7 +31,7 @@ export function FeedResult({ feed }: FeedResultProps) {
   return (
     <div
       onClick={handleCopy}
-      className="bg-card group flex items-center justify-between border border-border/50 p-5 rounded-3xl shadow-sm [@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:shadow-md cursor-pointer transition duration-200 ease-in-out"
+      className="bg-card group flex items-center justify-between border border-border/50 p-5 rounded-3xl shadow-sm [@media(any-hover:hover)]:hover:border-border [@media(any-hover:hover)]:hover:shadow-md active:border-border active:shadow-md cursor-pointer transition duration-200 ease-in-out"
     >
       <div className="flex flex-col min-w-0 mr-4">
         {title && (
@@ -39,7 +39,7 @@ export function FeedResult({ feed }: FeedResultProps) {
             {title}
           </span>
         )}
-        <span className="text-url-foreground text-base font-medium truncate font-mono bg-url px-3 py-1 rounded-full border border-transparent [@media(hover:hover)]:group-hover:border-border transition-colors duration-200">
+        <span className="text-url-foreground text-base font-medium truncate font-mono bg-url px-3 py-1 rounded-full border border-transparent [@media(any-hover:hover)]:group-hover:border-border group-active:border-border transition-colors duration-200">
           {url}
         </span>
       </div>
@@ -47,12 +47,12 @@ export function FeedResult({ feed }: FeedResultProps) {
         className={`ml-2 flex-shrink-0 p-2 rounded-xl transition-all duration-300 relative w-9 h-9 flex items-center justify-center ${
           isCopied
             ? "bg-green-500/20"
-            : "bg-secondary [@media(hover:hover)]:group-hover:bg-primary/20"
+            : "bg-secondary [@media(any-hover:hover)]:group-hover:bg-primary/20 group-active:bg-primary/20"
         }`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-5 w-5 stroke-muted-foreground [@media(hover:hover)]:group-hover:stroke-primary transition-all duration-200 ease-in-out absolute ${
+          className={`h-5 w-5 stroke-muted-foreground [@media(any-hover:hover)]:group-hover:stroke-primary group-active:stroke-primary transition-all duration-200 ease-in-out absolute ${
             isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
           }`}
           fill="none"
