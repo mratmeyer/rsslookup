@@ -38,7 +38,7 @@ export function Navbar() {
           onMouseUp={() => setText("Bookmarklet")}
           onMouseLeave={() => setText("Bookmarklet")}
           onClick={(e) => e.preventDefault()}
-          className="text-[13px] font-bold tracking-tight text-muted-foreground hover:text-primary bg-secondary hover:bg-secondary/80 border border-transparent hover:border-border/50 px-4 py-2 rounded-full transition-all duration-200 cursor-grab active:cursor-grabbing shadow-sm hover:shadow-md active:shadow-none"
+          className="text-[13px] font-bold tracking-tight text-muted-foreground hover:text-primary bg-slate-200/80 dark:bg-secondary hover:bg-slate-200 dark:hover:bg-secondary/80 border border-transparent hover:border-border/50 px-4 py-2 rounded-full transition-all duration-200 cursor-grab active:cursor-grabbing shadow-sm hover:shadow-md active:shadow-none"
         >
           {text}
         </a>

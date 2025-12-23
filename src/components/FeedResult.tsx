@@ -31,7 +31,7 @@ export function FeedResult({ feed }: FeedResultProps) {
   return (
     <div
       onClick={handleCopy}
-      className="bg-card group flex items-center justify-between border border-border/50 p-5 rounded-3xl shadow-sm [@media(any-hover:hover)]:hover:border-border [@media(any-hover:hover)]:hover:shadow-md active:border-border active:shadow-md cursor-pointer transition duration-200 ease-in-out"
+      className="bg-white/90 dark:bg-card group flex items-center justify-between border border-border/50 p-5 rounded-3xl shadow-sm [@media(any-hover:hover)]:hover:border-border [@media(any-hover:hover)]:hover:shadow-md active:border-border active:shadow-md cursor-pointer transition duration-200 ease-in-out"
     >
       <div className="flex flex-col min-w-0 mr-4">
         {title && (
@@ -39,7 +39,7 @@ export function FeedResult({ feed }: FeedResultProps) {
             {title}
           </span>
         )}
-        <span className="text-url-foreground text-base font-medium truncate font-mono bg-url px-3 py-1 rounded-full border border-transparent [@media(any-hover:hover)]:group-hover:border-border group-active:border-border transition-colors duration-200">
+        <span className="text-url-foreground text-base font-medium truncate font-mono bg-url px-3 py-1 rounded-full transition-colors duration-200">
           {url}
         </span>
       </div>

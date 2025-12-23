@@ -138,7 +138,7 @@ function HomePage() {
     <div>
       <div id="app">
         <Intro />
-        <div className="mb-12 bg-secondary/40 dark:bg-white/[0.02] p-2 sm:p-3 rounded-[2.5rem] border border-border/50">
+        <div className="mb-12 bg-secondary/80 dark:bg-white/[0.02] p-2 sm:p-3 rounded-[2.5rem] border border-border/50">
           <form onSubmit={handleSubmit} className="relative group/form">
             <div className="flex flex-col sm:flex-row items-stretch gap-2">
               <div className="relative flex-grow">
