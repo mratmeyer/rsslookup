@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "@tanstack/react-router";
 
 const BOOKMARKLET_CODE =
   "javascript:(function(){var currentUrl=window.location.href; var encodedUrl=encodeURIComponent(currentUrl); var targetUrl='https://www.rsslookup.com/?url='+encodedUrl; window.open(targetUrl,'_blank','noreferrer');})();";
@@ -15,8 +16,21 @@ export function Navbar() {
   }, []);
 
   return (
-    <nav className="flex justify-end mb-12 py-4">
-      <div className="relative group">
+    <nav className="flex items-center justify-between mb-12 py-6">
+      <Link to="/" className="flex items-center gap-3 group/logo">
+        <img
+          src="/icons/rsslookup_128.jpg"
+          alt="RSS Lookup Icon"
+          className="rounded-xl shadow-sm group-hover/logo:shadow-md transition-shadow duration-200"
+          width={32}
+          height={32}
+        />
+        <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-orange-700 to-orange-500 dark:from-orange-500 dark:to-orange-400 bg-clip-text text-transparent">
+          RSS Lookup
+        </span>
+      </Link>
+
+      <div className="relative group/bookmarklet">
         <a
           ref={linkRef}
           href="#"
@@ -24,11 +38,11 @@ export function Navbar() {
           onMouseUp={() => setText("Bookmarklet")}
           onMouseLeave={() => setText("Bookmarklet")}
           onClick={(e) => e.preventDefault()}
-          className="text-[13px] font-bold tracking-tight text-muted-foreground hover:text-primary bg-secondary/50 hover:bg-secondary border border-transparent hover:border-border/50 px-4 py-2 rounded-full transition-all duration-200 cursor-grab active:cursor-grabbing shadow-sm hover:shadow-md active:shadow-none"
+          className="text-[13px] font-bold tracking-tight text-muted-foreground hover:text-primary bg-secondary hover:bg-secondary/80 border border-transparent hover:border-border/50 px-4 py-2 rounded-full transition-all duration-200 cursor-grab active:cursor-grabbing shadow-sm hover:shadow-md active:shadow-none"
         >
           {text}
         </a>
-        <div className="absolute right-0 top-full mt-3 w-64 p-4 bg-card border border-border rounded-2xl shadow-xl opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none z-50 text-xs leading-relaxed text-center text-muted-foreground">
+        <div className="absolute right-0 top-full mt-3 w-64 p-4 bg-card border border-border rounded-2xl shadow-xl opacity-0 translate-y-2 group-hover/bookmarklet:opacity-100 group-hover/bookmarklet:translate-y-0 transition-all duration-200 pointer-events-none z-50 text-xs leading-relaxed text-center text-muted-foreground">
           Drag this to your bookmark bar to use RSS Lookup on other sites
         </div>
       </div>

@@ -5,7 +5,7 @@ interface ErrorMessageProps {
 export function ErrorMessage({ message }: ErrorMessageProps) {
   return (
     <div
-      className="bg-destructive border border-destructive-border text-destructive-foreground px-4 py-3 rounded-lg mt-8 flex items-center gap-3 shadow-sm"
+      className="bg-destructive border border-destructive-border text-destructive-foreground px-4 py-3 rounded-xl mt-8 flex items-center gap-3 shadow-sm"
       role="alert"
     >
       <svg

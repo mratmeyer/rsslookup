@@ -138,23 +138,41 @@ function HomePage() {
     <div>
       <div id="app">
         <Intro />
-        <div className="mb-12">
-          <form onSubmit={handleSubmit} className="relative">
-            <div className="flex flex-col sm:flex-row items-stretch gap-3">
-              <label htmlFor="inputText" className="sr-only">
-                Enter URL to search
-              </label>
-              <input
-                type="url"
-                onChange={(e) => setUrl(e.target.value)}
-                className="p-4 text-lg rounded-2xl border border-input-border bg-input text-foreground w-full h-16 focus:border-ring focus:ring-4 focus:ring-ring/20 outline-none transition duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50"
-                id="inputText"
-                name="inputText"
-                placeholder="Paste URL here..."
-                value={url}
-              />
+        <div className="mb-12 bg-secondary/40 dark:bg-white/[0.02] p-2 sm:p-3 rounded-[2.5rem] border border-border/50">
+          <form onSubmit={handleSubmit} className="relative group/form">
+            <div className="flex flex-col sm:flex-row items-stretch gap-2">
+              <div className="relative flex-grow">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/40 pointer-events-none group-focus-within/form:text-primary/50 transition-colors duration-200">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                </div>
+                <label htmlFor="inputText" className="sr-only">
+                  Enter URL to search
+                </label>
+                <input
+                  type="url"
+                  onChange={(e) => setUrl(e.target.value)}
+                  className="pl-12 pr-4 py-4 text-lg rounded-[1.75rem] border border-input-border bg-input text-foreground w-full h-16 focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50"
+                  id="inputText"
+                  name="inputText"
+                  placeholder="Paste URL here..."
+                  value={url}
+                />
+              </div>
               <button
-                className="bg-primary [@media(hover:hover)]:hover:bg-primary-hover disabled:hover:bg-primary w-full sm:w-36 h-16 flex-shrink-0 text-primary-foreground text-lg shadow-md rounded-2xl font-bold px-6 transition-all duration-200 ease-in-out disabled:opacity-80 disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2"
+                className="bg-primary [@media(hover:hover)]:hover:bg-primary-hover disabled:hover:bg-primary w-full sm:w-36 h-16 flex-shrink-0 text-primary-foreground text-lg shadow-md rounded-[1.75rem] font-bold px-6 transition-all duration-200 ease-in-out disabled:opacity-80 disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2 tracking-tight"
                 disabled={loading}
               >
                 {loading ? (
@@ -198,31 +216,25 @@ function HomePage() {
               />
             </div>
           </form>
-          <div className="mt-6">
-            <div>
-              {response != null ? (
-                <div className="pb-6">
-                  {response.status === 200 && response.result ? (
-                    <div>
-                      <h2 className="text-xl font-bold mt-8 mb-5 leading-tight text-foreground-heading">
-                        Found {response.result.length}{" "}
-                        {response.result.length === 1 ? "Feed" : "Feeds"}
-                      </h2>
-                      <div className="space-y-4">
-                        {response.result.map((feed) => (
-                          <FeedResult key={feed.url} feed={feed} />
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <ErrorMessage message={response.message || "Unknown error"} />
-                  )}
+          {response != null && (
+            <div className="mt-6 px-1 pb-2">
+              {response.status === 200 && response.result ? (
+                <div>
+                  <h2 className="text-xl font-bold mt-4 mb-5 leading-tight text-foreground-heading tracking-tight">
+                    Found {response.result.length}{" "}
+                    {response.result.length === 1 ? "Feed" : "Feeds"}
+                  </h2>
+                  <div className="space-y-4">
+                    {response.result.map((feed) => (
+                      <FeedResult key={feed.url} feed={feed} />
+                    ))}
+                  </div>
                 </div>
               ) : (
-                <div className="h-1"></div>
+                <ErrorMessage message={response.message || "Unknown error"} />
               )}
             </div>
-          </div>
+          )}
         </div>
         <RSSInfo />
         <FAQ />
