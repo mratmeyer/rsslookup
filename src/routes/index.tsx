@@ -49,6 +49,50 @@ function HomePage() {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const captchaRef = useRef<TurnstileInstance>(null);
+  const isPastingRef = useRef(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const mirrorRef = useRef<HTMLDivElement>(null);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newValue = e.target.value;
+
+    // Prefill logic: if typing into an empty field and it's not a paste
+    if (!url && newValue && !isPastingRef.current) {
+      // Check if it doesn't already have a protocol
+      if (!newValue.match(/^https?:\/\//i)) {
+        newValue = `https://${newValue}`;
+      }
+    }
+
+    setUrl(newValue);
+    // Reset pasting flag on next tick to ensure it covers the current change
+    setTimeout(() => {
+      isPastingRef.current = false;
+    }, 0);
+  };
+
+  const handlePaste = () => {
+    isPastingRef.current = true;
+  };
+
+  const handleScroll = () => {
+    if (inputRef.current && mirrorRef.current) {
+      mirrorRef.current.scrollLeft = inputRef.current.scrollLeft;
+    }
+  };
+
+  const renderValueWithColors = (val: string) => {
+    const protocolMatch = val.match(/^(https?:\/\/)(.*)/i);
+    if (protocolMatch) {
+      return (
+        <>
+          <span className="text-muted-foreground/50">{protocolMatch[1]}</span>
+          <span>{protocolMatch[2]}</span>
+        </>
+      );
+    }
+    return val;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     trackEvent("lookup");
@@ -142,7 +186,7 @@ function HomePage() {
           <form onSubmit={handleSubmit} className="relative group/form">
             <div className="flex flex-col sm:flex-row items-stretch gap-2">
               <div className="relative flex-grow">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/40 pointer-events-none group-focus-within/form:text-primary/50 transition-colors duration-200">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/40 pointer-events-none group-focus-within/form:text-primary/50 transition-colors duration-200 z-10">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -158,17 +202,31 @@ function HomePage() {
                     <line x1="21" y1="21" x2="16.65" y2="16.65" />
                   </svg>
                 </div>
+                <div
+                  ref={mirrorRef}
+                  className="absolute inset-0 pl-12 pr-4 py-4 text-lg w-full h-16 whitespace-pre overflow-hidden pointer-events-none flex items-center border border-transparent bg-transparent"
+                  aria-hidden="true"
+                >
+                  {renderValueWithColors(url)}
+                </div>
                 <label htmlFor="inputText" className="sr-only">
                   Enter URL to search
                 </label>
                 <input
+                  ref={inputRef}
                   type="url"
-                  onChange={(e) => setUrl(e.target.value)}
-                  className="pl-12 pr-4 py-4 text-lg rounded-[1.75rem] border border-input-border bg-input text-foreground w-full h-16 focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50"
+                  onChange={handleInputChange}
+                  onPaste={handlePaste}
+                  onScroll={handleScroll}
+                  className={`pl-12 pr-4 py-4 text-lg rounded-[1.75rem] border border-input-border bg-input w-full h-16 focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50 caret-foreground ${
+                    url ? "text-transparent" : "text-foreground"
+                  }`}
                   id="inputText"
                   name="inputText"
                   placeholder="Paste URL here..."
                   value={url}
+                  autoComplete="off"
+                  spellCheck="false"
                 />
               </div>
               <button
