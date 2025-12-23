@@ -29,7 +29,7 @@ export function Navbar() {
           {text}
         </a>
         <div className="absolute right-0 top-full mt-3 w-64 p-4 bg-card border border-border rounded-2xl shadow-xl opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none z-50 text-xs leading-relaxed text-center text-muted-foreground">
-          Drag this to your bookmark bar to use RSSLookup on other sites
+          Drag this to your bookmark bar to use RSS Lookup on other sites
         </div>
       </div>
     </nav>
