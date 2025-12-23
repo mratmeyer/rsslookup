@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { toast } from "react-hot-toast";
 
-import { BookmarkletBanner } from "~/components/BookmarkletNotification";
 import { Intro } from "~/components/Intro";
 import { ErrorMessage } from "~/components/ErrorMessage";
 import { FeedResult } from "~/components/FeedResult";
@@ -138,7 +137,6 @@ function HomePage() {
   return (
     <div>
       <div id="app">
-        <BookmarkletBanner />
         <Intro />
         <div className="mb-12">
           <form onSubmit={handleSubmit} className="relative">

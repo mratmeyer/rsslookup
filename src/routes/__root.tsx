@@ -5,6 +5,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { Toaster } from "react-hot-toast";
+import { Navbar } from "~/components/Navbar";
 import appCss from "~/styles/tailwind.css?url";
 
 export const Route = createRootRoute({
@@ -67,6 +68,7 @@ function RootComponent() {
           }}
         />
         <div className="m-auto max-w-3xl p-6 lg:p-12 min-h-screen">
+          <Navbar />
           <div className="mb-12">
             <Outlet />
           </div>
