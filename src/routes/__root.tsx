@@ -90,7 +90,7 @@ function Footer() {
           width="16"
           height="16"
         />{" "}
-        in Atlanta by{" "}
+        in NYC by{" "}
         <a
           className="hover:text-primary transition-colors duration-200"
           target="_blank"

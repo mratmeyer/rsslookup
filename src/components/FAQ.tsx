@@ -45,7 +45,7 @@ export function FAQ() {
             This site is a side project I set up in a couple days- it's not
             meant to collect a bunch of data. Besides information Cloudflare
             Turnstile collects to prevent abuse and anonymous analytics
-            collected by Plausible, I don't keep track of specific URLs
+            collected by Umami, I don't keep track of specific URLs
             requested using RSS Lookup.
           </p>
         </div>
