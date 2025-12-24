@@ -218,7 +218,7 @@ function HomePage() {
                   onChange={handleInputChange}
                   onPaste={handlePaste}
                   onScroll={handleScroll}
-                  className={`pl-12 pr-4 py-4 text-lg rounded-[1.75rem] border border-input-border bg-input w-full h-16 focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50 caret-foreground ${
+                  className={`pl-12 pr-4 py-4 text-lg rounded-[1.75rem] border border-input-border bg-input w-full h-16 focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition-[border-color,box-shadow] duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50 caret-foreground ${
                     url ? "text-transparent" : "text-foreground"
                   }`}
                   id="inputText"
