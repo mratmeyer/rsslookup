@@ -39,7 +39,7 @@ export function FeedResult({ feed }: FeedResultProps) {
             {title}
           </span>
         )}
-        <span className="text-url-foreground text-base font-medium truncate font-mono bg-url px-3 py-1 rounded-full transition-colors duration-200">
+        <span className="text-url-foreground text-base font-medium truncate font-mono bg-url px-3 py-1 rounded-full transition-colors duration-200 self-start max-w-full">
           {url}
         </span>
       </div>
