@@ -89,3 +89,50 @@
     }
   }
 }
+
+/* Loading button gradient animation */
+@layer utilities {
+  .loading-gradient {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .loading-gradient::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.15) 50%, 
+        transparent 100%
+      );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 50%;
+    }
+    100% {
+      background-position: -200% 50%;
+    }
+  }
+
+  .loading-gradient-pulse {
+    animation: subtle-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes subtle-glow {
+    0%, 100% {
+      box-shadow: 
+        0 4px 14px rgba(249, 115, 22, 0.25);
+    }
+    50% {
+      box-shadow: 
+        0 4px 20px rgba(249, 115, 22, 0.4);
+    }
+  }
+}
