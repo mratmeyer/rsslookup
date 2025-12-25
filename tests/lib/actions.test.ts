@@ -135,127 +135,7 @@ describe("lookupFeeds", () => {
   });
 
   // ============================================
-  // 2. HARDCODED RULES TESTS
-  // ============================================
-  describe("Hardcoded Rules", () => {
-    beforeEach(() => {
-      mockVerifyCloudflare.mockResolvedValue(true);
-    });
-
-    describe("Reddit Rules", () => {
-      it("generates RSS feed for Reddit root domain", async () => {
-        global.fetch = vi.fn().mockResolvedValue(
-          createMockResponse("<html></html>", {
-            url: "https://www.reddit.com/",
-          })
-        );
-
-        const result = await lookupFeeds(
-          "https://www.reddit.com/",
-          "valid-token",
-          TEST_SECRET
-        );
-
-        expect(result.status).toBe(200);
-        expect(result.result).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              url: "https://www.reddit.com/.rss",
-              title: "Reddit RSS Feed",
-            }),
-          ])
-        );
-      });
-
-      it("generates RSS feed for subreddit URL", async () => {
-        global.fetch = vi.fn().mockResolvedValue(
-          createMockResponse("<html></html>", {
-            url: "https://www.reddit.com/r/programming",
-          })
-        );
-
-        const result = await lookupFeeds(
-          "https://www.reddit.com/r/programming",
-          "valid-token",
-          TEST_SECRET
-        );
-
-        expect(result.status).toBe(200);
-        expect(result.result).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              url: "https://www.reddit.com/r/programming.rss",
-              title: "r/programming RSS Feed",
-            }),
-          ])
-        );
-      });
-    });
-
-    describe("YouTube Rules", () => {
-      it("generates feed for YouTube channel URL", async () => {
-        global.fetch = vi.fn().mockResolvedValue(
-          createMockResponse("<html></html>", {
-            url: "https://www.youtube.com/channel/UCvjgEDvShRsAy4JhCp7ZnDw",
-          })
-        );
-
-        const result = await lookupFeeds(
-          "https://www.youtube.com/channel/UCvjgEDvShRsAy4JhCp7ZnDw",
-          "valid-token",
-          TEST_SECRET
-        );
-
-        expect(result.status).toBe(200);
-        expect(result.result).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCvjgEDvShRsAy4JhCp7ZnDw",
-              title: "YouTube Channel Feed",
-            }),
-          ])
-        );
-      });
-    });
-
-    describe("GitHub Rules", () => {
-      it("generates commits, releases, and tags feeds for GitHub repo", async () => {
-        global.fetch = vi.fn().mockResolvedValue(
-          createMockResponse("<html></html>", {
-            url: "https://github.com/facebook/react",
-          })
-        );
-
-        const result = await lookupFeeds(
-          "https://github.com/facebook/react",
-          "valid-token",
-          TEST_SECRET
-        );
-
-        expect(result.status).toBe(200);
-        expect(result.result).toHaveLength(3);
-        expect(result.result).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              url: "https://github.com/facebook/react/commits.atom",
-              title: "facebook/react - Commits",
-            }),
-            expect.objectContaining({
-              url: "https://github.com/facebook/react/releases.atom",
-              title: "facebook/react - Releases",
-            }),
-            expect.objectContaining({
-              url: "https://github.com/facebook/react/tags.atom",
-              title: "facebook/react - Tags",
-            }),
-          ])
-        );
-      });
-    });
-  });
-
-  // ============================================
-  // 3. HTML PARSING TESTS
+  // 2. HTML PARSING TESTS
   // ============================================
   describe("HTML Parsing", () => {
     beforeEach(() => {
@@ -337,7 +217,7 @@ describe("lookupFeeds", () => {
   });
 
   // ============================================
-  // 4. ERROR HANDLING TESTS
+  // 3. ERROR HANDLING TESTS
   // ============================================
   describe("Error Handling", () => {
     beforeEach(() => {
@@ -418,7 +298,7 @@ describe("lookupFeeds", () => {
   });
 
   // ============================================
-  // 5. FEED TITLE FETCHING TESTS
+  // 4. FEED TITLE FETCHING TESTS
   // ============================================
   describe("Feed Title Fetching", () => {
     beforeEach(() => {

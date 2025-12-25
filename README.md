@@ -102,6 +102,61 @@ npm run deploy
 
 Make sure to set the `CLOUDFLARE_TURNSTILE_SECRET` and `VITE_CLOUDFLARE_TURNSTILE_SITE_KEY` environment variables in your Cloudflare dashboard/settings.
 
+## Adding Custom Site Rules
+
+Some websites have RSS feeds but don't advertise them via standard HTML `<link>` tags. Site-specific rules allow RSS Lookup to discover these "hidden" feeds by recognizing URL patterns and constructing feed URLs programmatically.
+
+For example, YouTube doesn't expose channel feeds in page metadata, but every channel has a feed at `youtube.com/feeds/videos.xml?channel_id=...`. The YouTube rule extracts the channel ID from the URL and builds the feed URL.
+
+**Current built-in rules:** Reddit, YouTube, GitHub, Stack Exchange
+
+### Creating a New Rule
+
+Rules live in `src/lib/rules/`. Each rule implements the `SiteRule` interface:
+
+```typescript
+interface SiteRule {
+  name: string;
+  matchesHostname(hostname: string): boolean;
+  extractFeeds(context: RuleContext, feedsMap: FeedsMap): void;
+}
+```
+
+**To add a new rule:**
+
+1. Create `src/lib/rules/YourSiteRule.ts`:
+
+   ```typescript
+   import type { FeedsMap } from "../types";
+   import type { SiteRule, RuleContext } from "./SiteRule";
+
+   export class YourSiteRule implements SiteRule {
+     readonly name = "Your Site";
+
+     matchesHostname(hostname: string): boolean {
+       return hostname === "example.com" || hostname === "www.example.com";
+     }
+
+     extractFeeds(context: RuleContext, feedsMap: FeedsMap): void {
+       // Extract feeds and add to feedsMap
+       feedsMap.set(`${context.origin}/feed.xml`, "Example Feed");
+     }
+   }
+   ```
+
+2. Register it in `src/lib/rules/index.ts`:
+
+   ```typescript
+   import { YourSiteRule } from "./YourSiteRule";
+   
+   const rules: SiteRule[] = [
+     // ... existing rules
+     new YourSiteRule(),
+   ];
+   ```
+
+3. Add tests in `tests/lib/rules.test.ts`.
+
 ## Available Scripts
 
 - `npm run dev`: Starts the Vite development server.
