@@ -15,15 +15,17 @@
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.19.0",
-    "@marsidev/react-turnstile": "^1.4.0",
     "@tanstack/react-router": "^1.141.6",
     "@tanstack/react-start": "^1.141.7",
+    "@upstash/ratelimit": "^2.0.7",
+    "@upstash/redis": "^1.36.0",
     "@vitejs/plugin-react": "^5.1.2",
     "dotenv": "^17.2.3",
     "htmlparser2": "^10.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-hot-toast": "^2.6.0",
+    "tldts": "^7.0.19",
     "vinxi": "^0.5.3"
   },
   "devDependencies": {

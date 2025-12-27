@@ -22,6 +22,7 @@ export type FeedsMap = Map<string, FeedMetadata>;
  */
 export interface CloudflareEnv {
   ASSETS: Fetcher;
-  CLOUDFLARE_TURNSTILE_SECRET?: string;
+  UPSTASH_REDIS_REST_URL?: string;
+  UPSTASH_REDIS_REST_TOKEN?: string;
   [key: string]: unknown;
 }

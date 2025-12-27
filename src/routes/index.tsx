@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useState, useRef } from "react";
-import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
-import { toast } from "react-hot-toast";
+import { useEffect, useState, useRef } from "react";
 
 import { Intro } from "~/components/Intro";
 import { ErrorMessage } from "~/components/ErrorMessage";
@@ -10,11 +8,7 @@ import { RSSInfo } from "~/components/RSSInfo";
 import { FAQ } from "~/components/FAQ";
 import { trackEvent } from "~/components/Umami";
 import { lookupFeedsServerFn } from "~/lib/server-functions";
-import { config } from "~/lib/config";
 import type { LookupResponse } from "~/lib/types";
-
-// Turnstile site key - from config
-const TURNSTILE_SITE_KEY = config.turnstile.siteKey;
 
 export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>) => {
@@ -47,8 +41,6 @@ function HomePage() {
   const [url, setUrl] = useState(urlParam || "");
   const [response, setResponse] = useState<LookupResponse | null>(null);
   const [loading, setLoading] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-  const captchaRef = useRef<TurnstileInstance>(null);
   const isPastingRef = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const mirrorRef = useRef<HTMLDivElement>(null);
@@ -96,51 +88,27 @@ function HomePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     trackEvent("lookup");
-
     e.preventDefault();
+
+    if (!url) return;
+
     setLoading(true);
-    captchaRef.current?.execute();
-  };
+    setResponse(null);
 
-  const handleTurnstileSuccess = useCallback((token: string) => {
-    setToken(token);
-  }, []);
-
-  const handleTurnstileError = () => {
-    toast.error(
-      "Captcha challenge failed. Please try loading the page again."
-    );
-    setLoading(false);
-  };
-
-  const handleTurnstileExpire = () => {
-    toast.error("Captcha challenge expired. Please submit again.");
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    if (token && url) {
-      setResponse(null);
-
-      lookupFeedsServerFn({ data: { url, cloudflareToken: token } })
-        .then((data) => {
-          setResponse(data as LookupResponse);
-        })
-        .catch((error) => {
-          setResponse({
-            status: 500,
-            message:
-              (error as { message?: string }).message ||
-              "An error occurred while fetching data.",
-          });
-        })
-        .finally(() => {
-          setLoading(false);
-          setToken(null);
-          captchaRef.current?.reset();
-        });
+    try {
+      const data = await lookupFeedsServerFn({ data: { url } });
+      setResponse(data as LookupResponse);
+    } catch (error) {
+      setResponse({
+        status: 500,
+        message:
+          (error as { message?: string }).message ||
+          "An error occurred while fetching data.",
+      });
+    } finally {
+      setLoading(false);
     }
-  }, [token, url]);
+  };
 
   useEffect(() => {
     if (urlParam) {
@@ -152,29 +120,26 @@ function HomePage() {
 
   const hasAutoExecutedRef = useRef(false);
 
+  // Auto-execute lookup when URL param is provided (bookmarklet support)
   useEffect(() => {
-    // Reset auto-execution flag when urlParam changes to a new value
-    if (urlParam) {
-      hasAutoExecutedRef.current = false;
-    }
-  }, [urlParam]);
-
-  const handleTurnstileLoad = useCallback(() => {
     if (urlParam && !hasAutoExecutedRef.current) {
       hasAutoExecutedRef.current = true;
       trackEvent("bookmarklet");
 
-      if (
-        captchaRef.current &&
-        typeof captchaRef.current.execute === "function"
-      ) {
-        setResponse(null);
-        setLoading(true);
+      setResponse(null);
+      setLoading(true);
 
-        captchaRef.current.execute();
-      } else {
-        setLoading(false);
-      }
+      lookupFeedsServerFn({ data: { url: urlParam } })
+        .then((data) => setResponse(data as LookupResponse))
+        .catch((error) => {
+          setResponse({
+            status: 500,
+            message:
+              (error as { message?: string }).message ||
+              "An error occurred.",
+          });
+        })
+        .finally(() => setLoading(false));
     }
   }, [urlParam]);
 
@@ -260,20 +225,6 @@ function HomePage() {
                   "Search"
                 )}
               </button>
-            </div>
-            <div className="absolute top-full left-0 w-full flex justify-center mt-4 z-50">
-              <Turnstile
-                ref={captchaRef}
-                siteKey={TURNSTILE_SITE_KEY}
-                onSuccess={handleTurnstileSuccess}
-                onError={handleTurnstileError}
-                onExpire={handleTurnstileExpire}
-                onWidgetLoad={handleTurnstileLoad}
-                options={{
-                  execution: "execute",
-                  appearance: "interaction-only",
-                }}
-              />
             </div>
           </form>
           {response != null && (

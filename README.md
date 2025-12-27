@@ -12,7 +12,7 @@ RSS Lookup is a free, open-source tool designed to find the RSS feed associated 
 - **HTML Meta Tag Detection:** Finds feeds specified using standard `<link rel="alternate" type="application/rss+xml">` (and Atom) tags.
 - **Common Path Fallback:** Checks conventional paths like `/feed`, `/rss.xml`, `/atom.xml` if no tags are found.
 - **Popular Site Integration:** Rules to natively supports popular sites like YouTube, StackExchange, and Reddit.
-- **Abuse Prevention:** Integrates Cloudflare Turnstile to protect the backend service.
+- **Abuse Prevention:** Rate limiting via Upstash Redis to prevent abuse (per-IP and per-domain limits).
 - **User-Friendly Results:** Displays found feed URLs clearly and easily copiable.
 - **Modern Tech:** Built with TanStack Start, Vite, and Cloudflare Workers for a seamless full-stack experience at the edge.
 
@@ -35,7 +35,7 @@ Follow these instructions to set up and run the project locally or deploy your o
 
 - [Node.js](https://nodejs.org/) (LTS version recommended, e.g., >= 18)
 - [npm](https://www.npmjs.com/) (usually included with Node.js)
-- A [Cloudflare Turnstile](https://www.cloudflare.com/application-services/products/turnstile/) account (for site key and secret)
+- An [Upstash Redis](https://upstash.com/) database (for rate limiting - free tier available)
 
 ### Setup
 
@@ -53,12 +53,12 @@ Follow these instructions to set up and run the project locally or deploy your o
     ```dotenv
     # .env
 
-    # Your Cloudflare Turnstile Site Key (public - used by frontend)
-    VITE_CLOUDFLARE_TURNSTILE_SITE_KEY=YOUR_CLOUDFLARE_TURNSTILE_SITE_KEY
-
-    # Your Cloudflare Turnstile Secret Key (server-side only)
-    CLOUDFLARE_TURNSTILE_SECRET=YOUR_CLOUDFLARE_TURNSTILE_SECRET_KEY
+    # Upstash Redis (for rate limiting)
+    UPSTASH_REDIS_REST_URL=https://your-redis.upstash.io
+    UPSTASH_REDIS_REST_TOKEN=your-token
     ```
+
+    > **Note:** Rate limiting is optional for local development. If these variables are not set, rate limiting will be disabled.
 
 3.  **Install Dependencies:**
 
@@ -100,7 +100,7 @@ To deploy to Cloudflare:
 npm run deploy
 ```
 
-Make sure to set the `CLOUDFLARE_TURNSTILE_SECRET` and `VITE_CLOUDFLARE_TURNSTILE_SITE_KEY` environment variables in your Cloudflare dashboard/settings.
+Make sure to set the `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` environment variables in your Cloudflare dashboard/settings.
 
 ## Adding Custom Site Rules
 

@@ -1,40 +1,20 @@
-import { verifyCloudflare } from "./captchaUtils";
 import { checkCommonFeedPaths } from "./scraperUtils";
 import { parseHtmlForFeeds, fetchFeedTitle } from "./parserUtils";
 import { parseURLforRules } from "./ruleUtils";
 import { USER_AGENT } from "./constants";
+import { checkRateLimits } from "./rateLimitUtils";
 import type { LookupResponse, FeedsMap } from "./types";
 
 /**
  * Look up RSS feeds for a given URL.
  * @param url - The URL to search for feeds.
- * @param cloudflareToken - The Cloudflare Turnstile token for verification.
- * @param turnstileSecret - The Cloudflare Turnstile secret key.
- * @param ip - The IP address of the client (optional).
+ * @param ip - The IP address of the client (optional, for rate limiting).
  * @returns The lookup response with feeds or error.
  */
 export async function lookupFeeds(
   url: string,
-  cloudflareToken: string,
-  turnstileSecret: string,
   ip: string | null = null
 ): Promise<LookupResponse> {
-  // Validate captcha token
-  if (!cloudflareToken) {
-    return {
-      status: 400,
-      message: "Cloudflare Turnstile token missing.",
-    };
-  }
-
-  const isVerified = await verifyCloudflare(cloudflareToken, turnstileSecret, ip);
-  if (!isVerified) {
-    return {
-      status: 403,
-      message: "Cloudflare Turnstile verification failed.",
-    };
-  }
-
   // Validate URL input
   if (!url) {
     return {
@@ -51,6 +31,15 @@ export async function lookupFeeds(
     return {
       status: 400,
       message: "Invalid URL format provided.",
+    };
+  }
+
+  // Rate limiting check
+  const rateLimitResult = await checkRateLimits(ip, url);
+  if (!rateLimitResult.allowed) {
+    return {
+      status: 429,
+      message: rateLimitResult.errorMessage || "Rate limit exceeded.",
     };
   }
 
