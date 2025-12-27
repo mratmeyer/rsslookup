@@ -6,12 +6,13 @@ import type { FeedsMap } from "./types";
  * @param baseUrl - The final URL of the page fetched.
  * @param feedsMap - Map of feed URL -> title (null if title should be fetched).
  * @param userAgent - The user agent string to use for requests.
+ * @returns True if at least one new feed was found.
  */
 export async function checkCommonFeedPaths(
   baseUrl: string,
   feedsMap: FeedsMap,
   userAgent: string
-): Promise<void> {
+): Promise<boolean> {
   const checkPromises = POSSIBLE_FEED_PATHS.map(async (path) => {
     let potentialFeedUrl: string;
     try {
@@ -44,10 +45,14 @@ export async function checkCommonFeedPaths(
   });
 
   const results = await Promise.allSettled(checkPromises);
+  let foundAny = false;
 
   results.forEach((result) => {
     if (result.status === "fulfilled" && result.value) {
       feedsMap.set(result.value, { title: null, isFromRule: false });
+      foundAny = true;
     }
   });
+
+  return foundAny;
 }

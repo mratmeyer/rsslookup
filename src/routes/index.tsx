@@ -96,7 +96,7 @@ function HomePage() {
     setResponse(null);
 
     try {
-      const data = await lookupFeedsServerFn({ data: { url } });
+      const data = await lookupFeedsServerFn({ data: { url, source: "web" } });
       setResponse(data as LookupResponse);
     } catch (error) {
       setResponse({
@@ -129,7 +129,7 @@ function HomePage() {
       setResponse(null);
       setLoading(true);
 
-      lookupFeedsServerFn({ data: { url: urlParam } })
+      lookupFeedsServerFn({ data: { url: urlParam, source: "bookmarklet" } })
         .then((data) => setResponse(data as LookupResponse))
         .catch((error) => {
           setResponse({

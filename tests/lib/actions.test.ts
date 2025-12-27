@@ -1,15 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { lookupFeeds } from "~/lib/actions";
 
-// Mock the captcha verification module
-vi.mock("~/lib/captchaUtils", () => ({
-  verifyCloudflare: vi.fn(),
-}));
-
-import { verifyCloudflare } from "~/lib/captchaUtils";
-
-const mockVerifyCloudflare = verifyCloudflare as ReturnType<typeof vi.fn>;
-
 // Helper to create a mock Response
 interface MockResponseOptions {
   status?: number;
@@ -41,9 +32,6 @@ function createMockResponse(
   };
 }
 
-// Test secret for mocking
-const TEST_SECRET = "test-turnstile-secret";
-
 describe("lookupFeeds", () => {
   let originalFetch: typeof global.fetch;
 
@@ -60,74 +48,22 @@ describe("lookupFeeds", () => {
   // 1. INPUT VALIDATION TESTS
   // ============================================
   describe("Input Validation", () => {
-    it("returns 400 when Cloudflare token is missing", async () => {
-      const result = await lookupFeeds(
-        "https://example.com",
-        "",
-        TEST_SECRET
-      );
-
-      expect(result.status).toBe(400);
-      expect(result.message).toBe("Cloudflare Turnstile token missing.");
-    });
-
-    it("returns 403 when Cloudflare verification fails", async () => {
-      mockVerifyCloudflare.mockResolvedValue(false);
-
-      const result = await lookupFeeds(
-        "https://example.com",
-        "invalid-token",
-        TEST_SECRET
-      );
-
-      expect(result.status).toBe(403);
-      expect(result.message).toBe("Cloudflare Turnstile verification failed.");
-    });
-
-    it("passes client IP to Cloudflare verification when provided", async () => {
-      mockVerifyCloudflare.mockResolvedValue(true);
-      const testIP = "1.2.3.4";
-
-      await lookupFeeds(
-        "https://example.com",
-        "valid-token",
-        TEST_SECRET,
-        testIP
-      );
-
-      expect(mockVerifyCloudflare).toHaveBeenCalledWith(
-        "valid-token",
-        TEST_SECRET,
-        testIP
-      );
-    });
-
     it("returns 400 when URL is missing", async () => {
-      mockVerifyCloudflare.mockResolvedValue(true);
-
-      const result = await lookupFeeds("", "valid-token", TEST_SECRET);
+      const result = await lookupFeeds("");
 
       expect(result.status).toBe(400);
       expect(result.message).toBe("Missing 'url' field.");
     });
 
     it("returns 400 when URL format is invalid", async () => {
-      mockVerifyCloudflare.mockResolvedValue(true);
-
-      const result = await lookupFeeds(
-        "not-a-valid-url",
-        "valid-token",
-        TEST_SECRET
-      );
+      const result = await lookupFeeds("not-a-valid-url");
 
       expect(result.status).toBe(400);
       expect(result.message).toBe("Invalid URL format provided.");
     });
 
     it("returns 400 for URL without protocol", async () => {
-      mockVerifyCloudflare.mockResolvedValue(true);
-
-      const result = await lookupFeeds("example.com", "valid-token", TEST_SECRET);
+      const result = await lookupFeeds("example.com");
 
       expect(result.status).toBe(400);
       expect(result.message).toBe("Invalid URL format provided.");
@@ -138,10 +74,6 @@ describe("lookupFeeds", () => {
   // 2. HTML PARSING TESTS
   // ============================================
   describe("HTML Parsing", () => {
-    beforeEach(() => {
-      mockVerifyCloudflare.mockResolvedValue(true);
-    });
-
     it("finds RSS feed from link tag with application/rss+xml type", async () => {
       const html = `
         <html>
@@ -166,11 +98,7 @@ describe("lookupFeeds", () => {
           )
         );
 
-      const result = await lookupFeeds(
-        "https://example.com",
-        "valid-token",
-        TEST_SECRET
-      );
+      const result = await lookupFeeds("https://example.com");
 
       expect(result.status).toBe(200);
       expect(result.result).toEqual(
@@ -205,11 +133,7 @@ describe("lookupFeeds", () => {
           )
         );
 
-      const result = await lookupFeeds(
-        "https://example.com",
-        "valid-token",
-        TEST_SECRET
-      );
+      const result = await lookupFeeds("https://example.com");
 
       expect(result.status).toBe(200);
       expect(result.result).toHaveLength(3);
@@ -220,18 +144,10 @@ describe("lookupFeeds", () => {
   // 3. ERROR HANDLING TESTS
   // ============================================
   describe("Error Handling", () => {
-    beforeEach(() => {
-      mockVerifyCloudflare.mockResolvedValue(true);
-    });
-
     it("returns 502 when fetch throws network error", async () => {
       global.fetch = vi.fn().mockRejectedValue(new Error("Network error"));
 
-      const result = await lookupFeeds(
-        "https://example.com",
-        "valid-token",
-        TEST_SECRET
-      );
+      const result = await lookupFeeds("https://example.com");
 
       expect(result.status).toBe(502);
       expect(result.message).toContain("Error fetching URL");
@@ -244,11 +160,7 @@ describe("lookupFeeds", () => {
           createMockResponse("Forbidden", { status: 403, ok: false })
         );
 
-      const result = await lookupFeeds(
-        "https://example.com",
-        "valid-token",
-        TEST_SECRET
-      );
+      const result = await lookupFeeds("https://example.com");
 
       expect(result.status).toBe(502);
       expect(result.message).toContain("Unable to access URL: Status 403");
@@ -273,11 +185,7 @@ describe("lookupFeeds", () => {
         );
       });
 
-      const result = await lookupFeeds(
-        "https://example.com",
-        "valid-token",
-        TEST_SECRET
-      );
+      const result = await lookupFeeds("https://example.com");
 
       expect(result.status).toBe(404);
       expect(result.message).toBe("No feeds found on this site.");
@@ -286,11 +194,7 @@ describe("lookupFeeds", () => {
     it("succeeds with rules even when fetch fails for URLs with hardcoded rules", async () => {
       global.fetch = vi.fn().mockRejectedValue(new Error("Network error"));
 
-      const result = await lookupFeeds(
-        "https://github.com/facebook/react",
-        "valid-token",
-        TEST_SECRET
-      );
+      const result = await lookupFeeds("https://github.com/facebook/react");
 
       expect(result.status).toBe(200);
       expect(result.result).toHaveLength(3);
@@ -301,10 +205,6 @@ describe("lookupFeeds", () => {
   // 4. FEED TITLE FETCHING TESTS
   // ============================================
   describe("Feed Title Fetching", () => {
-    beforeEach(() => {
-      mockVerifyCloudflare.mockResolvedValue(true);
-    });
-
     it("extracts title from RSS feed", async () => {
       const html = `
         <html>
@@ -331,11 +231,7 @@ describe("lookupFeeds", () => {
         )
         .mockResolvedValueOnce(createMockResponse(rssFeed));
 
-      const result = await lookupFeeds(
-        "https://example.com",
-        "valid-token",
-        TEST_SECRET
-      );
+      const result = await lookupFeeds("https://example.com");
 
       expect(result.status).toBe(200);
       expect(result.result?.[0].title).toBe("My Awesome Blog");
@@ -348,11 +244,7 @@ describe("lookupFeeds", () => {
         })
       );
 
-      const result = await lookupFeeds(
-        "https://github.com/owner/repo",
-        "valid-token",
-        TEST_SECRET
-      );
+      const result = await lookupFeeds("https://github.com/owner/repo");
 
       expect(result.status).toBe(200);
       expect(result.result).toEqual(

@@ -13,3 +13,7 @@ mode = "smart"
 [assets]
 directory = "dist/client"
 binding = "ASSETS"
+
+[[analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "rsslookup_analytics"

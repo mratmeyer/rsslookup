@@ -20,7 +20,7 @@ export default {
     // @ts-ignore
     globalThis.process.env = { ...globalThis.process.env, ...env };
 
-    const response = await appMiddleware(request);
+    const response = await appMiddleware(request, env);
     if (response) return response;
 
     // Import the bundled TanStack Start handler

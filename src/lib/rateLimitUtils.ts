@@ -225,13 +225,18 @@ async function checkDomainRateLimit(domain: string): Promise<boolean> {
   return result.success;
 }
 
+import type { CloudflareEnv } from "./types";
+import { trackEvent } from "./analytics";
+
 /**
  * Check both IP and domain rate limits.
  * Returns early if IP limit is exceeded.
  */
 export async function checkRateLimits(
   ip: string | null,
-  targetUrl: string
+  targetUrl: string,
+  env?: CloudflareEnv,
+  source: string = "unknown"
 ): Promise<RateLimitResult> {
   // Parse target URL to get domain
   let targetDomain: string;
@@ -243,10 +248,27 @@ export async function checkRateLimits(
     targetDomain = "";
   }
 
+  // Helper for tracking rate limit events
+  const trackRateLimit = (type: "ip" | "domain", limitType: string) => {
+    if (env) {
+      trackEvent(env, {
+        eventName: "rate_limit",
+        status: "blocked",
+        method: "none",
+        errorType: limitType,
+        source,
+        feedCount: 0,
+        durationMs: 0,
+        upstreamStatus: 429,
+      });
+    }
+  };
+
   // Check IP rate limit first (if IP is available)
   if (ip) {
     const ipAllowed = await checkIpRateLimit(ip);
     if (!ipAllowed) {
+      trackRateLimit("ip", "ip_limit_exceeded");
       return {
         allowed: false,
         errorMessage: RATE_LIMIT_MESSAGES.ip,
@@ -259,6 +281,7 @@ export async function checkRateLimits(
   if (targetDomain) {
     const domainAllowed = await checkDomainRateLimit(targetDomain);
     if (!domainAllowed) {
+      trackRateLimit("domain", "domain_limit_exceeded");
       return {
         allowed: false,
         errorMessage: RATE_LIMIT_MESSAGES.domain(targetDomain),

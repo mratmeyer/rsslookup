@@ -3,14 +3,19 @@ import { getRequest } from "@tanstack/react-start/server";
 import { lookupFeeds } from "./actions";
 
 export const lookupFeedsServerFn = createServerFn()
-  .inputValidator((data: { url: string }) => data)
+  .inputValidator((data: { url: string; source?: string }) => data)
   .handler(async ({ data }) => {
     const request = getRequest();
+
+    // Get Cloudflare Env from the global process shim (populated by worker/index.ts)
+    // @ts-ignore
+    const env = globalThis.process?.env as CloudflareEnv || {};
+
     const clientIP =
       request?.headers.get("cf-connecting-ip") ||
       request?.headers.get("x-forwarded-for")?.split(",")[0] ||
       null;
 
-    const result = await lookupFeeds(data.url, clientIP);
+    const result = await lookupFeeds(data.url, clientIP, env, data.source);
     return result;
   });

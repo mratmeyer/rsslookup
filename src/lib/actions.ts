@@ -3,20 +3,51 @@ import { parseHtmlForFeeds, fetchFeedTitle } from "./parserUtils";
 import { parseURLforRules } from "./ruleUtils";
 import { USER_AGENT } from "./constants";
 import { checkRateLimits } from "./rateLimitUtils";
-import type { LookupResponse, FeedsMap } from "./types";
+import type { LookupResponse, FeedsMap, CloudflareEnv } from "./types";
+import { trackEvent } from "./analytics";
 
 /**
  * Look up RSS feeds for a given URL.
  * @param url - The URL to search for feeds.
  * @param ip - The IP address of the client (optional, for rate limiting).
+ * @param env - The Cloudflare environment bindings (optional, for analytics).
+ * @param source - The source of the request (optional, for analytics).
  * @returns The lookup response with feeds or error.
  */
 export async function lookupFeeds(
   url: string,
-  ip: string | null = null
+  ip: string | null = null,
+  env?: CloudflareEnv,
+  source: string = "unknown"
 ): Promise<LookupResponse> {
+  const startTime = Date.now();
+  let upstreamStatus = 0;
+  let errorType = "none";
+  let method: "rule" | "scrape" | "guess" | "none" = "none";
+
+  // Helper to record analytics before returning
+  const recordAnalytics = (
+    status: "success" | "no_feeds" | "error" | "blocked",
+    feedCount: number,
+    finalErrorType: string = "none"
+  ) => {
+    if (env) {
+      trackEvent(env, {
+        eventName: "lookup",
+        status,
+        method,
+        errorType: finalErrorType,
+        source,
+        feedCount,
+        durationMs: Date.now() - startTime,
+        upstreamStatus,
+      });
+    }
+  };
+
   // Validate URL input
   if (!url) {
+    recordAnalytics("error", 0, "missing_url");
     return {
       status: 400,
       message: "Missing 'url' field.",
@@ -28,6 +59,7 @@ export async function lookupFeeds(
     // Basic validation: can it be parsed as a URL?
     parsedURL = new URL(url);
   } catch {
+    recordAnalytics("error", 0, "invalid_url");
     return {
       status: 400,
       message: "Invalid URL format provided.",
@@ -35,8 +67,11 @@ export async function lookupFeeds(
   }
 
   // Rate limiting check
-  const rateLimitResult = await checkRateLimits(ip, url);
+  const rateLimitResult = await checkRateLimits(ip, url, env);
   if (!rateLimitResult.allowed) {
+    // Analytics for rate limits are handled inside checkRateLimits for granularity,
+    // but we record the lookup failure here too.
+    recordAnalytics("blocked", 0, rateLimitResult.errorType || "rate_limit");
     return {
       status: 429,
       message: rateLimitResult.errorMessage || "Rate limit exceeded.",
@@ -48,6 +83,7 @@ export async function lookupFeeds(
 
   // Run rules initially to handle "salvage" cases where fetch might fail
   parseURLforRules(url, parsedURL.hostname, foundFeeds);
+  if (foundFeeds.size > 0) method = "rule";
 
   let response: Response | undefined;
   let responseText: string | undefined;
@@ -60,22 +96,26 @@ export async function lookupFeeds(
       redirect: "follow" as const,
     };
     response = await fetch(url, fetchOptions);
+    upstreamStatus = response.status;
     finalUrl = response.url; // Could be redirected
 
     if (!(response.ok || response.status === 304)) {
       if (foundFeeds.size === 0) {
+        errorType = `http_${response.status}`;
+        recordAnalytics("error", 0, errorType);
         return {
           status: 502,
           message: `Unable to access URL: Status ${response.status}`,
         };
       }
-      // If we have feeds from rules, fall through (responseText remains undefined)
+      // If we have feeds from rules, fall through
     } else {
       responseText = await response.text();
     }
   } catch (error) {
+    errorType = "fetch_error";
     if (foundFeeds.size === 0) {
-      // If rules found matches, then ignore the fetch error
+      recordAnalytics("error", 0, errorType);
       return {
         status: 502,
         message: `Error fetching URL: ${error instanceof Error ? error.message : "Unknown error"}`,
@@ -85,21 +125,27 @@ export async function lookupFeeds(
 
   // Parse HTML for <link> tags
   if (responseText && finalUrl) {
-    parseHtmlForFeeds(responseText, finalUrl, foundFeeds);
+    if (parseHtmlForFeeds(responseText, finalUrl, foundFeeds)) {
+      // Only update method if we didn't already have rules and found something here
+      if (method === "none") method = "scrape";
+    }
   }
 
   // If no feeds found in HTML, check common paths
   if (foundFeeds.size === 0 && finalUrl) {
-    await checkCommonFeedPaths(finalUrl, foundFeeds, USER_AGENT);
+    if (await checkCommonFeedPaths(finalUrl, foundFeeds, USER_AGENT)) {
+      method = "guess";
+    }
   }
 
-  // Parse URL for hardcoded rules again
-  // This is necessary because some rules (like YouTube playlist discovery) depend on feeds
-  // that might have been discovered during HTML parsing.
+  // Parse URL for hardcoded rules again (to catch YouTube playlists etc)
   parseURLforRules(url, parsedURL.hostname, foundFeeds);
+  if (foundFeeds.size > 0 && method === "none") method = "rule";
+
 
   // Return final results
   if (foundFeeds.size === 0) {
+    recordAnalytics("no_feeds", 0);
     return {
       status: 404,
       message: "No feeds found on this site.",
@@ -121,6 +167,7 @@ export async function lookupFeeds(
     isFromRule: metadata.isFromRule,
   }));
 
+  recordAnalytics("success", resultData.length);
   return {
     status: 200,
     result: resultData,
