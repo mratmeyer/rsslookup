@@ -56,7 +56,7 @@ export class StackExchangeRule implements SiteRule {
         if (tagMatch?.[1]) {
             feedsMap.set(
                 `${origin}/feeds/tag/${tagMatch[1]}`,
-                `${siteName} - [${tagMatch[1]}] Questions`
+                { title: `${siteName} - [${tagMatch[1]}] Questions`, isFromRule: true }
             );
         }
     }
@@ -75,7 +75,7 @@ export class StackExchangeRule implements SiteRule {
             const questionId = questionMatch[1];
             feedsMap.set(
                 `${origin}/feeds/question/${questionId}`,
-                `${siteName} - Question #${questionId}`
+                { title: `${siteName} - Question #${questionId}`, isFromRule: true }
             );
         }
     }
@@ -94,7 +94,7 @@ export class StackExchangeRule implements SiteRule {
             const userId = userMatch[1];
             feedsMap.set(
                 `${origin}/feeds/user/${userId}`,
-                `${siteName} - User Activity`
+                { title: `${siteName} - User Activity`, isFromRule: true }
             );
         }
     }

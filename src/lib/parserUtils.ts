@@ -119,7 +119,7 @@ export function parseHtmlForFeeds(
           try {
             const feedUrl = new URL(attributes.href, baseUrl).toString();
             if (!feedsMap.has(feedUrl)) {
-              feedsMap.set(feedUrl, null); // null = fetch title later
+              feedsMap.set(feedUrl, { title: null, isFromRule: false });
             }
           } catch {
             // Silently ignore invalid URLs - malformed href attributes should not break parsing

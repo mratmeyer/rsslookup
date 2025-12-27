@@ -19,14 +19,14 @@ export class RedditRule implements SiteRule {
 
         if (pathname === "/") {
             // Root domain needs trailing slash before .rss
-            feedsMap.set(cleanedURL + "/.rss", "Reddit RSS Feed");
+            feedsMap.set(cleanedURL + "/.rss", { title: "Reddit RSS Feed", isFromRule: true });
         } else {
             // Extract subreddit name for a better title
             const subredditMatch = pathname.match(/^\/r\/([\w]+)/);
             const title = subredditMatch
                 ? `r/${subredditMatch[1]} RSS Feed`
                 : "Reddit RSS Feed";
-            feedsMap.set(cleanedURL + ".rss", title);
+            feedsMap.set(cleanedURL + ".rss", { title, isFromRule: true });
         }
     }
 }

@@ -19,9 +19,9 @@ export class GitHubRule implements SiteRule {
     const repoMatch = pathname.match(/^\/([a-zA-Z0-9_.-]+)\/([a-zA-Z0-9_.-]+)$/);
     if (repoMatch) {
       const repoName = `${repoMatch[1]}/${repoMatch[2]}`;
-      feedsMap.set(`${cleanedURL}/commits.atom`, `${repoName} - Commits`);
-      feedsMap.set(`${cleanedURL}/releases.atom`, `${repoName} - Releases`);
-      feedsMap.set(`${cleanedURL}/tags.atom`, `${repoName} - Tags`);
+      feedsMap.set(`${cleanedURL}/commits.atom`, { title: `${repoName} - Commits`, isFromRule: true });
+      feedsMap.set(`${cleanedURL}/releases.atom`, { title: `${repoName} - Releases`, isFromRule: true });
+      feedsMap.set(`${cleanedURL}/tags.atom`, { title: `${repoName} - Tags`, isFromRule: true });
     }
   }
 }

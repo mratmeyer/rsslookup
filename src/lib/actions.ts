@@ -119,16 +119,17 @@ export async function lookupFeeds(
 
   // Fetch titles only for feeds that don't have a hardcoded title
   const feedEntries = Array.from(foundFeeds.entries());
-  const titlePromises = feedEntries.map(([feedUrl, existingTitle]) =>
-    existingTitle !== null
-      ? Promise.resolve(existingTitle)
+  const titlePromises = feedEntries.map(([feedUrl, metadata]) =>
+    metadata.title !== null
+      ? Promise.resolve(metadata.title)
       : fetchFeedTitle(feedUrl, USER_AGENT)
   );
   const titles = await Promise.all(titlePromises);
 
-  const resultData = feedEntries.map(([feedUrl], index) => ({
+  const resultData = feedEntries.map(([feedUrl, metadata], index) => ({
     url: feedUrl,
     title: titles[index],
+    isFromRule: metadata.isFromRule,
   }));
 
   return {

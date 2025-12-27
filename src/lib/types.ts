@@ -1,6 +1,7 @@
 export interface FeedResult {
   url: string;
   title: string | null;
+  isFromRule?: boolean;
 }
 
 export interface LookupResponse {
@@ -9,7 +10,12 @@ export interface LookupResponse {
   message?: string;
 }
 
-export type FeedsMap = Map<string, string | null>;
+export interface FeedMetadata {
+  title: string | null;
+  isFromRule: boolean;
+}
+
+export type FeedsMap = Map<string, FeedMetadata>;
 
 /**
  * Cloudflare Worker Environment bindings

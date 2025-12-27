@@ -47,7 +47,7 @@ export async function checkCommonFeedPaths(
 
   results.forEach((result) => {
     if (result.status === "fulfilled" && result.value) {
-      feedsMap.set(result.value, null); // null = fetch title later
+      feedsMap.set(result.value, { title: null, isFromRule: false });
     }
   });
 }

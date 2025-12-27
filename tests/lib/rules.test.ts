@@ -44,9 +44,10 @@ describe("Rules System", () => {
                 "www.reddit.com",
                 feedsMap
             );
-            expect(feedsMap.get("https://www.reddit.com/r/programming.rss")).toBe(
-                "r/programming RSS Feed"
-            );
+            expect(feedsMap.get("https://www.reddit.com/r/programming.rss")).toEqual({
+                title: "r/programming RSS Feed",
+                isFromRule: true,
+            });
         });
     });
 
@@ -80,7 +81,7 @@ describe("Rules System", () => {
             );
             expect(
                 feedsMap.get("https://www.youtube.com/feeds/videos.xml?user=TestUser")
-            ).toBe("YouTube - TestUser");
+            ).toEqual({ title: "YouTube - TestUser", isFromRule: true });
         });
 
         it("should extract playlist feed", () => {
@@ -168,9 +169,10 @@ describe("Rules System", () => {
                 "stackoverflow.com",
                 feedsMap
             );
-            expect(feedsMap.get("https://stackoverflow.com/feeds/tag/javascript")).toBe(
-                "stackoverflow - [javascript] Questions"
-            );
+            expect(feedsMap.get("https://stackoverflow.com/feeds/tag/javascript")).toEqual({
+                title: "stackoverflow - [javascript] Questions",
+                isFromRule: true,
+            });
         });
 
         it("should extract question feed", () => {
@@ -179,9 +181,10 @@ describe("Rules System", () => {
                 "stackoverflow.com",
                 feedsMap
             );
-            expect(feedsMap.get("https://stackoverflow.com/feeds/question/12345")).toBe(
-                "stackoverflow - Question #12345"
-            );
+            expect(feedsMap.get("https://stackoverflow.com/feeds/question/12345")).toEqual({
+                title: "stackoverflow - Question #12345",
+                isFromRule: true,
+            });
         });
 
         it("should extract user feed", () => {
@@ -190,9 +193,10 @@ describe("Rules System", () => {
                 "stackoverflow.com",
                 feedsMap
             );
-            expect(feedsMap.get("https://stackoverflow.com/feeds/user/67890")).toBe(
-                "stackoverflow - User Activity"
-            );
+            expect(feedsMap.get("https://stackoverflow.com/feeds/user/67890")).toEqual({
+                title: "stackoverflow - User Activity",
+                isFromRule: true,
+            });
         });
     });
 });

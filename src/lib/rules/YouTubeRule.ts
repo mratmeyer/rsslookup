@@ -38,7 +38,7 @@ export class YouTubeRule implements SiteRule {
         if (channelMatch?.[1]) {
             feedsMap.set(
                 `https://www.youtube.com/feeds/videos.xml?channel_id=${channelMatch[1]}`,
-                "YouTube Channel Feed"
+                { title: "YouTube Channel Feed", isFromRule: true }
             );
         }
     }
@@ -51,7 +51,7 @@ export class YouTubeRule implements SiteRule {
         if (userMatch?.[1]) {
             feedsMap.set(
                 `https://www.youtube.com/feeds/videos.xml?user=${userMatch[1]}`,
-                `YouTube - ${userMatch[1]}`
+                { title: `YouTube - ${userMatch[1]}`, isFromRule: true }
             );
         }
     }
@@ -66,7 +66,7 @@ export class YouTubeRule implements SiteRule {
             if (playlistId?.startsWith("PL")) {
                 feedsMap.set(
                     `https://www.youtube.com/feeds/videos.xml?playlist_id=${playlistId}`,
-                    "YouTube Playlist Feed"
+                    { title: "YouTube Playlist Feed", isFromRule: true }
                 );
             }
         } catch {
@@ -96,7 +96,7 @@ export class YouTubeRule implements SiteRule {
                 for (const [prefix, name] of Object.entries(this.playlistPrefixes)) {
                     feedsMap.set(
                         `https://www.youtube.com/feeds/videos.xml?playlist_id=${prefix}${channelIdBase}`,
-                        name
+                        { title: name, isFromRule: true }
                     );
                 }
             } catch {
