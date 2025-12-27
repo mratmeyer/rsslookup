@@ -122,6 +122,14 @@ interface SiteRule {
 }
 ```
 
+When adding feeds to the `feedsMap`, use the `FeedMetadata` structure:
+
+```typescript
+feedsMap.set(feedUrl, { title: "Feed Title", isFromRule: true });
+```
+
+The `isFromRule: true` flag indicates the feed was discovered by a community rule, which displays a special icon in the UI to inform users.
+
 **To add a new rule:**
 
 1. Create `src/lib/rules/YourSiteRule.ts`:
@@ -138,8 +146,11 @@ interface SiteRule {
      }
 
      extractFeeds(context: RuleContext, feedsMap: FeedsMap): void {
-       // Extract feeds and add to feedsMap
-       feedsMap.set(`${context.origin}/feed.xml`, "Example Feed");
+       // Extract feeds and add to feedsMap with metadata
+       feedsMap.set(`${context.origin}/feed.xml`, {
+         title: "Example Feed",
+         isFromRule: true,
+       });
      }
    }
    ```
