@@ -43,10 +43,10 @@ export function FAQ() {
           </h3>
           <p className="text-lg leading-relaxed text-muted-foreground">
             This site is a side project I set up in a couple days- it's not
-            meant to collect a bunch of data. Besides information Cloudflare
-            Turnstile collects to prevent abuse and anonymous analytics
-            collected by Umami, I don't keep track of specific URLs
-            requested using RSS Lookup.
+            meant to collect a bunch of data. Besides information Upstash Redis
+            collects for rate limiting and anonymous analytics collected by
+            Umami, I don't keep track of specific URLs requested using RSS
+            Lookup.
           </p>
         </div>
       </div>
