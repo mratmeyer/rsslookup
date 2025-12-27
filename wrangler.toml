@@ -7,6 +7,9 @@ routes = [
   { pattern = "www.rsslookup.com/*", zone_name = "rsslookup.com" }
 ]
 
+[placement]
+mode = "smart"
+
 [assets]
 directory = "dist/client"
 binding = "ASSETS"
