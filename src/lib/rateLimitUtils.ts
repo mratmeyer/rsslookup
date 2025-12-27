@@ -123,7 +123,7 @@ function getIpRateLimiter(): Ratelimit | null {
       RATE_LIMITS.ip.window
     ),
     prefix: "ratelimit:ip:",
-    analytics: true,
+    analytics: false,
   });
 
   return ipRateLimiter;
@@ -145,7 +145,7 @@ function getDomainRateLimiter(): Ratelimit | null {
       RATE_LIMITS.domain.window
     ),
     prefix: "ratelimit:domain:",
-    analytics: true,
+    analytics: false,
   });
 
   return domainRateLimiter;
@@ -167,7 +167,7 @@ function getDomainHighTrafficRateLimiter(): Ratelimit | null {
       RATE_LIMITS.domainHighTraffic.window
     ),
     prefix: "ratelimit:domain-ht:",
-    analytics: true,
+    analytics: false,
   });
 
   return domainHighTrafficRateLimiter;
