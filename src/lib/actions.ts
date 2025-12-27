@@ -25,6 +25,8 @@ export async function lookupFeeds(
   let errorType = "none";
   let method: "rule" | "scrape" | "guess" | "none" = "none";
 
+  let externalRequestCount = 0;
+
   // Helper to record analytics before returning
   const recordAnalytics = (
     status: "success" | "no_feeds" | "error" | "blocked",
@@ -41,17 +43,15 @@ export async function lookupFeeds(
         feedCount,
         durationMs: Date.now() - startTime,
         upstreamStatus,
+        externalRequestCount,
       });
     }
   };
 
-  // Validate URL input
+  // 1. INPUT VALIDATION
   if (!url) {
     recordAnalytics("error", 0, "missing_url");
-    return {
-      status: 400,
-      message: "Missing 'url' field.",
-    };
+    return { status: 400, message: "Missing 'url' field." };
   }
 
   let parsedURL: URL;
@@ -66,7 +66,7 @@ export async function lookupFeeds(
     };
   }
 
-  // Rate limiting check
+  // 2. CHECK RATE LIMITS
   const rateLimitResult = await checkRateLimits(ip, url, env);
   if (!rateLimitResult.allowed) {
     // Analytics for rate limits are handled inside checkRateLimits for granularity,
@@ -89,7 +89,9 @@ export async function lookupFeeds(
   let responseText: string | undefined;
   let finalUrl: string | undefined;
 
+  // 4. FETCH URL CONTENT
   try {
+    externalRequestCount++;
     const fetchOptions = {
       method: "GET",
       headers: { "User-Agent": USER_AGENT },
@@ -123,7 +125,8 @@ export async function lookupFeeds(
     }
   }
 
-  // Parse HTML for <link> tags
+  // 5. PARSE CONTENT AND FIND FEEDS
+  // A. Parse HTML for <link> tags
   if (responseText && finalUrl) {
     if (parseHtmlForFeeds(responseText, finalUrl, foundFeeds)) {
       // Only update method if we didn't already have rules and found something here
@@ -131,9 +134,12 @@ export async function lookupFeeds(
     }
   }
 
+  // B. Check Common Paths (if limited feeds found)
   // If no feeds found in HTML, check common paths
   if (foundFeeds.size === 0 && finalUrl) {
-    if (await checkCommonFeedPaths(finalUrl, foundFeeds, USER_AGENT)) {
+    const { foundAny, requestCount } = await checkCommonFeedPaths(finalUrl, foundFeeds, USER_AGENT);
+    externalRequestCount += requestCount;
+    if (foundAny) {
       method = "guess";
     }
   }
@@ -152,8 +158,14 @@ export async function lookupFeeds(
     };
   }
 
+  // 6. RESOLVE FEEDS AND FETCH TITLES
   // Fetch titles only for feeds that don't have a hardcoded title
   const feedEntries = Array.from(foundFeeds.entries());
+
+  // Count fetches for missing titles
+  const titleFetchesNeeded = feedEntries.filter(([_, meta]) => meta.title === null).length;
+  externalRequestCount += titleFetchesNeeded;
+
   const titlePromises = feedEntries.map(([feedUrl, metadata]) =>
     metadata.title !== null
       ? Promise.resolve(metadata.title)

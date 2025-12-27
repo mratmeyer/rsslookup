@@ -15,6 +15,7 @@ export interface AnalyticsEvent {
     feedCount: number;
     durationMs: number;
     upstreamStatus: number;
+    externalRequestCount: number;
 }
 
 /**
@@ -36,7 +37,12 @@ export function trackEvent(env: CloudflareEnv, event: AnalyticsEvent) {
                 event.errorType,
                 event.source,
             ],
-            doubles: [event.feedCount, event.durationMs, event.upstreamStatus],
+            doubles: [
+                event.feedCount,
+                event.durationMs,
+                event.upstreamStatus,
+                event.externalRequestCount
+            ],
             indexes: [event.eventName.slice(0, 32)], // Index by event name for faster filtering
         });
     } catch (error) {

@@ -6,13 +6,14 @@ import type { FeedsMap } from "./types";
  * @param baseUrl - The final URL of the page fetched.
  * @param feedsMap - Map of feed URL -> title (null if title should be fetched).
  * @param userAgent - The user agent string to use for requests.
- * @returns True if at least one new feed was found.
+ * @returns Object containing found status and request count.
  */
 export async function checkCommonFeedPaths(
   baseUrl: string,
   feedsMap: FeedsMap,
   userAgent: string
-): Promise<boolean> {
+): Promise<{ foundAny: boolean; requestCount: number }> {
+  let requestCount = 0;
   const checkPromises = POSSIBLE_FEED_PATHS.map(async (path) => {
     let potentialFeedUrl: string;
     try {
@@ -21,6 +22,9 @@ export async function checkCommonFeedPaths(
       if (feedsMap.has(potentialFeedUrl)) {
         return null;
       }
+
+      // We are about to make a request
+      requestCount++;
 
       const response = await fetch(potentialFeedUrl, {
         method: "GET",
@@ -47,6 +51,12 @@ export async function checkCommonFeedPaths(
   const results = await Promise.allSettled(checkPromises);
   let foundAny = false;
 
+  // Note: requestCount here is an approximation because Promise.allSettled runs in parallel,
+  // but since we incremented a local variable inside the async map callback *before* await,
+  // we need to be careful. Actually, mapping creates the promises immediately.
+  // The increment happening inside the map callback is correct for "requests initiated".
+  // However, simple counter in map callback works because map runs synchronously to create promises.
+
   results.forEach((result) => {
     if (result.status === "fulfilled" && result.value) {
       feedsMap.set(result.value, { title: null, isFromRule: false });
@@ -54,5 +64,5 @@ export async function checkCommonFeedPaths(
     }
   });
 
-  return foundAny;
+  return { foundAny, requestCount };
 }

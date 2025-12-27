@@ -27,6 +27,7 @@ export async function appMiddleware(request: Request, env?: CloudflareEnv): Prom
                 feedCount: 0,
                 durationMs: 0,
                 upstreamStatus: 302,
+                externalRequestCount: 0,
             });
         }
         return shortcut;

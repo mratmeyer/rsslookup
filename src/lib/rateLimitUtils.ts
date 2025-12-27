@@ -260,6 +260,7 @@ export async function checkRateLimits(
         feedCount: 0,
         durationMs: 0,
         upstreamStatus: 429,
+        externalRequestCount: 0,
       });
     }
   };
