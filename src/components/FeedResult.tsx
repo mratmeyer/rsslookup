@@ -31,7 +31,7 @@ export function FeedResult({ feed }: FeedResultProps) {
   return (
     <div
       onClick={handleCopy}
-      className="bg-white/90 dark:bg-card group flex items-center justify-between border border-border/50 p-5 rounded-3xl shadow-sm [@media(any-hover:hover)]:hover:border-border [@media(any-hover:hover)]:hover:shadow-md active:border-border active:shadow-md cursor-pointer transition duration-200 ease-in-out"
+      className="bg-white/90 dark:bg-white/5 group flex items-center justify-between border border-border/50 dark:border-white/10 p-5 rounded-3xl shadow-sm [@media(any-hover:hover)]:hover:border-border [@media(any-hover:hover)]:dark:hover:border-white/20 [@media(any-hover:hover)]:hover:shadow-md active:border-border active:shadow-md cursor-pointer transition duration-200 ease-in-out"
     >
       <div className="flex flex-col min-w-0 mr-4">
         {title && (
@@ -39,22 +39,20 @@ export function FeedResult({ feed }: FeedResultProps) {
             {title}
           </span>
         )}
-        <span className="text-url-foreground text-base font-medium truncate font-mono bg-url px-3 py-1 rounded-full transition-colors duration-200 self-start max-w-full">
+        <span className="text-url-foreground text-base font-medium truncate font-mono bg-url dark:bg-zinc-900 px-3 py-1 rounded-full transition-colors duration-200 self-start max-w-full">
           {url}
         </span>
       </div>
       <button
-        className={`ml-2 flex-shrink-0 p-2 rounded-xl transition-all duration-300 relative w-9 h-9 flex items-center justify-center ${
-          isCopied
-            ? "bg-green-500/20"
-            : "bg-secondary [@media(any-hover:hover)]:group-hover:bg-primary/20 group-active:bg-primary/20"
-        }`}
+        className={`ml-2 flex-shrink-0 p-2 rounded-xl transition-all duration-300 relative w-9 h-9 flex items-center justify-center ${isCopied
+          ? "bg-green-500/20"
+          : "bg-secondary dark:bg-white/10 [@media(any-hover:hover)]:group-hover:bg-primary/20 group-active:bg-primary/20"
+          }`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-5 w-5 stroke-muted-foreground [@media(any-hover:hover)]:group-hover:stroke-primary group-active:stroke-primary transition-all duration-200 ease-in-out absolute ${
-            isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
-          }`}
+          className={`h-5 w-5 stroke-muted-foreground [@media(any-hover:hover)]:group-hover:stroke-primary group-active:stroke-primary transition-all duration-200 ease-in-out absolute ${isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
+            }`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -68,9 +66,8 @@ export function FeedResult({ feed }: FeedResultProps) {
         </svg>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-5 w-5 stroke-green-500 transition-all duration-200 ease-in-out absolute ${
-            isCopied ? "scale-100 opacity-100" : "scale-0 opacity-0"
-          }`}
+          className={`h-5 w-5 stroke-green-500 transition-all duration-200 ease-in-out absolute ${isCopied ? "scale-100 opacity-100" : "scale-0 opacity-0"
+            }`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

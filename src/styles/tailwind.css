@@ -4,88 +4,142 @@
 
 @layer base {
   :root {
-    --background: 248 250 252; /* slate-50 */
-    --foreground: 30 41 59; /* slate-800 */
-    --foreground-heading: 15 23 42; /* slate-900 */
+    --background: 248 250 252;
+    /* slate-50 */
+    --foreground: 30 41 59;
+    /* slate-800 */
+    --foreground-heading: 15 23 42;
+    /* slate-900 */
 
-    --card: 255 255 255; /* white */
-    --card-foreground: 30 41 59; /* slate-800 */
+    --card: 255 255 255;
+    /* white */
+    --card-foreground: 30 41 59;
+    /* slate-800 */
 
-    --primary: 234 88 12; /* orange-600 */
-    --primary-foreground: 255 255 255; /* white */
-    --primary-hover: 194 65 12; /* orange-700 */
+    --primary: 234 88 12;
+    /* orange-600 */
+    --primary-foreground: 255 255 255;
+    /* white */
+    --primary-hover: 194 65 12;
+    /* orange-700 */
 
-    --secondary: 241 245 249; /* slate-100 */
-    --secondary-foreground: 30 41 59; /* slate-800 */
+    --secondary: 241 245 249;
+    /* slate-100 */
+    --secondary-foreground: 30 41 59;
+    /* slate-800 */
 
-    --muted: 100 116 139; /* slate-500 */
-    --muted-foreground: 71 85 105; /* slate-600 */
+    --muted: 100 116 139;
+    /* slate-500 */
+    --muted-foreground: 71 85 105;
+    /* slate-600 */
 
-    --border: 226 232 240; /* slate-200 */
-    --input: 255 255 255; /* white */
-    --input-border: 203 213 225; /* slate-300 */
+    --border: 226 232 240;
+    /* slate-200 */
+    --input: 255 255 255;
+    /* white */
+    --input-border: 203 213 225;
+    /* slate-300 */
 
-    --destructive: 254 242 242; /* red-50 */
-    --destructive-foreground: 153 27 27; /* red-800 */
-    --destructive-border: 252 165 165; /* red-300 */
-    --destructive-icon: 220 38 38; /* red-600 */
+    --destructive: 254 242 242;
+    /* red-50 */
+    --destructive-foreground: 153 27 27;
+    /* red-800 */
+    --destructive-border: 252 165 165;
+    /* red-300 */
+    --destructive-icon: 220 38 38;
+    /* red-600 */
 
-    --banner-background: 255 247 237; /* orange-50 */
-    --banner-foreground: 124 45 18; /* orange-900 */
-    --banner-border: 255 237 213; /* orange-100 */
+    --banner-background: 255 247 237;
+    /* orange-50 */
+    --banner-foreground: 124 45 18;
+    /* orange-900 */
+    --banner-border: 255 237 213;
+    /* orange-100 */
 
     /* Additional helpful vars */
-    --ring: 249 115 22; /* orange-500 */
+    --ring: 249 115 22;
+    /* orange-500 */
 
     /* URL Badge Specifics */
-    --url-background: 241 245 249; /* slate-100 */
-    --url-foreground: 30 41 59; /* slate-800 */
+    --url-background: 241 245 249;
+    /* slate-100 */
+    --url-foreground: 30 41 59;
+    /* slate-800 */
 
-    --success: 240 255 244; /* green-50-ish */
-    --success-foreground: 47 133 90; /* green-800-ish */
+    --success: 240 255 244;
+    /* green-50-ish */
+    --success-foreground: 47 133 90;
+    /* green-800-ish */
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --background: 15 23 42; /* slate-900 */
-      --foreground: 226 232 240; /* slate-200 */
-      --foreground-heading: 241 245 249; /* slate-100 */
+      --background: 20 19 24;
+      /* #141318 */
+      --foreground: 228 228 231;
+      /* zinc-200 */
+      --foreground-heading: 244 244 245;
+      /* zinc-100 */
 
-      --card: 30 41 59; /* slate-800 */
-      --card-foreground: 226 232 240; /* slate-200 */
+      --card: 39 39 42;
+      /* zinc-800 */
+      --card-foreground: 228 228 231;
+      /* zinc-200 */
 
-      --primary: 249 115 22; /* orange-500 */
-      --primary-foreground: 255 255 255; /* white */
-      --primary-hover: 234 88 12; /* orange-600 */
+      --primary: 249 115 22;
+      /* orange-500 */
+      --primary-foreground: 255 255 255;
+      /* white */
+      --primary-hover: 234 88 12;
+      /* orange-600 */
 
-      --secondary: 51 65 85; /* slate-700 */
-      --secondary-foreground: 226 232 240; /* slate-200 */
+      --secondary: 39 39 42;
+      /* zinc-800 */
+      --secondary-foreground: 228 228 231;
+      /* zinc-200 */
 
-      --muted: 51 65 85; /* slate-700 */
-      --muted-foreground: 203 213 225; /* slate-300 */
+      --muted: 63 63 70;
+      /* zinc-700 */
+      --muted-foreground: 161 161 170;
+      /* zinc-400 */
 
-      --border: 51 65 85; /* slate-700 */
-      --input: 30 41 59; /* slate-800 */
-      --input-border: 71 85 105; /* slate-600 */
+      --border: 63 63 70;
+      /* zinc-700 */
+      --input: 39 39 42;
+      /* zinc-800 */
+      --input-border: 82 82 91;
+      /* zinc-600 */
 
-      --destructive: 127 29 29; /* red-900 */
-      --destructive-foreground: 254 202 202; /* red-200 */
-      --destructive-border: 153 27 27; /* red-800 */
-      --destructive-icon: 248 113 113; /* red-400 */
+      --destructive: 127 29 29;
+      /* red-900 */
+      --destructive-foreground: 254 202 202;
+      /* red-200 */
+      --destructive-border: 153 27 27;
+      /* red-800 */
+      --destructive-icon: 248 113 113;
+      /* red-400 */
 
-      --banner-background: 51 65 85; /* slate-700 */
-      --banner-foreground: 253 186 116; /* orange-300 */
-      --banner-border: 71 85 105; /* slate-600 */
+      --banner-background: 39 39 42;
+      /* zinc-800 */
+      --banner-foreground: 253 186 116;
+      /* orange-300 */
+      --banner-border: 63 63 70;
+      /* zinc-700 */
 
-      --ring: 249 115 22; /* orange-500 */
+      --ring: 249 115 22;
+      /* orange-500 */
 
       /* URL Badge Specifics - Dark Mode */
       /* Lighter than secondary (950) and card (900) */
-      --url-background: 51 65 85; /* slate-700 */
-      --url-foreground: 226 232 240; /* slate-200 - High contrast like original */
+      --url-background: 39 39 42;
+      /* zinc-800 */
+      --url-foreground: 228 228 231;
+      /* zinc-200 - High contrast like original */
 
-      --success: 6 78 59; /* emerald-900 */
-      --success-foreground: 209 250 229; /* emerald-100 */
+      --success: 6 78 59;
+      /* emerald-900 */
+      --success-foreground: 209 250 229;
+      /* emerald-100 */
     }
   }
 }
@@ -101,12 +155,11 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: 
-      linear-gradient(90deg, 
-        transparent 0%, 
-        rgba(255, 255, 255, 0.15) 50%, 
-        transparent 100%
-      );
+    background:
+      linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.15) 50%,
+        transparent 100%);
     background-size: 200% 100%;
     animation: shimmer 1.5s ease-in-out infinite;
     pointer-events: none;
@@ -116,6 +169,7 @@
     0% {
       background-position: 200% 50%;
     }
+
     100% {
       background-position: -200% 50%;
     }
@@ -126,12 +180,15 @@
   }
 
   @keyframes subtle-glow {
-    0%, 100% {
-      box-shadow: 
+
+    0%,
+    100% {
+      box-shadow:
         0 4px 14px rgba(249, 115, 22, 0.25);
     }
+
     50% {
-      box-shadow: 
+      box-shadow:
         0 4px 20px rgba(249, 115, 22, 0.4);
     }
   }

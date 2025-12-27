@@ -8,6 +8,8 @@ import { Toaster } from "react-hot-toast";
 import { Navbar } from "~/components/Navbar";
 import appCss from "~/styles/tailwind.css?url";
 
+import { NotFound } from "~/components/NotFound";
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -20,15 +22,12 @@ export const Route = createRootRoute({
       },
     ],
     links: [
-      { rel: "icon", href: "/favicon.ico" },
+      { rel: "icon", href: "/favicon.png" },
       { rel: "stylesheet", href: appCss },
-      { rel: "stylesheet", href: "/fonts/style.css" },
+      { rel: "preconnect", href: "https://fonts.bunny.net" },
       {
-        rel: "preload",
-        href: "/fonts/inter-v2-latin-400-600-700.woff2",
-        as: "font",
-        type: "font/woff2",
-        crossOrigin: "anonymous",
+        rel: "stylesheet",
+        href: "https://fonts.bunny.net/css?family=outfit:100,200,300,400,500,600,700,800,900",
       },
     ],
     scripts: [
@@ -42,6 +41,7 @@ export const Route = createRootRoute({
   }),
 
   component: RootComponent,
+  notFoundComponent: NotFound,
 });
 
 function RootComponent() {
@@ -50,7 +50,7 @@ function RootComponent() {
       <head>
         <HeadContent />
       </head>
-      <body className="bg-background text-foreground">
+      <body className="bg-background text-foreground tracking-[0.015em]">
         <Toaster
           toastOptions={{
             success: {

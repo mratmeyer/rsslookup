@@ -2,7 +2,7 @@ export function RSSInfo() {
   return (
     <div className="mb-16 border-t border-border pt-12">
       <div className="bg-secondary/80 dark:bg-white/[0.02] rounded-3xl p-8 border border-border/50">
-        <h2 className="text-3xl font-bold mb-6 leading-tight text-foreground-heading tracking-tight">
+        <h2 className="text-3xl font-semibold mb-6 leading-tight text-foreground-heading">
           What are RSS feeds?
         </h2>
         <div className="prose prose-lg prose-slate text-muted-foreground">

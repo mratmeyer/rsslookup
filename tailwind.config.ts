@@ -39,7 +39,7 @@ export default {
       },
     },
     fontFamily: {
-      sans: ["Inter"],
+      sans: ["Outfit", "sans-serif"],
     },
   },
   variants: {

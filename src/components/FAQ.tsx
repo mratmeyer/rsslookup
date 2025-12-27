@@ -1,12 +1,12 @@
 export function FAQ() {
   return (
     <div className="mb-20">
-      <h2 className="text-3xl font-bold mb-8 leading-tight text-foreground-heading tracking-tight">
+      <h2 className="text-3xl font-semibold mb-8 leading-tight text-foreground-heading">
         Frequently asked questions
       </h2>
       <div className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4 md:gap-8">
-          <h3 className="text-lg font-bold leading-tight text-foreground-heading">
+          <h3 className="text-lg font-semibold leading-tight text-foreground-heading">
             What does RSS Lookup do?
           </h3>
           <p className="text-lg leading-relaxed text-muted-foreground">
@@ -15,8 +15,8 @@ export function FAQ() {
           </p>
         </div>
 
-        <div className="border-t border-border/50 pt-8 grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4 md:gap-8">
-          <h3 className="text-lg font-bold leading-tight text-foreground-heading">
+        <div className="border-t border-border/50 dark:border-white/10 pt-8 grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4 md:gap-8">
+          <h3 className="text-lg font-semibold leading-tight text-foreground-heading">
             How does RSS Lookup work?
           </h3>
           <p className="text-lg leading-relaxed text-muted-foreground">
@@ -26,8 +26,8 @@ export function FAQ() {
           </p>
         </div>
 
-        <div className="border-t border-border/50 pt-8 grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4 md:gap-8">
-          <h3 className="text-lg font-bold leading-tight text-foreground-heading">
+        <div className="border-t border-border/50 dark:border-white/10 pt-8 grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4 md:gap-8">
+          <h3 className="text-lg font-semibold leading-tight text-foreground-heading">
             Why couldn't RSS Lookup find any feeds?
           </h3>
           <p className="text-lg leading-relaxed text-muted-foreground">
@@ -37,8 +37,8 @@ export function FAQ() {
           </p>
         </div>
 
-        <div className="border-t border-border/50 pt-8 grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4 md:gap-8">
-          <h3 className="text-lg font-bold leading-tight text-foreground-heading">
+        <div className="border-t border-border/50 dark:border-white/10 pt-8 grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4 md:gap-8">
+          <h3 className="text-lg font-semibold leading-tight text-foreground-heading">
             What information does this site collect?
           </h3>
           <p className="text-lg leading-relaxed text-muted-foreground">

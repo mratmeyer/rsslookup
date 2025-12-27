@@ -19,13 +19,13 @@ export function Navbar() {
     <nav className="flex items-center justify-between mb-12 py-6">
       <Link to="/" className="flex items-center gap-3 group/logo">
         <img
-          src="/icons/rsslookup_128.jpg"
+          src="/icons/rsslookup_128.png"
           alt="RSS Lookup Icon"
-          className="rounded-xl shadow-sm group-hover/logo:shadow-md transition-shadow duration-200"
-          width={32}
-          height={32}
+          className=""
+          width={30}
+          height={30}
         />
-        <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-orange-700 to-orange-500 dark:from-orange-500 dark:to-orange-400 bg-clip-text text-transparent">
+        <span className="text-2xl font-semibold text-foreground">
           RSS Lookup
         </span>
       </Link>
@@ -38,11 +38,11 @@ export function Navbar() {
           onMouseUp={() => setText("Bookmarklet")}
           onMouseLeave={() => setText("Bookmarklet")}
           onClick={(e) => e.preventDefault()}
-          className="text-[13px] font-bold tracking-tight text-muted-foreground hover:text-primary bg-slate-200/80 dark:bg-secondary hover:bg-slate-200 dark:hover:bg-secondary/80 border border-transparent hover:border-border/50 px-4 py-2 rounded-full transition-all duration-200 cursor-grab active:cursor-grabbing shadow-sm hover:shadow-md active:shadow-none"
+          className="text-[13px] font-semibold text-muted-foreground hover:text-primary bg-slate-200/80 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 border border-transparent hover:border-border/50 px-4 py-2 rounded-full transition-all duration-200 cursor-grab active:cursor-grabbing shadow-sm hover:shadow-md active:shadow-none"
         >
           {text}
         </a>
-        <div className="absolute right-0 top-full mt-3 w-64 p-4 bg-card border border-border rounded-2xl shadow-xl opacity-0 translate-y-2 group-hover/bookmarklet:opacity-100 group-hover/bookmarklet:translate-y-0 transition-all duration-200 pointer-events-none z-50 text-xs leading-relaxed text-center text-muted-foreground">
+        <div className="absolute right-0 top-full mt-3 w-64 p-4 bg-card dark:bg-[#1A191E] border border-border dark:border-white/10 rounded-2xl shadow-xl opacity-0 translate-y-2 group-hover/bookmarklet:opacity-100 group-hover/bookmarklet:translate-y-0 transition-all duration-200 pointer-events-none z-50 text-xs leading-relaxed text-center text-muted-foreground">
           Drag this to your bookmarks bar to use RSS Lookup on other sites
         </div>
       </div>

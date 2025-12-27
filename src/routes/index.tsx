@@ -204,7 +204,7 @@ function HomePage() {
                 </div>
                 <div
                   ref={mirrorRef}
-                  className="absolute inset-0 pl-12 pr-4 py-4 text-lg w-full h-16 whitespace-pre overflow-hidden pointer-events-none flex items-center border border-transparent bg-transparent"
+                  className="absolute inset-0 pl-12 pr-4 py-4 text-lg w-full h-16 whitespace-pre overflow-hidden pointer-events-none flex items-center border border-transparent bg-transparent tracking-[0.015em]"
                   aria-hidden="true"
                 >
                   {renderValueWithColors(url)}
@@ -218,9 +218,8 @@ function HomePage() {
                   onChange={handleInputChange}
                   onPaste={handlePaste}
                   onScroll={handleScroll}
-                  className={`pl-12 pr-4 py-4 text-lg rounded-[1.75rem] border border-input-border bg-input w-full h-16 focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition-[border-color,box-shadow] duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50 caret-foreground ${
-                    url ? "text-transparent" : "text-foreground"
-                  }`}
+                  className={`pl-12 pr-4 py-4 text-lg rounded-[1.75rem] border border-input-border bg-input dark:bg-zinc-800 w-full h-16 focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition-[border-color,box-shadow] duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50 caret-foreground tracking-[0.015em] ${url ? "text-transparent" : "text-foreground"
+                    }`}
                   id="inputText"
                   name="inputText"
                   placeholder="Paste URL here..."
@@ -230,11 +229,10 @@ function HomePage() {
                 />
               </div>
               <button
-                className={`w-full sm:w-36 h-16 flex-shrink-0 bg-primary text-primary-foreground text-lg rounded-[1.75rem] font-bold px-6 transition-all duration-200 ease-in-out disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2 tracking-tight shadow-md ${
-                  loading
-                    ? "loading-gradient loading-gradient-pulse"
-                    : "[@media(any-hover:hover)]:hover:bg-primary-hover active:bg-primary-hover"
-                }`}
+                className={`w-full sm:w-36 h-16 flex-shrink-0 bg-primary text-primary-foreground text-lg rounded-[1.75rem] font-semibold px-6 transition-all duration-200 ease-in-out disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2 shadow-md ${loading
+                  ? "loading-gradient loading-gradient-pulse"
+                  : "[@media(any-hover:hover)]:hover:bg-primary-hover active:bg-primary-hover"
+                  }`}
                 disabled={loading}
               >
                 {loading ? (
@@ -282,7 +280,7 @@ function HomePage() {
             <div className="mt-6 px-1 pb-2">
               {response.status === 200 && response.result ? (
                 <div>
-                  <h2 className="text-xl font-bold mt-4 mb-5 leading-tight text-foreground-heading tracking-tight">
+                  <h2 className="text-xl font-semibold mt-4 mb-5 leading-tight text-foreground-heading">
                     Found {response.result.length}{" "}
                     {response.result.length === 1 ? "Feed" : "Feeds"}
                   </h2>
