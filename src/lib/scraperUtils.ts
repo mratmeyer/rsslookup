@@ -51,12 +51,6 @@ export async function checkCommonFeedPaths(
   const results = await Promise.allSettled(checkPromises);
   let foundAny = false;
 
-  // Note: requestCount here is an approximation because Promise.allSettled runs in parallel,
-  // but since we incremented a local variable inside the async map callback *before* await,
-  // we need to be careful. Actually, mapping creates the promises immediately.
-  // The increment happening inside the map callback is correct for "requests initiated".
-  // However, simple counter in map callback works because map runs synchronously to create promises.
-
   results.forEach((result) => {
     if (result.status === "fulfilled" && result.value) {
       feedsMap.set(result.value, { title: null, isFromRule: false });
