@@ -5,6 +5,7 @@ import { RedditRule } from "./RedditRule";
 import { YouTubeRule } from "./YouTubeRule";
 import { GitHubRule } from "./GitHubRule";
 import { StackExchangeRule } from "./StackExchangeRule";
+import { SteamRule } from "./SteamRule";
 
 // Export types and classes for external use
 export type { SiteRule, RuleContext } from "./SiteRule";
@@ -12,6 +13,7 @@ export { RedditRule } from "./RedditRule";
 export { YouTubeRule } from "./YouTubeRule";
 export { GitHubRule } from "./GitHubRule";
 export { StackExchangeRule } from "./StackExchangeRule";
+export { SteamRule } from "./SteamRule";
 
 /**
  * Registry of all available site rules.
@@ -22,6 +24,7 @@ const rules: SiteRule[] = [
     new YouTubeRule(),
     new GitHubRule(),
     new StackExchangeRule(),
+    new SteamRule(),
 ];
 
 /**
