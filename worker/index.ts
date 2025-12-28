@@ -19,8 +19,11 @@ export default {
     globalThis.process = globalThis.process || {};
     // @ts-ignore
     globalThis.process.env = { ...globalThis.process.env, ...env };
+    // Store ExecutionContext for server functions to use with waitUntil
+    // @ts-ignore
+    globalThis.__cfCtx = ctx;
 
-    const response = await appMiddleware(request, env);
+    const response = await appMiddleware(request, env, ctx);
     if (response) return response;
 
     // Import the bundled TanStack Start handler

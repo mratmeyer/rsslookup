@@ -5,12 +5,13 @@ import { trackEvent } from "./lib/analytics";
 /**
  * Shared middleware logic for the application.
  * Handles URL shortcuts and normalization in a platform-agnostic way.
- * 
+ *
  * @param request - The incoming standard Web API Request.
  * @param env - The Cloudflare environment bindings (optional).
+ * @param ctx - The Cloudflare ExecutionContext (optional, for waitUntil on analytics).
  * @returns A Response if interception is required (redirects), or null to proceed.
  */
-export async function appMiddleware(request: Request, env?: CloudflareEnv): Promise<Response | null> {
+export async function appMiddleware(request: Request, env?: CloudflareEnv, ctx?: ExecutionContext): Promise<Response | null> {
     const url = new URL(request.url);
 
     // Handle URL shortcut redirects (e.g., /https://example.com -> /?url=...)
@@ -28,7 +29,7 @@ export async function appMiddleware(request: Request, env?: CloudflareEnv): Prom
                 durationMs: 0,
                 upstreamStatus: 302,
                 externalRequestCount: 0,
-            });
+            }, ctx);
         }
         return shortcut;
     }

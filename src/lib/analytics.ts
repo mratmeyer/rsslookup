@@ -19,33 +19,41 @@ export interface AnalyticsEvent {
 }
 
 /**
- * Track an event to Cloudflare Analytics Engine
+ * Track an event to Cloudflare Analytics Engine.
+ * Uses ctx.waitUntil() to ensure the write completes even after the response is sent.
  */
-export function trackEvent(env: CloudflareEnv, event: AnalyticsEvent) {
+export function trackEvent(env: CloudflareEnv, event: AnalyticsEvent, ctx?: ExecutionContext) {
     if (!env.ANALYTICS) {
         // Analytics binding not available (e.g. during local dev without --mode wrangler)
         // console.log("[Analytics]", event);
         return;
     }
 
-    try {
-        env.ANALYTICS.writeDataPoint({
-            blobs: [
-                event.eventName,
-                event.status,
-                event.method,
-                event.errorType,
-                event.source,
-            ],
-            doubles: [
-                event.feedCount,
-                event.durationMs,
-                event.upstreamStatus,
-                event.externalRequestCount
-            ],
-            indexes: [event.eventName.slice(0, 32)], // Index by event name for faster filtering
-        });
-    } catch (error) {
-        console.error("Failed to write analytics data point", error);
+    const writePromise = (async () => {
+        try {
+            env.ANALYTICS!.writeDataPoint({
+                blobs: [
+                    event.eventName,
+                    event.status,
+                    event.method,
+                    event.errorType,
+                    event.source,
+                ],
+                doubles: [
+                    event.feedCount,
+                    event.durationMs,
+                    event.upstreamStatus,
+                    event.externalRequestCount
+                ],
+                indexes: [event.eventName.slice(0, 32)], // Index by event name for faster filtering
+            });
+        } catch (error) {
+            console.error("Failed to write analytics data point", error);
+        }
+    })();
+
+    // Use waitUntil to ensure the write completes even after the response is sent
+    if (ctx) {
+        ctx.waitUntil(writePromise);
     }
 }

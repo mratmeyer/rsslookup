@@ -12,13 +12,15 @@ import { trackEvent } from "./analytics";
  * @param ip - The IP address of the client (optional, for rate limiting).
  * @param env - The Cloudflare environment bindings (optional, for analytics).
  * @param source - The source of the request (optional, for analytics).
+ * @param ctx - The Cloudflare ExecutionContext (optional, for waitUntil on analytics).
  * @returns The lookup response with feeds or error.
  */
 export async function lookupFeeds(
   url: string,
   ip: string | null = null,
   env?: CloudflareEnv,
-  source: string = "unknown"
+  source: string = "unknown",
+  ctx?: ExecutionContext
 ): Promise<LookupResponse> {
   const startTime = Date.now();
   let upstreamStatus = 0;
@@ -44,7 +46,7 @@ export async function lookupFeeds(
         durationMs: Date.now() - startTime,
         upstreamStatus,
         externalRequestCount,
-      });
+      }, ctx);
     }
   };
 
@@ -67,7 +69,7 @@ export async function lookupFeeds(
   }
 
   // 2. CHECK RATE LIMITS
-  const rateLimitResult = await checkRateLimits(ip, url, env);
+  const rateLimitResult = await checkRateLimits(ip, url, env, source, ctx);
   if (!rateLimitResult.allowed) {
     // Analytics for rate limits are handled inside checkRateLimits for granularity,
     // but we record the lookup failure here too.

@@ -236,7 +236,8 @@ export async function checkRateLimits(
   ip: string | null,
   targetUrl: string,
   env?: CloudflareEnv,
-  source: string = "unknown"
+  source: string = "unknown",
+  ctx?: ExecutionContext
 ): Promise<RateLimitResult> {
   // Parse target URL to get domain
   let targetDomain: string;
@@ -261,7 +262,7 @@ export async function checkRateLimits(
         durationMs: 0,
         upstreamStatus: 429,
         externalRequestCount: 0,
-      });
+      }, ctx);
     }
   };
 
