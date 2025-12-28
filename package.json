@@ -3,6 +3,9 @@
   "version": "2.0.0",
   "type": "module",
   "description": "A free tool to find the RSS feed for any website.",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "dev:wrangler": "vite build --mode wrangler && wrangler dev",
