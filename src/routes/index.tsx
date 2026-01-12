@@ -203,7 +203,7 @@ function HomePage() {
   return (
     <div>
       <div id="app">
-        <div className="min-h-[calc(100vh-12rem)] flex flex-col justify-start pt-[5vh]">
+        <div className="min-h-[calc(100vh-12rem)] flex flex-col justify-start pt-[5vh] sm:pt-[8vh]">
           <Intro />
           <div className="mb-12 bg-secondary/80 dark:bg-white/[0.02] p-2 sm:p-3 rounded-[2.5rem] border border-border/50">
             <form onSubmit={handleSubmit} className="relative group/form">
