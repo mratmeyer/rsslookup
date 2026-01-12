@@ -192,4 +192,38 @@
         0 4px 20px rgba(249, 115, 22, 0.4);
     }
   }
+
+  /* Scroll reveal animations */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Staggered delays */
+  .scroll-reveal-delay-100 {
+    transition-delay: 100ms;
+  }
+
+  .scroll-reveal-delay-200 {
+    transition-delay: 200ms;
+  }
+
+  .scroll-reveal-delay-300 {
+    transition-delay: 300ms;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
 }

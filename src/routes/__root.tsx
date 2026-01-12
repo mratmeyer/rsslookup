@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-router";
 import { Toaster } from "react-hot-toast";
 import { Navbar } from "~/components/Navbar";
+import { ScrollReveal } from "~/components/ScrollReveal";
 import appCss from "~/styles/tailwind.css?url";
 
 import { NotFound } from "~/components/NotFound";
@@ -72,7 +73,9 @@ function RootComponent() {
           <div className="mb-12">
             <Outlet />
           </div>
-          <Footer />
+          <ScrollReveal threshold={0.1} delay={200}>
+            <Footer />
+          </ScrollReveal>
         </div>
         <Scripts />
       </body>

@@ -6,6 +6,8 @@ import { ErrorMessage } from "~/components/ErrorMessage";
 import { FeedResult } from "~/components/FeedResult";
 import { RSSInfo } from "~/components/RSSInfo";
 import { FAQ } from "~/components/FAQ";
+import { ScrollReveal } from "~/components/ScrollReveal";
+import { ScrollIndicator } from "~/components/ScrollIndicator";
 import { trackEvent } from "~/components/Umami";
 import { lookupFeedsServerFn } from "~/lib/server-functions";
 import type { LookupResponse } from "~/lib/types";
@@ -41,6 +43,7 @@ function HomePage() {
   const [url, setUrl] = useState(urlParam || "");
   const [response, setResponse] = useState<LookupResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showArrow, setShowArrow] = useState(true);
   const isPastingRef = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const mirrorRef = useRef<HTMLDivElement>(null);
@@ -143,12 +146,67 @@ function HomePage() {
     }
   }, [urlParam]);
 
+  // Hide arrow when RSSInfo section becomes visible
+  useEffect(() => {
+    const rssInfoElement = document.getElementById('rss-info');
+    if (!rssInfoElement) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowArrow(false);
+        }
+      },
+      {
+        threshold: 0.2,
+        // Require element to be 200px into viewport before triggering
+        rootMargin: '0px 0px -200px 0px'
+      }
+    );
+
+    observer.observe(rssInfoElement);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Hide arrow if viewport is tall enough to show all content
+  useEffect(() => {
+    const checkViewportHeight = () => {
+      const viewportHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // Only hide if content clearly fits with significant margin
+      if (documentHeight <= viewportHeight - 100) {
+        setShowArrow(false);
+      }
+    };
+
+    // Delay check to ensure page is fully rendered
+    const timeoutId = setTimeout(checkViewportHeight, 500);
+
+    window.addEventListener('resize', checkViewportHeight);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', checkViewportHeight);
+    };
+  }, []);
+
+  // Hide arrow if page loads with anchor link
+  useEffect(() => {
+    if (window.location.hash) {
+      setShowArrow(false);
+    }
+  }, []);
+
   return (
     <div>
       <div id="app">
-        <Intro />
-        <div className="mb-12 bg-secondary/80 dark:bg-white/[0.02] p-2 sm:p-3 rounded-[2.5rem] border border-border/50">
-          <form onSubmit={handleSubmit} className="relative group/form">
+        <div className="min-h-[calc(100vh-12rem)] flex flex-col justify-start pt-[5vh]">
+          <Intro />
+          <div className="mb-12 bg-secondary/80 dark:bg-white/[0.02] p-2 sm:p-3 rounded-[2.5rem] border border-border/50">
+            <form onSubmit={handleSubmit} className="relative group/form">
             <div className="flex flex-col sm:flex-row items-stretch gap-2">
               <div className="relative flex-grow">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/40 pointer-events-none group-focus-within/form:text-primary/50 transition-colors duration-200 z-10">
@@ -246,9 +304,22 @@ function HomePage() {
               )}
             </div>
           )}
+          </div>
         </div>
-        <RSSInfo />
-        <FAQ />
+
+        <ScrollIndicator visible={showArrow} />
+
+        <div id="rss-info">
+          <ScrollReveal threshold={0.1}>
+            <RSSInfo />
+          </ScrollReveal>
+        </div>
+
+        <div id="faq">
+          <ScrollReveal threshold={0.1} delay={100}>
+            <FAQ />
+          </ScrollReveal>
+        </div>
       </div>
     </div>
   );
