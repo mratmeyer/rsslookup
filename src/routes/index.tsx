@@ -307,9 +307,9 @@ function HomePage() {
           </div>
         </div>
 
-        <ScrollIndicator visible={showArrow} />
+        <ScrollIndicator visible={showArrow && !url} />
 
-        <div id="rss-info">
+        <div id="rss-info" className="mt-12">
           <ScrollReveal threshold={0.1}>
             <RSSInfo />
           </ScrollReveal>
