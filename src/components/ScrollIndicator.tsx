@@ -10,7 +10,7 @@ export function ScrollIndicator({ visible }: ScrollIndicatorProps) {
       }`}
       aria-hidden="true"
     >
-      <div className="flex flex-col items-center gap-2 bg-background/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg">
+      <div className="flex flex-col items-center gap-2 bg-background/80 backdrop-blur-sm px-6 py-3 rounded-full">
         <span className="text-sm text-muted-foreground/70 font-medium">
           Scroll for more
         </span>
