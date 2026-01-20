@@ -103,7 +103,19 @@ function getRedisClient(): Redis | null {
     return null;
   }
 
-  redisClient = new Redis({ url, token });
+  const cfAccessId = process.env.CF_ACCESS_ID;
+  const cfAccessSecret = process.env.CF_ACCESS_SECRET;
+
+  redisClient = new Redis({
+    url,
+    token,
+    ...(cfAccessId && cfAccessSecret && {
+      headers: {
+        "CF-Access-Client-Id": cfAccessId,
+        "CF-Access-Client-Secret": cfAccessSecret,
+      },
+    }),
+  });
   return redisClient;
 }
 
