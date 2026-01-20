@@ -25,5 +25,7 @@ export interface CloudflareEnv {
   ANALYTICS?: AnalyticsEngineDataset;
   UPSTASH_REDIS_REST_URL?: string;
   UPSTASH_REDIS_REST_TOKEN?: string;
+  CF_ACCESS_ID?: string;
+  CF_ACCESS_SECRET?: string;
   [key: string]: unknown;
 }
