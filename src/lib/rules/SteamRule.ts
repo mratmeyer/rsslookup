@@ -2,8 +2,8 @@ import type { FeedsMap } from "../types";
 import type { SiteRule, RuleContext } from "./SiteRule";
 
 /**
- * Rule for discovering RSS feeds on YouTube.
- * Handles channels, users, playlists, and derives additional playlist feeds.
+ * Rule for discovering RSS feeds on Steam.
+ * Handles store.steampowered.com URLs.
  */
 export class SteamRule implements SiteRule {
     readonly name = "Steam";
@@ -21,7 +21,7 @@ export class SteamRule implements SiteRule {
     }
 
     /**
-     * Extract feed from /channel/UC... URLs
+     * Extract feed from /news/app/{app_id}/ URLs
      */
     private extractUpdatesFeed(pathname: string, feedsMap: FeedsMap): void {
         // Matches /app/{app_id}/ and /news/app/{app_id}
