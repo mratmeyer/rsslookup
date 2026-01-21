@@ -182,12 +182,6 @@ The `isFromRule: true` flag indicates the feed was discovered by a community rul
 
 This project is open source under the Apache 2.0 License. Please see the `LICENSE` file for details.
 
-## Support
-
-RSS Lookup is ad free, open-source, and privacy respecting, now and in the future. If you find RSS Lookup helpful and would like to show your appreciation, you can support its development:
-
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/mratmeyer)
-
 ---
 
 Created by **Max Ratmeyer** - [Personal Site](https://www.maxratmeyer.com/?utm_source=rsslookup-github)
