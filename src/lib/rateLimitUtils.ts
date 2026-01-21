@@ -109,10 +109,17 @@ function getRedisClient(): Redis | null {
   redisClient = new Redis({
     url,
     token,
+    // Override the default fetch to inject Cloudflare Access headers
     ...(cfAccessId && cfAccessSecret && {
-      headers: {
-        "CF-Access-Client-Id": cfAccessId,
-        "CF-Access-Client-Secret": cfAccessSecret,
+      fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+        return fetch(input, {
+          ...init,
+          headers: {
+            ...init?.headers,
+            "CF-Access-Client-Id": cfAccessId,
+            "CF-Access-Client-Secret": cfAccessSecret,
+          },
+        });
       },
     }),
   });
