@@ -47,6 +47,8 @@ function HomePage() {
   const isPastingRef = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const mirrorRef = useRef<HTMLDivElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isMac, setIsMac] = useState<boolean | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newValue = e.target.value;
@@ -200,6 +202,24 @@ function HomePage() {
     }
   }, []);
 
+  // Detect if user is on Mac for keyboard shortcut display
+  useEffect(() => {
+    setIsMac(navigator.platform.toUpperCase().indexOf('MAC') >= 0);
+  }, []);
+
+  // CMD+K / Ctrl+K keyboard shortcut to focus the URL input
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <div>
       <div id="app">
@@ -227,7 +247,7 @@ function HomePage() {
                 </div>
                 <div
                   ref={mirrorRef}
-                  className="absolute inset-0 pl-12 pr-4 py-4 text-lg w-full h-16 whitespace-pre overflow-hidden pointer-events-none flex items-center border border-transparent bg-transparent tracking-[0.015em]"
+                  className="absolute inset-0 pl-12 pr-4 sm:pr-16 py-4 text-lg w-full h-16 whitespace-pre overflow-hidden pointer-events-none flex items-center border border-transparent bg-transparent tracking-[0.015em]"
                   aria-hidden="true"
                 >
                   {renderValueWithColors(url)}
@@ -241,7 +261,9 @@ function HomePage() {
                   onChange={handleInputChange}
                   onPaste={handlePaste}
                   onScroll={handleScroll}
-                  className={`pl-12 pr-4 py-4 text-lg rounded-[1.75rem] border border-input-border bg-input dark:bg-zinc-800 w-full h-16 focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition-[border-color,box-shadow] duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50 caret-foreground tracking-[0.015em] ${url ? "text-transparent" : "text-foreground"
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  className={`pl-12 pr-4 sm:pr-16 py-4 text-lg rounded-[1.75rem] border border-input-border bg-input dark:bg-zinc-800 w-full h-16 focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition-[border-color,box-shadow] duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50 caret-foreground tracking-[0.015em] ${url ? "text-transparent" : "text-foreground"
                     }`}
                   id="inputText"
                   name="inputText"
@@ -250,6 +272,14 @@ function HomePage() {
                   autoComplete="off"
                   spellCheck="false"
                 />
+                {/* Keyboard shortcut indicator */}
+                <div 
+                  className={`absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex items-center pointer-events-none transition-opacity duration-200 ${isMac === null || isFocused || url ? 'opacity-0' : 'opacity-100'}`}
+                >
+                  <kbd className="px-1.5 py-0.5 text-xs font-medium text-muted-foreground/60 bg-secondary dark:bg-zinc-700 rounded border border-border/50">
+                    {isMac ? '⌘K' : 'Ctrl K'}
+                  </kbd>
+                </div>
               </div>
               <button
                 className={`w-full sm:w-36 h-16 flex-shrink-0 bg-primary text-primary-foreground text-lg rounded-[1.75rem] font-semibold px-6 transition-all duration-200 ease-in-out disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2 shadow-md ${loading
