@@ -29,7 +29,7 @@
     "react-dom": "^19.2.3",
     "react-hot-toast": "^2.6.0",
     "tldts": "^7.0.19",
-    "vinxi": "^0.5.3"
+    "vinxi": "^0.5.11"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250124.0",
