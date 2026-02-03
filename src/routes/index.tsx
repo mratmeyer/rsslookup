@@ -46,6 +46,7 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const { url: urlParam } = Route.useSearch();
   const [url, setUrl] = useState(urlParam || "");
+  const [scrollIndicatorDismissed, setScrollIndicatorDismissed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { response, loading, execute } = useFeedLookup({
@@ -66,6 +67,20 @@ function HomePage() {
     }
   }, [urlParam]);
 
+  // Dismiss scroll indicator permanently when user interacts with input
+  const handleInputFocusChange = useCallback((focused: boolean) => {
+    if (focused) {
+      setScrollIndicatorDismissed(true);
+    }
+  }, []);
+
+  // Also dismiss if URL has content (e.g., from URL params or typing)
+  useEffect(() => {
+    if (url) {
+      setScrollIndicatorDismissed(true);
+    }
+  }, [url]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url) return;
@@ -85,6 +100,7 @@ function HomePage() {
                   onChange={setUrl}
                   inputRef={inputRef}
                   isMac={isMac}
+                  onFocusChange={handleInputFocusChange}
                 />
                 <SearchButton loading={loading} />
               </div>
@@ -111,7 +127,7 @@ function HomePage() {
           </div>
         </div>
 
-        <ScrollIndicator visible={showArrow && !url} />
+        <ScrollIndicator visible={showArrow && !scrollIndicatorDismissed} />
 
         <div id="rss-info" className="mt-12">
           <ScrollReveal threshold={0.1}>
