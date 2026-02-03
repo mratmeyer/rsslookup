@@ -1,3 +1,5 @@
+/// <reference types="@cloudflare/workers-types" />
+
 import { handleURLShortcut, normalizeURLParamEncoding } from "./lib/urlUtils";
 import { CloudflareEnv } from "./lib/types";
 import { trackEvent } from "./lib/analytics";
