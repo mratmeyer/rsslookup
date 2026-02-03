@@ -46,6 +46,7 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const { url: urlParam } = Route.useSearch();
   const [url, setUrl] = useState(urlParam || "");
+  const [inputFocused, setInputFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { response, loading, execute } = useFeedLookup({
@@ -85,6 +86,7 @@ function HomePage() {
                   onChange={setUrl}
                   inputRef={inputRef}
                   isMac={isMac}
+                  onFocusChange={setInputFocused}
                 />
                 <SearchButton loading={loading} />
               </div>
@@ -111,7 +113,7 @@ function HomePage() {
           </div>
         </div>
 
-        <ScrollIndicator visible={showArrow && !url} />
+        <ScrollIndicator visible={showArrow && !url && !inputFocused} />
 
         <div id="rss-info" className="mt-12">
           <ScrollReveal threshold={0.1}>

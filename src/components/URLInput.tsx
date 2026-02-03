@@ -5,13 +5,20 @@ interface URLInputProps {
   onChange: (value: string) => void;
   inputRef: React.RefObject<HTMLInputElement | null>;
   isMac: boolean | null;
+  onFocusChange?: (focused: boolean) => void;
 }
 
 /**
  * URL input field with syntax highlighting for the protocol portion.
  * Includes auto-prefix of https:// when typing (not pasting).
  */
-export function URLInput({ value, onChange, inputRef, isMac }: URLInputProps) {
+export function URLInput({
+  value,
+  onChange,
+  inputRef,
+  isMac,
+  onFocusChange,
+}: URLInputProps) {
   const mirrorRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const isPastingRef = useRef(false);
@@ -91,8 +98,14 @@ export function URLInput({ value, onChange, inputRef, isMac }: URLInputProps) {
         onChange={handleInputChange}
         onPaste={handlePaste}
         onScroll={handleScroll}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onFocus={() => {
+          setIsFocused(true);
+          onFocusChange?.(true);
+        }}
+        onBlur={() => {
+          setIsFocused(false);
+          onFocusChange?.(false);
+        }}
         className={`pl-12 pr-4 sm:pr-16 py-4 text-lg rounded-[1.75rem] border border-input-border bg-input dark:bg-zinc-800 w-full h-16 focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition-[border-color,box-shadow] duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50 caret-foreground tracking-[0.015em] ${
           value ? "text-transparent" : "text-foreground"
         }`}
