@@ -10,8 +10,7 @@ export default {
       colors: {
         background: "rgb(var(--background) / <alpha-value>)",
         foreground: "rgb(var(--foreground) / <alpha-value>)",
-        "foreground-heading":
-          "rgb(var(--foreground-heading) / <alpha-value>)",
+        "foreground-heading": "rgb(var(--foreground-heading) / <alpha-value>)",
         card: "rgb(var(--card) / <alpha-value>)",
         "card-foreground": "rgb(var(--card-foreground) / <alpha-value>)",
         primary: "rgb(var(--primary) / <alpha-value>)",

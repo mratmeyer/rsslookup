@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 interface ScrollRevealProps {
   children: ReactNode;
@@ -11,7 +11,7 @@ export function ScrollReveal({
   children,
   threshold = 0.1,
   delay = 0,
-  className = ''
+  className = "",
 }: ScrollRevealProps) {
   const elementRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -31,8 +31,8 @@ export function ScrollReveal({
       {
         threshold,
         // Start animation slightly before element enters viewport
-        rootMargin: '0px 0px -100px 0px'
-      }
+        rootMargin: "0px 0px -100px 0px",
+      },
     );
 
     observer.observe(element);
@@ -43,12 +43,12 @@ export function ScrollReveal({
   }, [threshold]);
 
   // Build delay class if delay is provided
-  const delayClass = delay > 0 ? `scroll-reveal-delay-${delay}` : '';
+  const delayClass = delay > 0 ? `scroll-reveal-delay-${delay}` : "";
 
   return (
     <div
       ref={elementRef}
-      className={`scroll-reveal ${isVisible ? 'is-visible' : ''} ${delayClass} ${className}`}
+      className={`scroll-reveal ${isVisible ? "is-visible" : ""} ${delayClass} ${className}`}
     >
       {children}
     </div>

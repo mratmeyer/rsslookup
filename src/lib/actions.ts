@@ -20,7 +20,7 @@ export async function lookupFeeds(
   ip: string | null = null,
   env?: CloudflareEnv,
   source: string = "unknown",
-  ctx?: ExecutionContext
+  ctx?: ExecutionContext,
 ): Promise<LookupResponse> {
   const startTime = Date.now();
   let upstreamStatus = 0;
@@ -33,20 +33,24 @@ export async function lookupFeeds(
   const recordAnalytics = (
     status: "success" | "no_feeds" | "error" | "blocked",
     feedCount: number,
-    finalErrorType: string = "none"
+    finalErrorType: string = "none",
   ) => {
     if (env) {
-      trackEvent(env, {
-        eventName: "lookup",
-        status,
-        method,
-        errorType: finalErrorType,
-        source,
-        feedCount,
-        durationMs: Date.now() - startTime,
-        upstreamStatus,
-        externalRequestCount,
-      }, ctx);
+      trackEvent(
+        env,
+        {
+          eventName: "lookup",
+          status,
+          method,
+          errorType: finalErrorType,
+          source,
+          feedCount,
+          durationMs: Date.now() - startTime,
+          upstreamStatus,
+          externalRequestCount,
+        },
+        ctx,
+      );
     }
   };
 
@@ -139,7 +143,11 @@ export async function lookupFeeds(
   // B. Check Common Paths (if limited feeds found)
   // If no feeds found in HTML, check common paths
   if (foundFeeds.size === 0 && finalUrl) {
-    const { foundAny, requestCount } = await checkCommonFeedPaths(finalUrl, foundFeeds, USER_AGENT);
+    const { foundAny, requestCount } = await checkCommonFeedPaths(
+      finalUrl,
+      foundFeeds,
+      USER_AGENT,
+    );
     externalRequestCount += requestCount;
     if (foundAny) {
       method = "guess";
@@ -149,7 +157,6 @@ export async function lookupFeeds(
   // Parse URL for hardcoded rules again (to catch YouTube playlists etc)
   parseURLforRules(url, parsedURL.hostname, foundFeeds);
   if (foundFeeds.size > 0 && method === "none") method = "rule";
-
 
   // Return final results
   if (foundFeeds.size === 0) {
@@ -165,13 +172,15 @@ export async function lookupFeeds(
   const feedEntries = Array.from(foundFeeds.entries());
 
   // Count fetches for missing titles
-  const titleFetchesNeeded = feedEntries.filter(([_, meta]) => meta.title === null).length;
+  const titleFetchesNeeded = feedEntries.filter(
+    ([_, meta]) => meta.title === null,
+  ).length;
   externalRequestCount += titleFetchesNeeded;
 
   const titlePromises = feedEntries.map(([feedUrl, metadata]) =>
     metadata.title !== null
       ? Promise.resolve(metadata.title)
-      : fetchFeedTitle(feedUrl, USER_AGENT)
+      : fetchFeedTitle(feedUrl, USER_AGENT),
   );
   const titles = await Promise.all(titlePromises);
 

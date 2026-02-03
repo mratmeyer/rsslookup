@@ -6,7 +6,7 @@ export function ScrollIndicator({ visible }: ScrollIndicatorProps) {
   return (
     <div
       className={`fixed bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 transition-opacity duration-500 pointer-events-none z-40 ${
-        visible ? 'opacity-100' : 'opacity-0'
+        visible ? "opacity-100" : "opacity-0"
       }`}
       aria-hidden="true"
     >

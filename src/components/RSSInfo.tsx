@@ -12,8 +12,9 @@ export function RSSInfo() {
             content like articles and blog posts from across the internet.
           </p>
           <p className="leading-relaxed">
-            There's not much you can do with an RSS feed URL on its own, but there
-            are many RSS clients and services you can use to subscribe to them.
+            There's not much you can do with an RSS feed URL on its own, but
+            there are many RSS clients and services you can use to subscribe to
+            them.
           </p>
         </div>
       </div>

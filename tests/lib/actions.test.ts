@@ -11,7 +11,7 @@ interface MockResponseOptions {
 
 function createMockResponse(
   body: string,
-  options: MockResponseOptions = {}
+  options: MockResponseOptions = {},
 ): Partial<Response> {
   const {
     status = 200,
@@ -87,15 +87,15 @@ describe("lookupFeeds", () => {
       global.fetch = vi
         .fn()
         .mockResolvedValueOnce(
-          createMockResponse(html, { url: "https://example.com" })
+          createMockResponse(html, { url: "https://example.com" }),
         )
         .mockResolvedValue(
           createMockResponse(
             "<rss><channel><title>Test Feed</title></channel></rss>",
             {
               headers: { "content-type": "application/rss+xml" },
-            }
-          )
+            },
+          ),
         );
 
       const result = await lookupFeeds("https://example.com");
@@ -106,7 +106,7 @@ describe("lookupFeeds", () => {
           expect.objectContaining({
             url: "https://example.com/feed.xml",
           }),
-        ])
+        ]),
       );
     });
 
@@ -125,12 +125,12 @@ describe("lookupFeeds", () => {
       global.fetch = vi
         .fn()
         .mockResolvedValueOnce(
-          createMockResponse(html, { url: "https://example.com" })
+          createMockResponse(html, { url: "https://example.com" }),
         )
         .mockResolvedValue(
           createMockResponse(
-            "<rss><channel><title>Feed</title></channel></rss>"
-          )
+            "<rss><channel><title>Feed</title></channel></rss>",
+          ),
         );
 
       const result = await lookupFeeds("https://example.com");
@@ -157,7 +157,7 @@ describe("lookupFeeds", () => {
       global.fetch = vi
         .fn()
         .mockResolvedValue(
-          createMockResponse("Forbidden", { status: 403, ok: false })
+          createMockResponse("Forbidden", { status: 403, ok: false }),
         );
 
       const result = await lookupFeeds("https://example.com");
@@ -177,11 +177,11 @@ describe("lookupFeeds", () => {
           return Promise.resolve(
             createMockResponse("<html><body>No feeds here</body></html>", {
               url: "https://example.com",
-            })
+            }),
           );
         }
         return Promise.resolve(
-          createMockResponse("Not Found", { status: 404, ok: false })
+          createMockResponse("Not Found", { status: 404, ok: false }),
         );
       });
 
@@ -227,7 +227,7 @@ describe("lookupFeeds", () => {
       global.fetch = vi
         .fn()
         .mockResolvedValueOnce(
-          createMockResponse(html, { url: "https://example.com" })
+          createMockResponse(html, { url: "https://example.com" }),
         )
         .mockResolvedValueOnce(createMockResponse(rssFeed));
 
@@ -241,7 +241,7 @@ describe("lookupFeeds", () => {
       global.fetch = vi.fn().mockResolvedValue(
         createMockResponse("<html></html>", {
           url: "https://github.com/owner/repo",
-        })
+        }),
       );
 
       const result = await lookupFeeds("https://github.com/owner/repo");
@@ -258,7 +258,7 @@ describe("lookupFeeds", () => {
           expect.objectContaining({
             title: "owner/repo - Tags",
           }),
-        ])
+        ]),
       );
     });
   });

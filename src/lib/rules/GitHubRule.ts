@@ -16,12 +16,23 @@ export class GitHubRule implements SiteRule {
     const { cleanedURL, pathname } = context;
 
     // Match /username/reponame (won't match subpages like /issues, /pulls)
-    const repoMatch = pathname.match(/^\/([a-zA-Z0-9_.-]+)\/([a-zA-Z0-9_.-]+)$/);
+    const repoMatch = pathname.match(
+      /^\/([a-zA-Z0-9_.-]+)\/([a-zA-Z0-9_.-]+)$/,
+    );
     if (repoMatch) {
       const repoName = `${repoMatch[1]}/${repoMatch[2]}`;
-      feedsMap.set(`${cleanedURL}/commits.atom`, { title: `${repoName} - Commits`, isFromRule: true });
-      feedsMap.set(`${cleanedURL}/releases.atom`, { title: `${repoName} - Releases`, isFromRule: true });
-      feedsMap.set(`${cleanedURL}/tags.atom`, { title: `${repoName} - Tags`, isFromRule: true });
+      feedsMap.set(`${cleanedURL}/commits.atom`, {
+        title: `${repoName} - Commits`,
+        isFromRule: true,
+      });
+      feedsMap.set(`${cleanedURL}/releases.atom`, {
+        title: `${repoName} - Releases`,
+        isFromRule: true,
+      });
+      feedsMap.set(`${cleanedURL}/tags.atom`, {
+        title: `${repoName} - Tags`,
+        isFromRule: true,
+      });
     }
   }
 }

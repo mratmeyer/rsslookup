@@ -3,6 +3,7 @@
 This document references the schema for the detailed analytics tracking implemented via Cloudflare Analytics Engine.
 
 ## Dataset
+
 - **Name**: `rsslookup_analytics`
 - **Bindings**: `ANALYTICS` (in `wrangler.toml`)
 
@@ -13,22 +14,22 @@ The application writes generic `blobs` and `doubles` to the engine. Below is the
 ```typescript
 // From src/lib/analytics.ts
 env.ANALYTICS.writeDataPoint({
-    blobs: [
-        eventName,   // blob1
-        status,      // blob2
-        method,      // blob3
-        errorType,   // blob4
-        source,      // blob5
-    ],
-    doubles: [
-        feedCount,          // double1
-        durationMs,         // double2
-        upstreamStatus,     // double3
-        externalRequestCount// double4
-    ],
-    indexes: [
-        eventName // index1
-    ]
+  blobs: [
+    eventName, // blob1
+    status, // blob2
+    method, // blob3
+    errorType, // blob4
+    source, // blob5
+  ],
+  doubles: [
+    feedCount, // double1
+    durationMs, // double2
+    upstreamStatus, // double3
+    externalRequestCount, // double4
+  ],
+  indexes: [
+    eventName, // index1
+  ],
 });
 ```
 
@@ -57,14 +58,14 @@ ORDER BY timestamp DESC
 
 ## Field Descriptions
 
-| Field | Column | Type | Description |
-| :--- | :--- | :--- | :--- |
-| **Event Name** | `blob1` | string | The type of event: `lookup`, `rate_limit`, `redirect`. |
-| **Status** | `blob2` | string | Outcome of the operation: `success`, `no_feeds`, `error`, `blocked`. |
-| **Method** | `blob3` | string | How feeds were found: `rule` (hardcoded), `scrape` (HTML), `guess` (common paths). |
-| **Error Type** | `blob4` | string | Specific error details, e.g., `ip_limit_exceeded`, `http_404`, `fetch_error`. |
-| **Source** | `blob5` | string | Origin of the request: `web` (UI), `bookmarklet` (URL param), `shortcut` (/https://...). |
-| **Feed Count** | `double1` | number | Number of feeds returned to the user. |
-| **Duration** | `double2` | number | Latency of the upstream fetch in milliseconds. |
-| **Upstream Status** | `double3` | number | HTTP status code returned by the target URL (e.g., 200, 404, 500). |
-| **Ext. Request Count** | `double4` | number | Total number of external HTTP requests made during processing. |
+| Field                  | Column    | Type   | Description                                                                              |
+| :--------------------- | :-------- | :----- | :--------------------------------------------------------------------------------------- |
+| **Event Name**         | `blob1`   | string | The type of event: `lookup`, `rate_limit`, `redirect`.                                   |
+| **Status**             | `blob2`   | string | Outcome of the operation: `success`, `no_feeds`, `error`, `blocked`.                     |
+| **Method**             | `blob3`   | string | How feeds were found: `rule` (hardcoded), `scrape` (HTML), `guess` (common paths).       |
+| **Error Type**         | `blob4`   | string | Specific error details, e.g., `ip_limit_exceeded`, `http_404`, `fetch_error`.            |
+| **Source**             | `blob5`   | string | Origin of the request: `web` (UI), `bookmarklet` (URL param), `shortcut` (/https://...). |
+| **Feed Count**         | `double1` | number | Number of feeds returned to the user.                                                    |
+| **Duration**           | `double2` | number | Latency of the upstream fetch in milliseconds.                                           |
+| **Upstream Status**    | `double3` | number | HTTP status code returned by the target URL (e.g., 200, 404, 500).                       |
+| **Ext. Request Count** | `double4` | number | Total number of external HTTP requests made during processing.                           |

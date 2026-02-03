@@ -1,36 +1,31 @@
 /**
  * Cloudflare Worker entry point for TanStack Start.
- * Handles URL redirects and env injection.
+ * Sets up Cloudflare env/ctx globals, then delegates to TanStack Start.
  */
 
 /// <reference types="@cloudflare/workers-types" />
 
-import { appMiddleware } from "../src/middleware";
-import type { CloudflareEnv } from "../src/lib/types";
+import type { CloudflareEnv } from '../src/lib/types'
 
 export default {
   async fetch(
     request: Request,
     env: CloudflareEnv,
-    ctx: ExecutionContext
+    ctx: ExecutionContext,
   ): Promise<Response> {
     // Polyfill process.env so it's available globally during the request
     // @ts-ignore
-    globalThis.process = globalThis.process || {};
+    globalThis.process = globalThis.process || {}
     // @ts-ignore
-    globalThis.process.env = { ...globalThis.process.env, ...env };
+    globalThis.process.env = { ...globalThis.process.env, ...env }
     // Store ExecutionContext for server functions to use with waitUntil
     // @ts-ignore
-    globalThis.__cfCtx = ctx;
+    globalThis.__cfCtx = ctx
 
-    const response = await appMiddleware(request, env, ctx);
-    if (response) return response;
+    // Let TanStack Start handle everything
+    const { default: handler } =
+      await import('@tanstack/react-start/server-entry')
 
-    // Import the bundled TanStack Start handler
-    const { default: handler } = await import(
-      "@tanstack/react-start/server-entry"
-    );
-
-    return (handler as any).fetch(request, env, ctx);
+    return (handler as any).fetch(request, env, ctx)
   },
-};
+}

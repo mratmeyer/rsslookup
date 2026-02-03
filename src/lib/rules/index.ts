@@ -20,11 +20,11 @@ export { SteamRule } from "./SteamRule";
  * Add new rules here to enable them.
  */
 const rules: SiteRule[] = [
-    new RedditRule(),
-    new YouTubeRule(),
-    new GitHubRule(),
-    new StackExchangeRule(),
-    new SteamRule(),
+  new RedditRule(),
+  new YouTubeRule(),
+  new GitHubRule(),
+  new StackExchangeRule(),
+  new SteamRule(),
 ];
 
 /**
@@ -34,50 +34,50 @@ const rules: SiteRule[] = [
  * @param feedsMap - Map to add discovered feeds to
  */
 export function applyRules(
-    fullURL: string,
-    hostname: string,
-    feedsMap: FeedsMap
+  fullURL: string,
+  hostname: string,
+  feedsMap: FeedsMap,
 ): void {
+  try {
+    const cleanedURL = cleanURL(fullURL);
+    if (!cleanedURL) return;
+
+    let urlObject: URL;
     try {
-        const cleanedURL = cleanURL(fullURL);
-        if (!cleanedURL) return;
-
-        let urlObject: URL;
-        try {
-            urlObject = new URL(cleanedURL);
-        } catch {
-            // Invalid URL - can't apply rules
-            return;
-        }
-
-        const context: RuleContext = {
-            fullURL,
-            cleanedURL,
-            hostname,
-            pathname: urlObject.pathname,
-            origin: urlObject.origin,
-            searchParams: urlObject.searchParams,
-            feedsMap,
-        };
-
-        // Apply each matching rule
-        for (const rule of rules) {
-            if (rule.matchesHostname(hostname)) {
-                try {
-                    rule.extractFeeds(context, feedsMap);
-                } catch {
-                    // Individual rule failure shouldn't break other rules
-                }
-            }
-        }
+      urlObject = new URL(cleanedURL);
     } catch {
-        // Silently ignore errors - rule parsing should not break the lookup
+      // Invalid URL - can't apply rules
+      return;
     }
+
+    const context: RuleContext = {
+      fullURL,
+      cleanedURL,
+      hostname,
+      pathname: urlObject.pathname,
+      origin: urlObject.origin,
+      searchParams: urlObject.searchParams,
+      feedsMap,
+    };
+
+    // Apply each matching rule
+    for (const rule of rules) {
+      if (rule.matchesHostname(hostname)) {
+        try {
+          rule.extractFeeds(context, feedsMap);
+        } catch {
+          // Individual rule failure shouldn't break other rules
+        }
+      }
+    }
+  } catch {
+    // Silently ignore errors - rule parsing should not break the lookup
+  }
 }
 
 /**
  * Get all registered rules (useful for testing or introspection)
  */
 export function getRegisteredRules(): readonly SiteRule[] {
-    return rules;
+  return rules;
 }

@@ -46,17 +46,21 @@ export function FeedResult({ feed }: FeedResultProps) {
         </span>
       </div>
       <div className="flex items-center gap-3 ml-2">
-        {isFromRule && <CommunityRuleIcon onHoverChange={setIsTooltipHovered} />}
+        {isFromRule && (
+          <CommunityRuleIcon onHoverChange={setIsTooltipHovered} />
+        )}
         <button
-          className={`flex-shrink-0 p-2 rounded-xl transition-all duration-300 relative w-9 h-9 flex items-center justify-center ${isCopied
-            ? "bg-green-500/20"
-            : `bg-secondary dark:bg-white/10 ${isTooltipHovered ? "" : "[@media(any-hover:hover)]:group-hover/card:bg-primary/20 group-active/card:bg-primary/20"}`
-            }`}
+          className={`flex-shrink-0 p-2 rounded-xl transition-all duration-300 relative w-9 h-9 flex items-center justify-center ${
+            isCopied
+              ? "bg-green-500/20"
+              : `bg-secondary dark:bg-white/10 ${isTooltipHovered ? "" : "[@media(any-hover:hover)]:group-hover/card:bg-primary/20 group-active/card:bg-primary/20"}`
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className={`h-5 w-5 stroke-muted-foreground ${isTooltipHovered ? "" : "[@media(any-hover:hover)]:group-hover/card:stroke-primary group-active/card:stroke-primary"} transition-all duration-200 ease-in-out absolute ${isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
-              }`}
+            className={`h-5 w-5 stroke-muted-foreground ${isTooltipHovered ? "" : "[@media(any-hover:hover)]:group-hover/card:stroke-primary group-active/card:stroke-primary"} transition-all duration-200 ease-in-out absolute ${
+              isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
+            }`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -70,8 +74,9 @@ export function FeedResult({ feed }: FeedResultProps) {
           </svg>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className={`h-5 w-5 stroke-green-500 transition-all duration-200 ease-in-out absolute ${isCopied ? "scale-100 opacity-100" : "scale-0 opacity-0"
-              }`}
+            className={`h-5 w-5 stroke-green-500 transition-all duration-200 ease-in-out absolute ${
+              isCopied ? "scale-100 opacity-100" : "scale-0 opacity-0"
+            }`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

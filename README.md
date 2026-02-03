@@ -157,7 +157,7 @@ The `isFromRule: true` flag indicates the feed was discovered by a community rul
 
    ```typescript
    import { YourSiteRule } from "./YourSiteRule";
-   
+
    const rules: SiteRule[] = [
      // ... existing rules
      new YourSiteRule(),

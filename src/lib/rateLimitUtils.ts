@@ -122,7 +122,7 @@ function getIpRateLimiter(): Ratelimit | null {
     redis,
     limiter: Ratelimit.slidingWindow(
       RATE_LIMITS.ip.requests,
-      RATE_LIMITS.ip.window
+      RATE_LIMITS.ip.window,
     ),
     prefix: "ratelimit:ip:",
     analytics: false,
@@ -144,7 +144,7 @@ function getDomainRateLimiter(): Ratelimit | null {
     redis,
     limiter: Ratelimit.slidingWindow(
       RATE_LIMITS.domain.requests,
-      RATE_LIMITS.domain.window
+      RATE_LIMITS.domain.window,
     ),
     prefix: "ratelimit:domain:",
     analytics: false,
@@ -166,7 +166,7 @@ function getDomainHighTrafficRateLimiter(): Ratelimit | null {
     redis,
     limiter: Ratelimit.slidingWindow(
       RATE_LIMITS.domainHighTraffic.requests,
-      RATE_LIMITS.domainHighTraffic.window
+      RATE_LIMITS.domainHighTraffic.window,
     ),
     prefix: "ratelimit:domain-ht:",
     analytics: false,
@@ -236,7 +236,7 @@ export async function checkRateLimits(
   targetUrl: string,
   env?: CloudflareEnv,
   source: string = "unknown",
-  ctx?: ExecutionContext
+  ctx?: ExecutionContext,
 ): Promise<RateLimitResult> {
   // Parse target URL to get domain
   let targetDomain: string;
@@ -251,17 +251,21 @@ export async function checkRateLimits(
   // Helper for tracking rate limit events
   const trackRateLimit = (type: "ip" | "domain", limitType: string) => {
     if (env) {
-      trackEvent(env, {
-        eventName: "rate_limit",
-        status: "blocked",
-        method: "none",
-        errorType: limitType,
-        source,
-        feedCount: 0,
-        durationMs: 0,
-        upstreamStatus: 429,
-        externalRequestCount: 0,
-      }, ctx);
+      trackEvent(
+        env,
+        {
+          eventName: "rate_limit",
+          status: "blocked",
+          method: "none",
+          errorType: limitType,
+          source,
+          feedCount: 0,
+          durationMs: 0,
+          upstreamStatus: 429,
+          externalRequestCount: 0,
+        },
+        ctx,
+      );
     }
   };
 

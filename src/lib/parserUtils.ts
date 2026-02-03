@@ -10,7 +10,7 @@ import type { FeedsMap } from "./types";
  */
 export async function fetchFeedTitle(
   feedUrl: string,
-  userAgent: string
+  userAgent: string,
 ): Promise<string | null> {
   try {
     const response = await fetch(feedUrl, {
@@ -85,7 +85,7 @@ function parseFeedTitle(xmlContent: string): string | null {
         }
       },
     },
-    { xmlMode: true }
+    { xmlMode: true },
   );
 
   parser.write(xmlContent);
@@ -104,7 +104,7 @@ function parseFeedTitle(xmlContent: string): string | null {
 export function parseHtmlForFeeds(
   htmlContent: string,
   baseUrl: string,
-  feedsMap: FeedsMap
+  feedsMap: FeedsMap,
 ): boolean {
   let foundAny = false;
   const parser = new htmlparser2.Parser({

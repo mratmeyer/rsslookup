@@ -152,14 +152,15 @@
   }
 
   .loading-gradient::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
-    background:
-      linear-gradient(90deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.15) 50%,
-        transparent 100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.15) 50%,
+      transparent 100%
+    );
     background-size: 200% 100%;
     animation: shimmer 1.5s ease-in-out infinite;
     pointer-events: none;
@@ -180,16 +181,13 @@
   }
 
   @keyframes subtle-glow {
-
     0%,
     100% {
-      box-shadow:
-        0 4px 14px rgba(249, 115, 22, 0.25);
+      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.25);
     }
 
     50% {
-      box-shadow:
-        0 4px 20px rgba(249, 115, 22, 0.4);
+      box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4);
     }
   }
 
@@ -197,7 +195,9 @@
   .scroll-reveal {
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
   }
 
   .scroll-reveal.is-visible {

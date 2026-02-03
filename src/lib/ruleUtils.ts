@@ -10,7 +10,7 @@ import type { FeedsMap } from "./types";
 export function parseURLforRules(
   fullURL: string,
   hostname: string,
-  feedsMap: FeedsMap
+  feedsMap: FeedsMap,
 ): void {
   applyRules(fullURL, hostname, feedsMap);
 }

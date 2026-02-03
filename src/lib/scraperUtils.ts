@@ -11,7 +11,7 @@ import type { FeedsMap } from "./types";
 export async function checkCommonFeedPaths(
   baseUrl: string,
   feedsMap: FeedsMap,
-  userAgent: string
+  userAgent: string,
 ): Promise<{ foundAny: boolean; requestCount: number }> {
   let requestCount = 0;
   const checkPromises = POSSIBLE_FEED_PATHS.map(async (path) => {
