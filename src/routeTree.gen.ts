@@ -8,80 +8,80 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as USplatRouteImport } from "./routes/u/$";
-import { Route as UApiSendRouteImport } from "./routes/u/api/send";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as USplatRouteImport } from './routes/u/$'
+import { Route as UApiSendRouteImport } from './routes/u/api/send'
 
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const USplatRoute = USplatRouteImport.update({
-  id: "/u/$",
-  path: "/u/$",
+  id: '/u/$',
+  path: '/u/$',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const UApiSendRoute = UApiSendRouteImport.update({
-  id: "/u/api/send",
-  path: "/u/api/send",
+  id: '/u/api/send',
+  path: '/u/api/send',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/u/$": typeof USplatRoute;
-  "/u/api/send": typeof UApiSendRoute;
+  '/': typeof IndexRoute
+  '/u/$': typeof USplatRoute
+  '/u/api/send': typeof UApiSendRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/u/$": typeof USplatRoute;
-  "/u/api/send": typeof UApiSendRoute;
+  '/': typeof IndexRoute
+  '/u/$': typeof USplatRoute
+  '/u/api/send': typeof UApiSendRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/u/$": typeof USplatRoute;
-  "/u/api/send": typeof UApiSendRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/u/$': typeof USplatRoute
+  '/u/api/send': typeof UApiSendRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/u/$" | "/u/api/send";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/u/$" | "/u/api/send";
-  id: "__root__" | "/" | "/u/$" | "/u/api/send";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/u/$' | '/u/api/send'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/u/$' | '/u/api/send'
+  id: '__root__' | '/' | '/u/$' | '/u/api/send'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  USplatRoute: typeof USplatRoute;
-  UApiSendRoute: typeof UApiSendRoute;
+  IndexRoute: typeof IndexRoute
+  USplatRoute: typeof USplatRoute
+  UApiSendRoute: typeof UApiSendRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/u/$": {
-      id: "/u/$";
-      path: "/u/$";
-      fullPath: "/u/$";
-      preLoaderRoute: typeof USplatRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/u/api/send": {
-      id: "/u/api/send";
-      path: "/u/api/send";
-      fullPath: "/u/api/send";
-      preLoaderRoute: typeof UApiSendRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/u/$': {
+      id: '/u/$'
+      path: '/u/$'
+      fullPath: '/u/$'
+      preLoaderRoute: typeof USplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/u/api/send': {
+      id: '/u/api/send'
+      path: '/u/api/send'
+      fullPath: '/u/api/send'
+      preLoaderRoute: typeof UApiSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,17 +89,17 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   USplatRoute: USplatRoute,
   UApiSendRoute: UApiSendRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from "./router.tsx";
-import type { startInstance } from "./start.ts";
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }
