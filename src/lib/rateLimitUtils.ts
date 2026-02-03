@@ -1,6 +1,8 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { getDomain } from "tldts";
+import type { CloudflareEnv } from "./types";
+import { trackEvent } from "./analytics";
 
 /**
  * High-traffic domains that get 5x the normal rate limit.
@@ -224,9 +226,6 @@ async function checkDomainRateLimit(domain: string): Promise<boolean> {
   const result = await limiter.limit(rootDomain);
   return result.success;
 }
-
-import type { CloudflareEnv } from "./types";
-import { trackEvent } from "./analytics";
 
 /**
  * Check both IP and domain rate limits.

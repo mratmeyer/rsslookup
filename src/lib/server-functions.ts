@@ -9,12 +9,12 @@ export const lookupFeedsServerFn = createServerFn()
     const request = getRequest();
 
     // Get Cloudflare Env from the global process shim (populated by worker/index.ts)
-    // @ts-ignore
-    const env = (globalThis.process?.env as CloudflareEnv) || {};
+    const env = (globalThis as unknown as { process?: { env?: CloudflareEnv } })
+      .process?.env;
 
     // Get ExecutionContext for waitUntil (populated by worker/index.ts)
-    // @ts-ignore
-    const ctx = globalThis.__cfCtx as ExecutionContext | undefined;
+    const ctx = (globalThis as unknown as { __cfCtx?: ExecutionContext })
+      .__cfCtx;
 
     const clientIP =
       request?.headers.get("cf-connecting-ip") ||
