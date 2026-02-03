@@ -47,7 +47,7 @@ export function Navbar() {
           </svg>
         </a>
 
-        <div className="relative group/bookmarklet">
+        <div className="hidden sm:block relative group/bookmarklet">
           <a
             ref={linkRef}
             href="#"
