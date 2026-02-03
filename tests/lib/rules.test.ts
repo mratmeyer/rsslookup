@@ -5,6 +5,7 @@ import { RedditRule } from "~/lib/rules/RedditRule";
 import { YouTubeRule } from "~/lib/rules/YouTubeRule";
 import { GitHubRule } from "~/lib/rules/GitHubRule";
 import { StackExchangeRule } from "~/lib/rules/StackExchangeRule";
+import { SteamRule } from "~/lib/rules/SteamRule";
 
 describe("Rules System", () => {
     let feedsMap: FeedsMap;
@@ -16,11 +17,12 @@ describe("Rules System", () => {
     describe("Registry", () => {
         it("should have all rules registered", () => {
             const rules = getRegisteredRules();
-            expect(rules.length).toBe(4);
+            expect(rules.length).toBe(5);
             expect(rules.map((r) => r.name)).toContain("Reddit");
             expect(rules.map((r) => r.name)).toContain("YouTube");
             expect(rules.map((r) => r.name)).toContain("GitHub");
             expect(rules.map((r) => r.name)).toContain("Stack Exchange");
+            expect(rules.map((r) => r.name)).toContain("Steam");
         });
     });
 
@@ -197,6 +199,64 @@ describe("Rules System", () => {
                 title: "stackoverflow - User Activity",
                 isFromRule: true,
             });
+        });
+    });
+
+    describe("SteamRule", () => {
+        const rule = new SteamRule();
+
+        it("should match store.steampowered.com hostname", () => {
+            expect(rule.matchesHostname("store.steampowered.com")).toBe(true);
+            expect(rule.matchesHostname("steampowered.com")).toBe(false);
+            expect(rule.matchesHostname("steamcommunity.com")).toBe(false);
+        });
+
+        it("should extract feed for app page", () => {
+            applyRules(
+                "https://store.steampowered.com/app/123456",
+                "store.steampowered.com",
+                feedsMap
+            );
+            expect(
+                feedsMap.get("https://store.steampowered.com/feeds/news/app/123456/")
+            ).toEqual({
+                title: "Game Updates",
+                isFromRule: true,
+            });
+        });
+
+        it("should extract feed for app page with game name", () => {
+            applyRules(
+                "https://store.steampowered.com/app/123456/Half_Life_3",
+                "store.steampowered.com",
+                feedsMap
+            );
+            expect(
+                feedsMap.get("https://store.steampowered.com/feeds/news/app/123456/")
+            ).toEqual({
+                title: "Half Life 3 Updates",
+                isFromRule: true,
+            });
+        });
+
+        it("should extract feed for news app page", () => {
+            applyRules(
+                "https://store.steampowered.com/news/app/123456",
+                "store.steampowered.com",
+                feedsMap
+            );
+            expect(
+                feedsMap.has("https://store.steampowered.com/feeds/news/app/123456/")
+            ).toBe(true);
+        });
+
+        it("should not extract feed for non-app pages", () => {
+            applyRules(
+                "https://store.steampowered.com/explore",
+                "store.steampowered.com",
+                feedsMap
+            );
+            expect(feedsMap.size).toBe(0);
         });
     });
 });

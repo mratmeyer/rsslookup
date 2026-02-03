@@ -15,7 +15,7 @@ export class SteamRule implements SiteRule {
     }
 
     extractFeeds(context: RuleContext, feedsMap: FeedsMap): void {
-        const { fullURL, pathname, searchParams } = context;
+        const { pathname } = context;
 
         this.extractUpdatesFeed(pathname, feedsMap);
     }
