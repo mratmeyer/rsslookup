@@ -2,7 +2,7 @@
 
 [![GitHub Repo stars](https://img.shields.io/github/stars/mratmeyer/rsslookup?style=social)](https://github.com/mratmeyer/rsslookup/stargazers)
 
-RSS Lookup is a free, open-source tool designed to find the RSS feed associated with any URL. Simply paste the website's address, and RSS Lookup will intelligently scan the site's HTML for feed links and check common feed path conventions.
+RSS Lookup is a free, open-source tool designed to find the RSS feed associated with any URL. Simply paste the website's address, and RSS Lookup will scan the site's HTML and check common feed path conventions to give you the best chance at finding feeds on the site.
 
 **Check out the live tool:** [**www.rsslookup.com**](https://www.rsslookup.com/)
 
@@ -11,7 +11,7 @@ RSS Lookup is a free, open-source tool designed to find the RSS feed associated 
 - **Simple Interface:** Clean, easy-to-use single-page application.
 - **HTML Meta Tag Detection:** Finds feeds specified using standard `<link rel="alternate" type="application/rss+xml">` (and Atom) tags.
 - **Common Path Fallback:** Checks conventional paths like `/feed`, `/rss.xml`, `/atom.xml` if no tags are found.
-- **Popular Site Integration:** Rules to natively supports popular sites like YouTube, StackExchange, and Reddit.
+- **Popular Site Rules:** Rules to natively supports popular sites like YouTube, StackExchange, and Reddit.
 - **Abuse Prevention:** Rate limiting via Upstash Redis to prevent abuse (per-IP and per-domain limits).
 - **User-Friendly Results:** Displays found feed URLs clearly and easily copiable.
 - **Modern Tech:** Built with TanStack Start, Vite, and Cloudflare Workers for a seamless full-stack experience at the edge.
@@ -107,8 +107,6 @@ Make sure to set the `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` env
 Some websites have RSS feeds but don't advertise them via standard HTML `<link>` tags. Site-specific rules allow RSS Lookup to discover these "hidden" feeds by recognizing URL patterns and constructing feed URLs programmatically.
 
 For example, YouTube doesn't expose channel feeds in page metadata, but every channel has a feed at `youtube.com/feeds/videos.xml?channel_id=...`. The YouTube rule extracts the channel ID from the URL and builds the feed URL.
-
-**Current built-in rules:** Reddit, YouTube, GitHub, Stack Exchange
 
 ### Creating a New Rule
 
