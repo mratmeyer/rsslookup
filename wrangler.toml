@@ -4,7 +4,7 @@ compatibility_flags = ["nodejs_compat"]
 main = "worker/index.ts"
 
 routes = [
-  { pattern = "www.rsslookup.com/*", zone_name = "rsslookup.com" }
+  { pattern = "www.rsslookup.com", custom_domain = true }
 ]
 
 [assets]
