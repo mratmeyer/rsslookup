@@ -46,7 +46,8 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const { url: urlParam } = Route.useSearch();
   const [url, setUrl] = useState(urlParam || "");
-  const [scrollIndicatorDismissed, setScrollIndicatorDismissed] = useState(false);
+  const [scrollIndicatorDismissed, setScrollIndicatorDismissed] =
+    useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { response, loading, execute } = useFeedLookup({
