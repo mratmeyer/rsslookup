@@ -7,6 +7,7 @@ import { GitHubRule } from "./GitHubRule";
 import { StackExchangeRule } from "./StackExchangeRule";
 import { SteamRule } from "./SteamRule";
 import { NYTimesRule } from "./NYTimesRule";
+import { CNNRule } from "./CNNRule";
 
 // Export types and classes for external use
 export type { SiteRule, RuleContext } from "./SiteRule";
@@ -16,6 +17,7 @@ export { GitHubRule } from "./GitHubRule";
 export { StackExchangeRule } from "./StackExchangeRule";
 export { SteamRule } from "./SteamRule";
 export { NYTimesRule } from "./NYTimesRule";
+export { CNNRule } from "./CNNRule";
 
 /**
  * Registry of all available site rules.
@@ -28,6 +30,7 @@ const rules: SiteRule[] = [
   new StackExchangeRule(),
   new SteamRule(),
   new NYTimesRule(),
+  new CNNRule(),
 ];
 
 /**
