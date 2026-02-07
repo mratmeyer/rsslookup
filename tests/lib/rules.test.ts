@@ -8,6 +8,13 @@ import { StackExchangeRule } from "~/lib/rules/StackExchangeRule";
 import { SteamRule } from "~/lib/rules/SteamRule";
 import { NYTimesRule } from "~/lib/rules/NYTimesRule";
 import { CNNRule } from "~/lib/rules/CNNRule";
+import { FoxNewsRule } from "~/lib/rules/FoxNewsRule";
+import { BBCRule } from "~/lib/rules/BBCRule";
+import { NYPostRule } from "~/lib/rules/NYPostRule";
+import { CNBCRule } from "~/lib/rules/CNBCRule";
+import { CBSNewsRule } from "~/lib/rules/CBSNewsRule";
+import { WashingtonPostRule } from "~/lib/rules/WashingtonPostRule";
+import { WSJRule } from "~/lib/rules/WSJRule";
 
 describe("Rules System", () => {
   let feedsMap: FeedsMap;
@@ -19,7 +26,7 @@ describe("Rules System", () => {
   describe("Registry", () => {
     it("should have all rules registered", () => {
       const rules = getRegisteredRules();
-      expect(rules.length).toBe(7);
+      expect(rules.length).toBe(14);
       expect(rules.map((r) => r.name)).toContain("Reddit");
       expect(rules.map((r) => r.name)).toContain("YouTube");
       expect(rules.map((r) => r.name)).toContain("GitHub");
@@ -27,6 +34,13 @@ describe("Rules System", () => {
       expect(rules.map((r) => r.name)).toContain("Steam");
       expect(rules.map((r) => r.name)).toContain("NYTimes");
       expect(rules.map((r) => r.name)).toContain("CNN");
+      expect(rules.map((r) => r.name)).toContain("Fox News");
+      expect(rules.map((r) => r.name)).toContain("BBC");
+      expect(rules.map((r) => r.name)).toContain("NY Post");
+      expect(rules.map((r) => r.name)).toContain("CNBC");
+      expect(rules.map((r) => r.name)).toContain("CBS News");
+      expect(rules.map((r) => r.name)).toContain("Washington Post");
+      expect(rules.map((r) => r.name)).toContain("WSJ");
     });
   });
 
@@ -335,6 +349,56 @@ describe("Rules System", () => {
     });
   });
 
+  describe("FoxNewsRule", () => {
+    const rule = new FoxNewsRule();
+
+    it("should match foxnews.com hostnames", () => {
+      expect(rule.matchesHostname("foxnews.com")).toBe(true);
+      expect(rule.matchesHostname("www.foxnews.com")).toBe(true);
+      expect(rule.matchesHostname("moxie.foxnews.com")).toBe(false);
+      expect(rule.matchesHostname("example.com")).toBe(false);
+    });
+
+    it("should extract all Fox News feeds for any foxnews.com URL", () => {
+      applyRules("https://www.foxnews.com/", "www.foxnews.com", feedsMap);
+      expect(feedsMap.size).toBe(11);
+    });
+
+    it("should include the Latest Headlines feed", () => {
+      applyRules("https://www.foxnews.com/", "www.foxnews.com", feedsMap);
+      expect(
+        feedsMap.get("https://moxie.foxnews.com/google-publisher/latest.xml"),
+      ).toEqual({ title: "Latest Headlines", isFromRule: true });
+    });
+
+    it("should include section feeds", () => {
+      applyRules(
+        "https://www.foxnews.com/politics",
+        "www.foxnews.com",
+        feedsMap,
+      );
+      expect(
+        feedsMap.has("https://moxie.foxnews.com/google-publisher/world.xml"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://moxie.foxnews.com/google-publisher/politics.xml"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://moxie.foxnews.com/google-publisher/tech.xml"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://moxie.foxnews.com/google-publisher/us.xml"),
+      ).toBe(true);
+    });
+
+    it("should mark all feeds as isFromRule", () => {
+      applyRules("https://www.foxnews.com/", "www.foxnews.com", feedsMap);
+      for (const [, metadata] of feedsMap) {
+        expect(metadata.isFromRule).toBe(true);
+      }
+    });
+  });
+
   describe("CNNRule", () => {
     const rule = new CNNRule();
 
@@ -373,6 +437,602 @@ describe("Rules System", () => {
 
     it("should mark all feeds as isFromRule", () => {
       applyRules("https://www.cnn.com/", "www.cnn.com", feedsMap);
+      for (const [, metadata] of feedsMap) {
+        expect(metadata.isFromRule).toBe(true);
+      }
+    });
+  });
+
+  describe("BBCRule", () => {
+    const rule = new BBCRule();
+
+    it("should match bbc.co.uk and bbc.com hostnames", () => {
+      expect(rule.matchesHostname("bbc.co.uk")).toBe(true);
+      expect(rule.matchesHostname("www.bbc.co.uk")).toBe(true);
+      expect(rule.matchesHostname("bbc.com")).toBe(true);
+      expect(rule.matchesHostname("www.bbc.com")).toBe(true);
+      expect(rule.matchesHostname("feeds.bbci.co.uk")).toBe(false);
+      expect(rule.matchesHostname("example.com")).toBe(false);
+    });
+
+    it("should extract all BBC feeds for any bbc.co.uk URL", () => {
+      applyRules("https://www.bbc.co.uk/", "www.bbc.co.uk", feedsMap);
+      expect(feedsMap.size).toBe(39);
+    });
+
+    it("should include the Top Stories feed", () => {
+      applyRules("https://www.bbc.co.uk/", "www.bbc.co.uk", feedsMap);
+      expect(feedsMap.get("http://feeds.bbci.co.uk/news/rss.xml")).toEqual({
+        title: "Top Stories",
+        isFromRule: true,
+      });
+    });
+
+    it("should include section feeds", () => {
+      applyRules("https://www.bbc.co.uk/news", "www.bbc.co.uk", feedsMap);
+      expect(feedsMap.has("http://feeds.bbci.co.uk/news/world/rss.xml")).toBe(
+        true,
+      );
+      expect(
+        feedsMap.has("http://feeds.bbci.co.uk/news/technology/rss.xml"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("http://feeds.bbci.co.uk/news/business/rss.xml"),
+      ).toBe(true);
+    });
+
+    it("should include regional edition feeds", () => {
+      applyRules("https://www.bbc.co.uk/", "www.bbc.co.uk", feedsMap);
+      expect(
+        feedsMap.get("http://feeds.bbci.co.uk/news/rss.xml?edition=uk"),
+      ).toEqual({ title: "Top Stories (UK Edition)", isFromRule: true });
+      expect(
+        feedsMap.has("http://feeds.bbci.co.uk/news/rss.xml?edition=us"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("http://feeds.bbci.co.uk/news/rss.xml?edition=int"),
+      ).toBe(true);
+    });
+
+    it("should include video and audio feeds", () => {
+      applyRules("https://www.bbc.co.uk/", "www.bbc.co.uk", feedsMap);
+      expect(
+        feedsMap.get(
+          "http://feeds.bbci.co.uk/news/video_and_audio/news_front_page/rss.xml?edition=uk",
+        ),
+      ).toEqual({ title: "Top Stories (Video & Audio)", isFromRule: true });
+      expect(
+        feedsMap.has(
+          "http://feeds.bbci.co.uk/news/video_and_audio/world/rss.xml",
+        ),
+      ).toBe(true);
+    });
+
+    it("should include other feeds", () => {
+      applyRules("https://www.bbc.co.uk/", "www.bbc.co.uk", feedsMap);
+      expect(
+        feedsMap.has(
+          "http://feeds.bbci.co.uk/news/system/latest_published_content/rss.xml",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.bbc.co.uk/blogs/theeditors/rss.xml"),
+      ).toBe(true);
+    });
+
+    it("should mark all feeds as isFromRule", () => {
+      applyRules("https://www.bbc.co.uk/", "www.bbc.co.uk", feedsMap);
+      for (const [, metadata] of feedsMap) {
+        expect(metadata.isFromRule).toBe(true);
+      }
+    });
+  });
+
+  describe("NYPostRule", () => {
+    const rule = new NYPostRule();
+
+    it("should match nypost.com hostnames", () => {
+      expect(rule.matchesHostname("nypost.com")).toBe(true);
+      expect(rule.matchesHostname("www.nypost.com")).toBe(true);
+      expect(rule.matchesHostname("pagesix.com")).toBe(false);
+      expect(rule.matchesHostname("example.com")).toBe(false);
+    });
+
+    it("should extract all NY Post feeds for any nypost.com URL", () => {
+      applyRules("https://nypost.com/", "nypost.com", feedsMap);
+      expect(feedsMap.size).toBe(15);
+    });
+
+    it("should include the All Stories feed", () => {
+      applyRules("https://nypost.com/", "nypost.com", feedsMap);
+      expect(feedsMap.get("https://nypost.com/feed/")).toEqual({
+        title: "NYPost.com – All Stories",
+        isFromRule: true,
+      });
+    });
+
+    it("should include the PageSix feed", () => {
+      applyRules("https://nypost.com/", "nypost.com", feedsMap);
+      expect(feedsMap.get("https://pagesix.com/feed/")).toEqual({
+        title: "PageSix.com – All Stories",
+        isFromRule: true,
+      });
+    });
+
+    it("should include section feeds", () => {
+      applyRules("https://nypost.com/politics", "nypost.com", feedsMap);
+      expect(feedsMap.has("https://nypost.com/us-news/feed/")).toBe(true);
+      expect(feedsMap.has("https://nypost.com/sports/feed/")).toBe(true);
+      expect(feedsMap.has("https://nypost.com/business/feed/")).toBe(true);
+      expect(feedsMap.has("https://nypost.com/tech/feed/")).toBe(true);
+      expect(feedsMap.has("https://nypost.com/entertainment/feed/")).toBe(true);
+      expect(feedsMap.has("https://nypost.com/real-estate/feed/")).toBe(true);
+    });
+
+    it("should mark all feeds as isFromRule", () => {
+      applyRules("https://nypost.com/", "nypost.com", feedsMap);
+      for (const [, metadata] of feedsMap) {
+        expect(metadata.isFromRule).toBe(true);
+      }
+    });
+  });
+
+  describe("CNBCRule", () => {
+    const rule = new CNBCRule();
+
+    it("should match cnbc.com hostnames", () => {
+      expect(rule.matchesHostname("cnbc.com")).toBe(true);
+      expect(rule.matchesHostname("www.cnbc.com")).toBe(true);
+      expect(rule.matchesHostname("search.cnbc.com")).toBe(false);
+      expect(rule.matchesHostname("example.com")).toBe(false);
+    });
+
+    it("should extract all CNBC feeds for any cnbc.com URL", () => {
+      applyRules("https://www.cnbc.com/", "www.cnbc.com", feedsMap);
+      expect(feedsMap.size).toBe(54);
+    });
+
+    it("should include the Top News feed", () => {
+      applyRules("https://www.cnbc.com/", "www.cnbc.com", feedsMap);
+      expect(
+        feedsMap.get(
+          "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114",
+        ),
+      ).toEqual({ title: "Top News", isFromRule: true });
+    });
+
+    it("should include news section feeds", () => {
+      applyRules(
+        "https://www.cnbc.com/world",
+        "www.cnbc.com",
+        feedsMap,
+      );
+      expect(
+        feedsMap.has(
+          "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100727362",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=19854910",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000113",
+        ),
+      ).toBe(true);
+    });
+
+    it("should include investing feeds", () => {
+      applyRules("https://www.cnbc.com/", "www.cnbc.com", feedsMap);
+      expect(
+        feedsMap.get(
+          "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=15839069",
+        ),
+      ).toEqual({ title: "Investing", isFromRule: true });
+      expect(
+        feedsMap.has(
+          "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=21324812",
+        ),
+      ).toBe(true);
+    });
+
+    it("should include blog feeds", () => {
+      applyRules("https://www.cnbc.com/", "www.cnbc.com", feedsMap);
+      expect(
+        feedsMap.get(
+          "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=19206666",
+        ),
+      ).toEqual({ title: "Buffett Watch", isFromRule: true });
+    });
+
+    it("should include video and TV feeds", () => {
+      applyRules("https://www.cnbc.com/", "www.cnbc.com", feedsMap);
+      expect(
+        feedsMap.get(
+          "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=15839263",
+        ),
+      ).toEqual({ title: "Top Video", isFromRule: true });
+      expect(
+        feedsMap.has(
+          "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=15838499",
+        ),
+      ).toBe(true);
+    });
+
+    it("should include European and Asian TV program feeds", () => {
+      applyRules("https://www.cnbc.com/", "www.cnbc.com", feedsMap);
+      expect(
+        feedsMap.has(
+          "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=17501773",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=15838831",
+        ),
+      ).toBe(true);
+    });
+
+    it("should mark all feeds as isFromRule", () => {
+      applyRules("https://www.cnbc.com/", "www.cnbc.com", feedsMap);
+      for (const [, metadata] of feedsMap) {
+        expect(metadata.isFromRule).toBe(true);
+      }
+    });
+  });
+
+  describe("CBSNewsRule", () => {
+    const rule = new CBSNewsRule();
+
+    it("should match cbsnews.com hostnames", () => {
+      expect(rule.matchesHostname("cbsnews.com")).toBe(true);
+      expect(rule.matchesHostname("www.cbsnews.com")).toBe(true);
+      expect(rule.matchesHostname("assets.cbsnews.com")).toBe(false);
+      expect(rule.matchesHostname("example.com")).toBe(false);
+    });
+
+    it("should extract all CBS News feeds for any cbsnews.com URL", () => {
+      applyRules("https://www.cbsnews.com/", "www.cbsnews.com", feedsMap);
+      expect(feedsMap.size).toBe(26);
+    });
+
+    it("should include the Top Stories feed", () => {
+      applyRules("https://www.cbsnews.com/", "www.cbsnews.com", feedsMap);
+      expect(
+        feedsMap.get("https://www.cbsnews.com/latest/rss/main"),
+      ).toEqual({ title: "Top Stories", isFromRule: true });
+    });
+
+    it("should include topic feeds", () => {
+      applyRules(
+        "https://www.cbsnews.com/news",
+        "www.cbsnews.com",
+        feedsMap,
+      );
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/us"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/politics"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/world"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/health"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/technology"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/science"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/space"),
+      ).toBe(true);
+    });
+
+    it("should include broadcast feeds", () => {
+      applyRules("https://www.cbsnews.com/", "www.cbsnews.com", feedsMap);
+      expect(
+        feedsMap.get("https://www.cbsnews.com/latest/rss/60-minutes"),
+      ).toEqual({ title: "60 Minutes", isFromRule: true });
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/evening-news"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/face-the-nation"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/48-hours"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/sunday-morning"),
+      ).toBe(true);
+    });
+
+    it("should include streaming network feeds", () => {
+      applyRules("https://www.cbsnews.com/", "www.cbsnews.com", feedsMap);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/cbs-reports-custom"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/daily-report-clips"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/the-takeout-full-episodes"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://www.cbsnews.com/latest/rss/the-dish-full-episodes"),
+      ).toBe(true);
+    });
+
+    it("should mark all feeds as isFromRule", () => {
+      applyRules("https://www.cbsnews.com/", "www.cbsnews.com", feedsMap);
+      for (const [, metadata] of feedsMap) {
+        expect(metadata.isFromRule).toBe(true);
+      }
+    });
+  });
+
+  describe("WashingtonPostRule", () => {
+    const rule = new WashingtonPostRule();
+
+    it("should match washingtonpost.com hostnames", () => {
+      expect(rule.matchesHostname("washingtonpost.com")).toBe(true);
+      expect(rule.matchesHostname("www.washingtonpost.com")).toBe(true);
+      expect(rule.matchesHostname("feeds.washingtonpost.com")).toBe(false);
+      expect(rule.matchesHostname("example.com")).toBe(false);
+    });
+
+    it("should extract all Washington Post feeds for any washingtonpost.com URL", () => {
+      applyRules(
+        "https://www.washingtonpost.com/",
+        "www.washingtonpost.com",
+        feedsMap,
+      );
+      expect(feedsMap.size).toBe(24);
+    });
+
+    it("should include main section feeds", () => {
+      applyRules(
+        "https://www.washingtonpost.com/",
+        "www.washingtonpost.com",
+        feedsMap,
+      );
+      expect(
+        feedsMap.get(
+          "https://www.washingtonpost.com/arcio/rss/category/politics/",
+        ),
+      ).toEqual({ title: "Politics", isFromRule: true });
+      expect(
+        feedsMap.has(
+          "https://www.washingtonpost.com/arcio/rss/category/opinions/",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://feeds.washingtonpost.com/rss/local"),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://www.washingtonpost.com/arcio/rss/category/sports/",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://feeds.washingtonpost.com/rss/business/technology"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("http://feeds.washingtonpost.com/rss/national"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://feeds.washingtonpost.com/rss/world"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("http://feeds.washingtonpost.com/rss/business"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://feeds.washingtonpost.com/rss/lifestyle"),
+      ).toBe(true);
+      expect(
+        feedsMap.has("http://feeds.washingtonpost.com/rss/entertainment"),
+      ).toBe(true);
+    });
+
+    it("should include sports sub-feeds", () => {
+      applyRules(
+        "https://www.washingtonpost.com/sports",
+        "www.washingtonpost.com",
+        feedsMap,
+      );
+      expect(
+        feedsMap.has(
+          "http://feeds.washingtonpost.com/rss/rss_football-insider",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "http://feeds.washingtonpost.com/rss/rss_capitals-insider",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "http://feeds.washingtonpost.com/rss/rss_nationals-journal",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "http://feeds.washingtonpost.com/rss/rss_wizards-insider",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "http://feeds.washingtonpost.com/rss/rss_soccer-insider",
+        ),
+      ).toBe(true);
+    });
+
+    it("should include columnist feeds", () => {
+      applyRules(
+        "https://www.washingtonpost.com/",
+        "www.washingtonpost.com",
+        feedsMap,
+      );
+      expect(
+        feedsMap.get(
+          "https://www.washingtonpost.com/arcio/rss/author/George%20F%20-Will/",
+        ),
+      ).toEqual({ title: "George F. Will", isFromRule: true });
+    });
+
+    it("should include local sub-feeds", () => {
+      applyRules(
+        "https://www.washingtonpost.com/",
+        "www.washingtonpost.com",
+        feedsMap,
+      );
+      expect(
+        feedsMap.get(
+          "http://feeds.washingtonpost.com/rss/rss_capital-weather-gang",
+        ),
+      ).toEqual({ title: "Capital Weather Gang", isFromRule: true });
+      expect(
+        feedsMap.has(
+          "http://feeds.washingtonpost.com/rss/national/inspired-life",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://www.washingtonpost.com/arcio/rss/category/history/",
+        ),
+      ).toBe(true);
+    });
+
+    it("should mark all feeds as isFromRule", () => {
+      applyRules(
+        "https://www.washingtonpost.com/",
+        "www.washingtonpost.com",
+        feedsMap,
+      );
+      for (const [, metadata] of feedsMap) {
+        expect(metadata.isFromRule).toBe(true);
+      }
+    });
+  });
+
+  describe("WSJRule", () => {
+    const rule = new WSJRule();
+
+    it("should match wsj.com hostnames", () => {
+      expect(rule.matchesHostname("wsj.com")).toBe(true);
+      expect(rule.matchesHostname("www.wsj.com")).toBe(true);
+      expect(rule.matchesHostname("feeds.content.dowjones.io")).toBe(false);
+      expect(rule.matchesHostname("example.com")).toBe(false);
+    });
+
+    it("should extract all WSJ feeds for any wsj.com URL", () => {
+      applyRules("https://www.wsj.com/", "www.wsj.com", feedsMap);
+      expect(feedsMap.size).toBe(15);
+    });
+
+    it("should include the Opinion feed", () => {
+      applyRules("https://www.wsj.com/", "www.wsj.com", feedsMap);
+      expect(
+        feedsMap.get(
+          "https://feeds.content.dowjones.io/public/rss/RSSOpinion",
+        ),
+      ).toEqual({ title: "Opinion", isFromRule: true });
+    });
+
+    it("should include news section feeds", () => {
+      applyRules(
+        "https://www.wsj.com/world",
+        "www.wsj.com",
+        feedsMap,
+      );
+      expect(
+        feedsMap.has(
+          "https://feeds.content.dowjones.io/public/rss/RSSWorldNews",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://feeds.content.dowjones.io/public/rss/WSJcomUSBusiness",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://feeds.content.dowjones.io/public/rss/RSSMarketsMain",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://feeds.content.dowjones.io/public/rss/RSSWSJD",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://feeds.content.dowjones.io/public/rss/RSSUSnews",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://feeds.content.dowjones.io/public/rss/socialpoliticsfeed",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://feeds.content.dowjones.io/public/rss/socialeconomyfeed",
+        ),
+      ).toBe(true);
+    });
+
+    it("should include lifestyle and culture feeds", () => {
+      applyRules("https://www.wsj.com/", "www.wsj.com", feedsMap);
+      expect(
+        feedsMap.get(
+          "https://feeds.content.dowjones.io/public/rss/RSSLifestyle",
+        ),
+      ).toEqual({ title: "Lifestyle", isFromRule: true });
+      expect(
+        feedsMap.has(
+          "https://feeds.content.dowjones.io/public/rss/RSSArtsCulture",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://feeds.content.dowjones.io/public/rss/RSSStyle",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://feeds.content.dowjones.io/public/rss/rsssportsfeed",
+        ),
+      ).toBe(true);
+    });
+
+    it("should include personal finance and real estate feeds", () => {
+      applyRules("https://www.wsj.com/", "www.wsj.com", feedsMap);
+      expect(
+        feedsMap.get(
+          "https://feeds.content.dowjones.io/public/rss/latestnewsrealestate",
+        ),
+      ).toEqual({ title: "Real Estate", isFromRule: true });
+      expect(
+        feedsMap.has(
+          "https://feeds.content.dowjones.io/public/rss/RSSPersonalFinance",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://feeds.content.dowjones.io/public/rss/socialhealth",
+        ),
+      ).toBe(true);
+    });
+
+    it("should mark all feeds as isFromRule", () => {
+      applyRules("https://www.wsj.com/", "www.wsj.com", feedsMap);
       for (const [, metadata] of feedsMap) {
         expect(metadata.isFromRule).toBe(true);
       }

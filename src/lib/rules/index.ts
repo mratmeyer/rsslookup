@@ -8,6 +8,13 @@ import { StackExchangeRule } from "./StackExchangeRule";
 import { SteamRule } from "./SteamRule";
 import { NYTimesRule } from "./NYTimesRule";
 import { CNNRule } from "./CNNRule";
+import { FoxNewsRule } from "./FoxNewsRule";
+import { BBCRule } from "./BBCRule";
+import { NYPostRule } from "./NYPostRule";
+import { CNBCRule } from "./CNBCRule";
+import { CBSNewsRule } from "./CBSNewsRule";
+import { WashingtonPostRule } from "./WashingtonPostRule";
+import { WSJRule } from "./WSJRule";
 
 // Export types and classes for external use
 export type { SiteRule, RuleContext } from "./SiteRule";
@@ -18,6 +25,13 @@ export { StackExchangeRule } from "./StackExchangeRule";
 export { SteamRule } from "./SteamRule";
 export { NYTimesRule } from "./NYTimesRule";
 export { CNNRule } from "./CNNRule";
+export { FoxNewsRule } from "./FoxNewsRule";
+export { BBCRule } from "./BBCRule";
+export { NYPostRule } from "./NYPostRule";
+export { CNBCRule } from "./CNBCRule";
+export { CBSNewsRule } from "./CBSNewsRule";
+export { WashingtonPostRule } from "./WashingtonPostRule";
+export { WSJRule } from "./WSJRule";
 
 /**
  * Registry of all available site rules.
@@ -31,6 +45,13 @@ const rules: SiteRule[] = [
   new SteamRule(),
   new NYTimesRule(),
   new CNNRule(),
+  new FoxNewsRule(),
+  new BBCRule(),
+  new NYPostRule(),
+  new CNBCRule(),
+  new CBSNewsRule(),
+  new WashingtonPostRule(),
+  new WSJRule(),
 ];
 
 /**
