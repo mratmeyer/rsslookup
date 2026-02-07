@@ -7,6 +7,7 @@ import { GitHubRule } from "~/lib/rules/GitHubRule";
 import { StackExchangeRule } from "~/lib/rules/StackExchangeRule";
 import { SteamRule } from "~/lib/rules/SteamRule";
 import { NYTimesRule } from "~/lib/rules/NYTimesRule";
+import { CNNRule } from "~/lib/rules/CNNRule";
 
 describe("Rules System", () => {
   let feedsMap: FeedsMap;
@@ -18,13 +19,14 @@ describe("Rules System", () => {
   describe("Registry", () => {
     it("should have all rules registered", () => {
       const rules = getRegisteredRules();
-      expect(rules.length).toBe(6);
+      expect(rules.length).toBe(7);
       expect(rules.map((r) => r.name)).toContain("Reddit");
       expect(rules.map((r) => r.name)).toContain("YouTube");
       expect(rules.map((r) => r.name)).toContain("GitHub");
       expect(rules.map((r) => r.name)).toContain("Stack Exchange");
       expect(rules.map((r) => r.name)).toContain("Steam");
       expect(rules.map((r) => r.name)).toContain("NYTimes");
+      expect(rules.map((r) => r.name)).toContain("CNN");
     });
   });
 
@@ -327,6 +329,50 @@ describe("Rules System", () => {
 
     it("should mark all feeds as isFromRule", () => {
       applyRules("https://www.nytimes.com/", "www.nytimes.com", feedsMap);
+      for (const [, metadata] of feedsMap) {
+        expect(metadata.isFromRule).toBe(true);
+      }
+    });
+  });
+
+  describe("CNNRule", () => {
+    const rule = new CNNRule();
+
+    it("should match cnn.com hostnames", () => {
+      expect(rule.matchesHostname("cnn.com")).toBe(true);
+      expect(rule.matchesHostname("www.cnn.com")).toBe(true);
+      expect(rule.matchesHostname("rss.cnn.com")).toBe(false);
+      expect(rule.matchesHostname("example.com")).toBe(false);
+    });
+
+    it("should extract all CNN feeds for any cnn.com URL", () => {
+      applyRules("https://www.cnn.com/", "www.cnn.com", feedsMap);
+      expect(feedsMap.size).toBe(13);
+    });
+
+    it("should include the Top Stories feed", () => {
+      applyRules("https://www.cnn.com/", "www.cnn.com", feedsMap);
+      expect(feedsMap.get("http://rss.cnn.com/rss/cnn_topstories.rss")).toEqual(
+        { title: "Top Stories", isFromRule: true },
+      );
+    });
+
+    it("should include section feeds", () => {
+      applyRules("https://www.cnn.com/politics", "www.cnn.com", feedsMap);
+      expect(feedsMap.has("http://rss.cnn.com/rss/cnn_world.rss")).toBe(true);
+      expect(feedsMap.has("http://rss.cnn.com/rss/cnn_tech.rss")).toBe(true);
+      expect(feedsMap.has("http://rss.cnn.com/rss/cnn_health.rss")).toBe(true);
+    });
+
+    it("should include the CNN 10 podcast feed", () => {
+      applyRules("https://www.cnn.com/", "www.cnn.com", feedsMap);
+      expect(
+        feedsMap.get("http://rss.cnn.com/services/podcasting/cnn10/rss.xml"),
+      ).toEqual({ title: "CNN 10", isFromRule: true });
+    });
+
+    it("should mark all feeds as isFromRule", () => {
+      applyRules("https://www.cnn.com/", "www.cnn.com", feedsMap);
       for (const [, metadata] of feedsMap) {
         expect(metadata.isFromRule).toBe(true);
       }
