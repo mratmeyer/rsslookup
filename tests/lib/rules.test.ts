@@ -6,6 +6,7 @@ import { YouTubeRule } from "~/lib/rules/YouTubeRule";
 import { GitHubRule } from "~/lib/rules/GitHubRule";
 import { StackExchangeRule } from "~/lib/rules/StackExchangeRule";
 import { SteamRule } from "~/lib/rules/SteamRule";
+import { NYTimesRule } from "~/lib/rules/NYTimesRule";
 
 describe("Rules System", () => {
   let feedsMap: FeedsMap;
@@ -17,12 +18,13 @@ describe("Rules System", () => {
   describe("Registry", () => {
     it("should have all rules registered", () => {
       const rules = getRegisteredRules();
-      expect(rules.length).toBe(5);
+      expect(rules.length).toBe(6);
       expect(rules.map((r) => r.name)).toContain("Reddit");
       expect(rules.map((r) => r.name)).toContain("YouTube");
       expect(rules.map((r) => r.name)).toContain("GitHub");
       expect(rules.map((r) => r.name)).toContain("Stack Exchange");
       expect(rules.map((r) => r.name)).toContain("Steam");
+      expect(rules.map((r) => r.name)).toContain("NYTimes");
     });
   });
 
@@ -267,6 +269,67 @@ describe("Rules System", () => {
         feedsMap,
       );
       expect(feedsMap.size).toBe(0);
+    });
+  });
+
+  describe("NYTimesRule", () => {
+    const rule = new NYTimesRule();
+
+    it("should match nytimes.com hostnames", () => {
+      expect(rule.matchesHostname("nytimes.com")).toBe(true);
+      expect(rule.matchesHostname("www.nytimes.com")).toBe(true);
+      expect(rule.matchesHostname("rss.nytimes.com")).toBe(false);
+      expect(rule.matchesHostname("example.com")).toBe(false);
+    });
+
+    it("should extract all NYT feeds for any nytimes.com URL", () => {
+      applyRules("https://www.nytimes.com/", "www.nytimes.com", feedsMap);
+      // Should have a large number of feeds
+      expect(feedsMap.size).toBeGreaterThan(50);
+    });
+
+    it("should include the Home Page feed", () => {
+      applyRules("https://www.nytimes.com/", "www.nytimes.com", feedsMap);
+      expect(
+        feedsMap.get(
+          "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+        ),
+      ).toEqual({ title: "Home Page", isFromRule: true });
+    });
+
+    it("should include section feeds", () => {
+      applyRules(
+        "https://www.nytimes.com/section/world",
+        "www.nytimes.com",
+        feedsMap,
+      );
+      expect(
+        feedsMap.has("https://rss.nytimes.com/services/xml/rss/nyt/World.xml"),
+      ).toBe(true);
+      expect(
+        feedsMap.has(
+          "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",
+        ),
+      ).toBe(true);
+      expect(
+        feedsMap.has("https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml"),
+      ).toBe(true);
+    });
+
+    it("should include opinion columnist feeds", () => {
+      applyRules("https://www.nytimes.com/", "www.nytimes.com", feedsMap);
+      expect(
+        feedsMap.get(
+          "https://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/paul-krugman/rss.xml",
+        ),
+      ).toEqual({ title: "Paul Krugman", isFromRule: true });
+    });
+
+    it("should mark all feeds as isFromRule", () => {
+      applyRules("https://www.nytimes.com/", "www.nytimes.com", feedsMap);
+      for (const [, metadata] of feedsMap) {
+        expect(metadata.isFromRule).toBe(true);
+      }
     });
   });
 });

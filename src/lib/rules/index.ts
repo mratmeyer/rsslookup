@@ -6,6 +6,7 @@ import { YouTubeRule } from "./YouTubeRule";
 import { GitHubRule } from "./GitHubRule";
 import { StackExchangeRule } from "./StackExchangeRule";
 import { SteamRule } from "./SteamRule";
+import { NYTimesRule } from "./NYTimesRule";
 
 // Export types and classes for external use
 export type { SiteRule, RuleContext } from "./SiteRule";
@@ -14,6 +15,7 @@ export { YouTubeRule } from "./YouTubeRule";
 export { GitHubRule } from "./GitHubRule";
 export { StackExchangeRule } from "./StackExchangeRule";
 export { SteamRule } from "./SteamRule";
+export { NYTimesRule } from "./NYTimesRule";
 
 /**
  * Registry of all available site rules.
@@ -25,6 +27,7 @@ const rules: SiteRule[] = [
   new GitHubRule(),
   new StackExchangeRule(),
   new SteamRule(),
+  new NYTimesRule(),
 ];
 
 /**
