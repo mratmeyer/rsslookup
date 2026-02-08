@@ -9,7 +9,11 @@ export default defineConfig(({ mode }) => ({
     // Use Cloudflare plugin for production and wrangler dev builds
     (mode === "production" || mode === "wrangler") &&
       cloudflare({ viteEnvironment: { name: "ssr" } }),
-    tanstackStart(),
+    tanstackStart({
+      prerender: {
+        enabled: true,
+      },
+    }),
     react(),
     tsconfigPaths(),
   ].filter(Boolean),
