@@ -1,7 +1,7 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { getDomain } from "tldts";
-import type { CloudflareEnv } from "./types";
+import type { CloudflareEnv, RateLimitResult } from "./types";
 import { trackEvent } from "./analytics";
 
 /**
@@ -76,15 +76,6 @@ export const RATE_LIMIT_MESSAGES = {
     `Please wait an hour and try again, or if you believe this is an error, ` +
     `open an issue at https://github.com/mratmeyer/rsslookup/issues with the domain name.`,
 } as const;
-
-/**
- * Combined rate limit check result
- */
-export interface RateLimitResult {
-  allowed: boolean;
-  errorMessage?: string;
-  errorType?: "ip" | "domain";
-}
 
 // Cached rate limiter instances
 let ipRateLimiter: Ratelimit | null = null;

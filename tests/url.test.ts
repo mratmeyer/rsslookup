@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  handleURLShortcut,
-  normalizeURLParamEncoding,
-} from "../src/lib/urlUtils";
+import { handleURLShortcut, normalizeURLParamEncoding } from "../src/start";
 
 describe("handleURLShortcut", () => {
   it("should return null for normal paths", () => {

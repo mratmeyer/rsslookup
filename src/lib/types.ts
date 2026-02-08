@@ -18,6 +18,15 @@ export interface FeedMetadata {
 export type FeedsMap = Map<string, FeedMetadata>;
 
 /**
+ * Combined rate limit check result
+ */
+export interface RateLimitResult {
+  allowed: boolean;
+  errorMessage?: string;
+  errorType?: "ip" | "domain";
+}
+
+/**
  * Cloudflare Worker Environment bindings
  */
 export interface CloudflareEnv {

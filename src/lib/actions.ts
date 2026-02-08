@@ -1,8 +1,8 @@
-import { checkCommonFeedPaths } from "./scraperUtils";
-import { parseHtmlForFeeds, fetchFeedTitle } from "./parserUtils";
+import { checkCommonFeedPaths } from "./scraper";
+import { parseHtmlForFeeds, fetchFeedTitle } from "./parser";
 import { applyRules } from "./rules";
 import { USER_AGENT } from "./constants";
-import { checkRateLimits } from "./rateLimitUtils";
+import { checkRateLimits } from "./rateLimit";
 import type { LookupResponse, FeedsMap, CloudflareEnv } from "./types";
 import { trackEvent } from "./analytics";
 

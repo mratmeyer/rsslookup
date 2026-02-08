@@ -1,4 +1,4 @@
-import { cleanURL } from "../urlUtils";
+import { cleanURL } from "../url";
 import type { FeedsMap } from "../types";
 import type { SiteRule, RuleContext } from "./SiteRule";
 import { RedditRule } from "./RedditRule";
@@ -15,25 +15,6 @@ import { CNBCRule } from "./CNBCRule";
 import { CBSNewsRule } from "./CBSNewsRule";
 import { WashingtonPostRule } from "./WashingtonPostRule";
 import { WSJRule } from "./WSJRule";
-
-// Export types and rules for external use
-export type { SiteRule, RuleContext } from "./SiteRule";
-export { StaticFeedRule } from "./StaticFeedRule";
-export { RedditRule } from "./RedditRule";
-export { YouTubeRule } from "./YouTubeRule";
-export { GitHubRule } from "./GitHubRule";
-export { StackExchangeRule } from "./StackExchangeRule";
-export { SteamRule } from "./SteamRule";
-export { NYTimesRule } from "./NYTimesRule";
-export { CNNRule } from "./CNNRule";
-export { FoxNewsRule } from "./FoxNewsRule";
-export { BBCRule } from "./BBCRule";
-export { NYPostRule } from "./NYPostRule";
-export { CNBCRule } from "./CNBCRule";
-export { CBSNewsRule } from "./CBSNewsRule";
-export { WashingtonPostRule } from "./WashingtonPostRule";
-export { WSJRule } from "./WSJRule";
-
 /**
  * Registry of all available site rules.
  * Add new rules here to enable them.
