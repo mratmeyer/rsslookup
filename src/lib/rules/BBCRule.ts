@@ -1,10 +1,9 @@
-import type { FeedsMap } from "../types";
-import type { SiteRule, RuleContext } from "./SiteRule";
+import { StaticFeedRule } from "./StaticFeedRule";
 
 /**
  * All known BBC News RSS feeds organized by category.
  */
-const BBC_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
+export const BBC_FEEDS = [
   // Popular BBC News Feeds
   {
     url: "http://feeds.bbci.co.uk/news/rss.xml",
@@ -166,27 +165,10 @@ const BBC_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
     url: "http://feeds.bbci.co.uk/news/rss.xml?edition=int",
     title: "Top Stories (International Edition)",
   },
-];
+] as const;
 
-/**
- * Rule for discovering RSS feeds on the BBC.
- * Handles bbc.co.uk, bbc.com, and their www subdomains by returning all known BBC feeds.
- */
-export class BBCRule implements SiteRule {
-  readonly name = "BBC";
-
-  matchesHostname(hostname: string): boolean {
-    return (
-      hostname === "bbc.co.uk" ||
-      hostname === "www.bbc.co.uk" ||
-      hostname === "bbc.com" ||
-      hostname === "www.bbc.com"
-    );
-  }
-
-  extractFeeds(_context: RuleContext, feedsMap: FeedsMap): void {
-    for (const feed of BBC_FEEDS) {
-      feedsMap.set(feed.url, { title: feed.title, isFromRule: true });
-    }
-  }
-}
+export const BBCRule = new StaticFeedRule(
+  "BBC",
+  ["bbc.co.uk", "www.bbc.co.uk", "bbc.com", "www.bbc.com"],
+  BBC_FEEDS,
+);

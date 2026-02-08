@@ -1,10 +1,9 @@
-import type { FeedsMap } from "../types";
-import type { SiteRule, RuleContext } from "./SiteRule";
+import { StaticFeedRule } from "./StaticFeedRule";
 
 /**
  * All known Wall Street Journal RSS feeds.
  */
-const WSJ_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
+export const WSJ_FEEDS = [
   // News & Commentary
   {
     url: "https://feeds.content.dowjones.io/public/rss/RSSOpinion",
@@ -66,22 +65,10 @@ const WSJ_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
     url: "https://feeds.content.dowjones.io/public/rss/rsssportsfeed",
     title: "Sports",
   },
-];
+] as const;
 
-/**
- * Rule for discovering RSS feeds on The Wall Street Journal.
- * Handles wsj.com and www.wsj.com URLs by returning all known WSJ feeds.
- */
-export class WSJRule implements SiteRule {
-  readonly name = "WSJ";
-
-  matchesHostname(hostname: string): boolean {
-    return hostname === "wsj.com" || hostname === "www.wsj.com";
-  }
-
-  extractFeeds(_context: RuleContext, feedsMap: FeedsMap): void {
-    for (const feed of WSJ_FEEDS) {
-      feedsMap.set(feed.url, { title: feed.title, isFromRule: true });
-    }
-  }
-}
+export const WSJRule = new StaticFeedRule(
+  "WSJ",
+  ["wsj.com", "www.wsj.com"],
+  WSJ_FEEDS,
+);

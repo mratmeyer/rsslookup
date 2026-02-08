@@ -1,6 +1,6 @@
 import { checkCommonFeedPaths } from "./scraperUtils";
 import { parseHtmlForFeeds, fetchFeedTitle } from "./parserUtils";
-import { parseURLforRules } from "./ruleUtils";
+import { applyRules } from "./rules";
 import { USER_AGENT } from "./constants";
 import { checkRateLimits } from "./rateLimitUtils";
 import type { LookupResponse, FeedsMap, CloudflareEnv } from "./types";
@@ -88,7 +88,7 @@ export async function lookupFeeds(
   const foundFeeds: FeedsMap = new Map();
 
   // Run rules initially to handle "salvage" cases where fetch might fail
-  parseURLforRules(url, parsedURL.hostname, foundFeeds);
+  applyRules(url, parsedURL.hostname, foundFeeds);
   if (foundFeeds.size > 0) method = "rule";
 
   let response: Response | undefined;
@@ -155,7 +155,7 @@ export async function lookupFeeds(
   }
 
   // Parse URL for hardcoded rules again (to catch YouTube playlists etc)
-  parseURLforRules(url, parsedURL.hostname, foundFeeds);
+  applyRules(url, parsedURL.hostname, foundFeeds);
   if (foundFeeds.size > 0 && method === "none") method = "rule";
 
   // Return final results
@@ -173,7 +173,7 @@ export async function lookupFeeds(
 
   // Count fetches for missing titles
   const titleFetchesNeeded = feedEntries.filter(
-    ([_, meta]) => meta.title === null,
+    ([, meta]) => meta.title === null,
   ).length;
   externalRequestCount += titleFetchesNeeded;
 

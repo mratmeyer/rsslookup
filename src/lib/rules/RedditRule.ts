@@ -1,4 +1,3 @@
-import type { FeedsMap } from "../types";
 import type { SiteRule, RuleContext } from "./SiteRule";
 
 /**
@@ -8,14 +7,18 @@ import type { SiteRule, RuleContext } from "./SiteRule";
 export class RedditRule implements SiteRule {
   readonly name = "Reddit";
 
-  private readonly validHostnames = ["www.reddit.com", "reddit.com"];
+  private readonly validHostnames = [
+    "www.reddit.com",
+    "reddit.com",
+    "old.reddit.com",
+  ];
 
   matchesHostname(hostname: string): boolean {
     return this.validHostnames.includes(hostname);
   }
 
-  extractFeeds(context: RuleContext, feedsMap: FeedsMap): void {
-    const { cleanedURL, pathname } = context;
+  extractFeeds(context: RuleContext): void {
+    const { cleanedURL, pathname, feedsMap } = context;
 
     if (pathname === "/") {
       // Root domain needs trailing slash before .rss

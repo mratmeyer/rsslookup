@@ -16,8 +16,9 @@ import { CBSNewsRule } from "./CBSNewsRule";
 import { WashingtonPostRule } from "./WashingtonPostRule";
 import { WSJRule } from "./WSJRule";
 
-// Export types and classes for external use
+// Export types and rules for external use
 export type { SiteRule, RuleContext } from "./SiteRule";
+export { StaticFeedRule } from "./StaticFeedRule";
 export { RedditRule } from "./RedditRule";
 export { YouTubeRule } from "./YouTubeRule";
 export { GitHubRule } from "./GitHubRule";
@@ -43,15 +44,15 @@ const rules: SiteRule[] = [
   new GitHubRule(),
   new StackExchangeRule(),
   new SteamRule(),
-  new NYTimesRule(),
-  new CNNRule(),
-  new FoxNewsRule(),
-  new BBCRule(),
-  new NYPostRule(),
-  new CNBCRule(),
-  new CBSNewsRule(),
-  new WashingtonPostRule(),
-  new WSJRule(),
+  NYTimesRule,
+  CNNRule,
+  FoxNewsRule,
+  BBCRule,
+  NYPostRule,
+  CNBCRule,
+  CBSNewsRule,
+  WashingtonPostRule,
+  WSJRule,
 ];
 
 /**
@@ -91,7 +92,7 @@ export function applyRules(
     for (const rule of rules) {
       if (rule.matchesHostname(hostname)) {
         try {
-          rule.extractFeeds(context, feedsMap);
+          rule.extractFeeds(context);
         } catch {
           // Individual rule failure shouldn't break other rules
         }

@@ -12,7 +12,10 @@ export function usePlatformDetection(): UsePlatformDetectionResult {
   const [isMac, setIsMac] = useState<boolean | null>(null);
 
   useEffect(() => {
-    setIsMac(navigator.platform.toUpperCase().indexOf("MAC") >= 0);
+    const platform =
+      (navigator as Navigator & { userAgentData?: { platform: string } })
+        .userAgentData?.platform ?? navigator.platform;
+    setIsMac(/mac/i.test(platform));
   }, []);
 
   return { isMac };

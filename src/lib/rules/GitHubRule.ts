@@ -1,4 +1,3 @@
-import type { FeedsMap } from "../types";
 import type { SiteRule, RuleContext } from "./SiteRule";
 
 /**
@@ -12,8 +11,8 @@ export class GitHubRule implements SiteRule {
     return hostname === "github.com";
   }
 
-  extractFeeds(context: RuleContext, feedsMap: FeedsMap): void {
-    const { cleanedURL, pathname } = context;
+  extractFeeds(context: RuleContext): void {
+    const { cleanedURL, pathname, feedsMap } = context;
 
     // Match /username/reponame (won't match subpages like /issues, /pulls)
     const repoMatch = pathname.match(

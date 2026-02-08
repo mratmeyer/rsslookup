@@ -1,10 +1,9 @@
-import type { FeedsMap } from "../types";
-import type { SiteRule, RuleContext } from "./SiteRule";
+import { StaticFeedRule } from "./StaticFeedRule";
 
 /**
  * All known CNN RSS feeds.
  */
-const CNN_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
+export const CNN_FEEDS = [
   {
     url: "http://rss.cnn.com/rss/cnn_topstories.rss",
     title: "Top Stories",
@@ -57,22 +56,10 @@ const CNN_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
     url: "http://rss.cnn.com/cnn-underscored.rss",
     title: "CNN Underscored",
   },
-];
+] as const;
 
-/**
- * Rule for discovering RSS feeds on CNN.
- * Handles cnn.com and www.cnn.com URLs by returning all known CNN feeds.
- */
-export class CNNRule implements SiteRule {
-  readonly name = "CNN";
-
-  matchesHostname(hostname: string): boolean {
-    return hostname === "cnn.com" || hostname === "www.cnn.com";
-  }
-
-  extractFeeds(_context: RuleContext, feedsMap: FeedsMap): void {
-    for (const feed of CNN_FEEDS) {
-      feedsMap.set(feed.url, { title: feed.title, isFromRule: true });
-    }
-  }
-}
+export const CNNRule = new StaticFeedRule(
+  "CNN",
+  ["cnn.com", "www.cnn.com"],
+  CNN_FEEDS,
+);

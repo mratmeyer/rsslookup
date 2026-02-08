@@ -18,14 +18,14 @@ Rules implement the `SiteRule` interface from `src/lib/rules/SiteRule.ts`:
 interface SiteRule {
   name: string;
   matchesHostname(hostname: string): boolean;
-  extractFeeds(context: RuleContext, feedsMap: FeedsMap): void;
+  extractFeeds(context: RuleContext): void;
 }
 ```
 
-When adding feeds, always set `isFromRule: true`:
+For static feed lists, use `StaticFeedRule` from `src/lib/rules/StaticFeedRule.ts`. When adding feeds in dynamic rules, always set `isFromRule: true`:
 
 ```typescript
-feedsMap.set(feedUrl, { title: "Feed Title", isFromRule: true });
+context.feedsMap.set(feedUrl, { title: "Feed Title", isFromRule: true });
 ```
 
 Register new rules in `src/lib/rules/index.ts` and add tests in `tests/lib/rules.test.ts`.

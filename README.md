@@ -116,24 +116,41 @@ Rules live in `src/lib/rules/`. Each rule implements the `SiteRule` interface:
 interface SiteRule {
   name: string;
   matchesHostname(hostname: string): boolean;
-  extractFeeds(context: RuleContext, feedsMap: FeedsMap): void;
+  extractFeeds(context: RuleContext): void;
 }
 ```
 
-When adding feeds to the `feedsMap`, use the `FeedMetadata` structure:
+Feeds are accessed via `context.feedsMap`. When adding feeds, always set `isFromRule: true`:
 
 ```typescript
-feedsMap.set(feedUrl, { title: "Feed Title", isFromRule: true });
+context.feedsMap.set(feedUrl, { title: "Feed Title", isFromRule: true });
 ```
 
 The `isFromRule: true` flag indicates the feed was discovered by a community rule, which displays a special icon in the UI to inform users.
 
 **To add a new rule:**
 
+For sites with a static list of feeds, use the `StaticFeedRule` base class:
+
+```typescript
+import { StaticFeedRule } from "./StaticFeedRule";
+
+export const EXAMPLE_FEEDS = [
+  { url: "https://example.com/feed.xml", title: "Example Feed" },
+] as const;
+
+export const ExampleRule = new StaticFeedRule(
+  "Example",
+  ["example.com", "www.example.com"],
+  EXAMPLE_FEEDS,
+);
+```
+
+For sites that need dynamic feed URL construction, implement `SiteRule` directly:
+
 1. Create `src/lib/rules/YourSiteRule.ts`:
 
    ```typescript
-   import type { FeedsMap } from "../types";
    import type { SiteRule, RuleContext } from "./SiteRule";
 
    export class YourSiteRule implements SiteRule {
@@ -143,9 +160,8 @@ The `isFromRule: true` flag indicates the feed was discovered by a community rul
        return hostname === "example.com" || hostname === "www.example.com";
      }
 
-     extractFeeds(context: RuleContext, feedsMap: FeedsMap): void {
-       // Extract feeds and add to feedsMap with metadata
-       feedsMap.set(`${context.origin}/feed.xml`, {
+     extractFeeds(context: RuleContext): void {
+       context.feedsMap.set(`${context.origin}/feed.xml`, {
          title: "Example Feed",
          isFromRule: true,
        });
@@ -160,7 +176,7 @@ The `isFromRule: true` flag indicates the feed was discovered by a community rul
 
    const rules: SiteRule[] = [
      // ... existing rules
-     new YourSiteRule(),
+     new YourSiteRule(), // or just YourSiteRule for StaticFeedRule instances
    ];
    ```
 

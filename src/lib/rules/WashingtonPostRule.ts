@@ -1,10 +1,9 @@
-import type { FeedsMap } from "../types";
-import type { SiteRule, RuleContext } from "./SiteRule";
+import { StaticFeedRule } from "./StaticFeedRule";
 
 /**
  * All known Washington Post RSS feeds organized by category.
  */
-const WAPO_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
+export const WAPO_FEEDS = [
   // Main Sections
   {
     url: "https://www.washingtonpost.com/arcio/rss/category/politics/",
@@ -107,25 +106,10 @@ const WAPO_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
     url: "http://feeds.washingtonpost.com/rss/rss_going-out-gurus",
     title: "Going Out Guide",
   },
-];
+] as const;
 
-/**
- * Rule for discovering RSS feeds on The Washington Post.
- * Handles washingtonpost.com and www.washingtonpost.com URLs by returning all known WaPo feeds.
- */
-export class WashingtonPostRule implements SiteRule {
-  readonly name = "Washington Post";
-
-  matchesHostname(hostname: string): boolean {
-    return (
-      hostname === "washingtonpost.com" ||
-      hostname === "www.washingtonpost.com"
-    );
-  }
-
-  extractFeeds(_context: RuleContext, feedsMap: FeedsMap): void {
-    for (const feed of WAPO_FEEDS) {
-      feedsMap.set(feed.url, { title: feed.title, isFromRule: true });
-    }
-  }
-}
+export const WashingtonPostRule = new StaticFeedRule(
+  "Washington Post",
+  ["washingtonpost.com", "www.washingtonpost.com"],
+  WAPO_FEEDS,
+);

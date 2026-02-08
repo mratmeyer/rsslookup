@@ -1,10 +1,9 @@
-import type { FeedsMap } from "../types";
-import type { SiteRule, RuleContext } from "./SiteRule";
+import { StaticFeedRule } from "./StaticFeedRule";
 
 /**
  * All known CNBC RSS feeds organized by category.
  */
-const CNBC_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
+export const CNBC_FEEDS = [
   // News
   {
     url: "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114",
@@ -227,22 +226,10 @@ const CNBC_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
     url: "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=37447855",
     title: "The Call",
   },
-];
+] as const;
 
-/**
- * Rule for discovering RSS feeds on CNBC.
- * Handles cnbc.com and www.cnbc.com URLs by returning all known CNBC feeds.
- */
-export class CNBCRule implements SiteRule {
-  readonly name = "CNBC";
-
-  matchesHostname(hostname: string): boolean {
-    return hostname === "cnbc.com" || hostname === "www.cnbc.com";
-  }
-
-  extractFeeds(_context: RuleContext, feedsMap: FeedsMap): void {
-    for (const feed of CNBC_FEEDS) {
-      feedsMap.set(feed.url, { title: feed.title, isFromRule: true });
-    }
-  }
-}
+export const CNBCRule = new StaticFeedRule(
+  "CNBC",
+  ["cnbc.com", "www.cnbc.com"],
+  CNBC_FEEDS,
+);

@@ -18,7 +18,9 @@ const urlMiddleware = createMiddleware().server(async ({ next, request }) => {
   const url = new URL(request.url);
 
   // Access Cloudflare env/ctx from globalThis (set by worker/index.ts in production)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const env = (globalThis as any).process?.env as CloudflareEnv | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ctx = (globalThis as any).__cfCtx as ExecutionContext | undefined;
 
   // Handle URL shortcut redirects (e.g., /https://example.com -> /?url=...)

@@ -38,7 +38,6 @@ export interface SiteRule {
   /**
    * Extract feeds from the URL and add them to the feedsMap.
    * @param context - The rule context with URL information
-   * @param feedsMap - Map to add discovered feeds to
    */
-  extractFeeds(context: RuleContext, feedsMap: FeedsMap): void;
+  extractFeeds(context: RuleContext): void;
 }

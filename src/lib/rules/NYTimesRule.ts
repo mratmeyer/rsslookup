@@ -1,10 +1,9 @@
-import type { FeedsMap } from "../types";
-import type { SiteRule, RuleContext } from "./SiteRule";
+import { StaticFeedRule } from "./StaticFeedRule";
 
 /**
  * All known NYT RSS feeds organized by category.
  */
-const NYT_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
+export const NYT_FEEDS = [
   // News
   {
     url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
@@ -315,22 +314,10 @@ const NYT_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
     url: "https://rss.nytimes.com/services/xml/rss/nyt/sunday-review.xml",
     title: "Sunday Opinion",
   },
-];
+] as const;
 
-/**
- * Rule for discovering RSS feeds on The New York Times.
- * Handles nytimes.com and www.nytimes.com URLs by returning all known NYT feeds.
- */
-export class NYTimesRule implements SiteRule {
-  readonly name = "NYTimes";
-
-  matchesHostname(hostname: string): boolean {
-    return hostname === "nytimes.com" || hostname === "www.nytimes.com";
-  }
-
-  extractFeeds(_context: RuleContext, feedsMap: FeedsMap): void {
-    for (const feed of NYT_FEEDS) {
-      feedsMap.set(feed.url, { title: feed.title, isFromRule: true });
-    }
-  }
-}
+export const NYTimesRule = new StaticFeedRule(
+  "NYTimes",
+  ["nytimes.com", "www.nytimes.com"],
+  NYT_FEEDS,
+);

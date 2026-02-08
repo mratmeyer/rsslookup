@@ -50,7 +50,7 @@ describe("Rules System", () => {
     it("should match reddit.com hostnames", () => {
       expect(rule.matchesHostname("reddit.com")).toBe(true);
       expect(rule.matchesHostname("www.reddit.com")).toBe(true);
-      expect(rule.matchesHostname("old.reddit.com")).toBe(false);
+      expect(rule.matchesHostname("old.reddit.com")).toBe(true);
     });
 
     it("should extract feed for root URL", () => {
@@ -65,6 +65,18 @@ describe("Rules System", () => {
         feedsMap,
       );
       expect(feedsMap.get("https://www.reddit.com/r/programming.rss")).toEqual({
+        title: "r/programming RSS Feed",
+        isFromRule: true,
+      });
+    });
+
+    it("should extract feed for old.reddit.com", () => {
+      applyRules(
+        "https://old.reddit.com/r/programming",
+        "old.reddit.com",
+        feedsMap,
+      );
+      expect(feedsMap.get("https://old.reddit.com/r/programming.rss")).toEqual({
         title: "r/programming RSS Feed",
         isFromRule: true,
       });
@@ -289,7 +301,7 @@ describe("Rules System", () => {
   });
 
   describe("NYTimesRule", () => {
-    const rule = new NYTimesRule();
+    const rule = NYTimesRule;
 
     it("should match nytimes.com hostnames", () => {
       expect(rule.matchesHostname("nytimes.com")).toBe(true);
@@ -350,7 +362,7 @@ describe("Rules System", () => {
   });
 
   describe("FoxNewsRule", () => {
-    const rule = new FoxNewsRule();
+    const rule = FoxNewsRule;
 
     it("should match foxnews.com hostnames", () => {
       expect(rule.matchesHostname("foxnews.com")).toBe(true);
@@ -400,7 +412,7 @@ describe("Rules System", () => {
   });
 
   describe("CNNRule", () => {
-    const rule = new CNNRule();
+    const rule = CNNRule;
 
     it("should match cnn.com hostnames", () => {
       expect(rule.matchesHostname("cnn.com")).toBe(true);
@@ -444,7 +456,7 @@ describe("Rules System", () => {
   });
 
   describe("BBCRule", () => {
-    const rule = new BBCRule();
+    const rule = BBCRule;
 
     it("should match bbc.co.uk and bbc.com hostnames", () => {
       expect(rule.matchesHostname("bbc.co.uk")).toBe(true);
@@ -529,7 +541,7 @@ describe("Rules System", () => {
   });
 
   describe("NYPostRule", () => {
-    const rule = new NYPostRule();
+    const rule = NYPostRule;
 
     it("should match nypost.com hostnames", () => {
       expect(rule.matchesHostname("nypost.com")).toBe(true);
@@ -578,7 +590,7 @@ describe("Rules System", () => {
   });
 
   describe("CNBCRule", () => {
-    const rule = new CNBCRule();
+    const rule = CNBCRule;
 
     it("should match cnbc.com hostnames", () => {
       expect(rule.matchesHostname("cnbc.com")).toBe(true);
@@ -602,11 +614,7 @@ describe("Rules System", () => {
     });
 
     it("should include news section feeds", () => {
-      applyRules(
-        "https://www.cnbc.com/world",
-        "www.cnbc.com",
-        feedsMap,
-      );
+      applyRules("https://www.cnbc.com/world", "www.cnbc.com", feedsMap);
       expect(
         feedsMap.has(
           "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100727362",
@@ -684,7 +692,7 @@ describe("Rules System", () => {
   });
 
   describe("CBSNewsRule", () => {
-    const rule = new CBSNewsRule();
+    const rule = CBSNewsRule;
 
     it("should match cbsnews.com hostnames", () => {
       expect(rule.matchesHostname("cbsnews.com")).toBe(true);
@@ -700,38 +708,33 @@ describe("Rules System", () => {
 
     it("should include the Top Stories feed", () => {
       applyRules("https://www.cbsnews.com/", "www.cbsnews.com", feedsMap);
-      expect(
-        feedsMap.get("https://www.cbsnews.com/latest/rss/main"),
-      ).toEqual({ title: "Top Stories", isFromRule: true });
+      expect(feedsMap.get("https://www.cbsnews.com/latest/rss/main")).toEqual({
+        title: "Top Stories",
+        isFromRule: true,
+      });
     });
 
     it("should include topic feeds", () => {
-      applyRules(
-        "https://www.cbsnews.com/news",
-        "www.cbsnews.com",
-        feedsMap,
+      applyRules("https://www.cbsnews.com/news", "www.cbsnews.com", feedsMap);
+      expect(feedsMap.has("https://www.cbsnews.com/latest/rss/us")).toBe(true);
+      expect(feedsMap.has("https://www.cbsnews.com/latest/rss/politics")).toBe(
+        true,
       );
-      expect(
-        feedsMap.has("https://www.cbsnews.com/latest/rss/us"),
-      ).toBe(true);
-      expect(
-        feedsMap.has("https://www.cbsnews.com/latest/rss/politics"),
-      ).toBe(true);
-      expect(
-        feedsMap.has("https://www.cbsnews.com/latest/rss/world"),
-      ).toBe(true);
-      expect(
-        feedsMap.has("https://www.cbsnews.com/latest/rss/health"),
-      ).toBe(true);
+      expect(feedsMap.has("https://www.cbsnews.com/latest/rss/world")).toBe(
+        true,
+      );
+      expect(feedsMap.has("https://www.cbsnews.com/latest/rss/health")).toBe(
+        true,
+      );
       expect(
         feedsMap.has("https://www.cbsnews.com/latest/rss/technology"),
       ).toBe(true);
-      expect(
-        feedsMap.has("https://www.cbsnews.com/latest/rss/science"),
-      ).toBe(true);
-      expect(
-        feedsMap.has("https://www.cbsnews.com/latest/rss/space"),
-      ).toBe(true);
+      expect(feedsMap.has("https://www.cbsnews.com/latest/rss/science")).toBe(
+        true,
+      );
+      expect(feedsMap.has("https://www.cbsnews.com/latest/rss/space")).toBe(
+        true,
+      );
     });
 
     it("should include broadcast feeds", () => {
@@ -745,9 +748,9 @@ describe("Rules System", () => {
       expect(
         feedsMap.has("https://www.cbsnews.com/latest/rss/face-the-nation"),
       ).toBe(true);
-      expect(
-        feedsMap.has("https://www.cbsnews.com/latest/rss/48-hours"),
-      ).toBe(true);
+      expect(feedsMap.has("https://www.cbsnews.com/latest/rss/48-hours")).toBe(
+        true,
+      );
       expect(
         feedsMap.has("https://www.cbsnews.com/latest/rss/sunday-morning"),
       ).toBe(true);
@@ -762,10 +765,14 @@ describe("Rules System", () => {
         feedsMap.has("https://www.cbsnews.com/latest/rss/daily-report-clips"),
       ).toBe(true);
       expect(
-        feedsMap.has("https://www.cbsnews.com/latest/rss/the-takeout-full-episodes"),
+        feedsMap.has(
+          "https://www.cbsnews.com/latest/rss/the-takeout-full-episodes",
+        ),
       ).toBe(true);
       expect(
-        feedsMap.has("https://www.cbsnews.com/latest/rss/the-dish-full-episodes"),
+        feedsMap.has(
+          "https://www.cbsnews.com/latest/rss/the-dish-full-episodes",
+        ),
       ).toBe(true);
     });
 
@@ -778,7 +785,7 @@ describe("Rules System", () => {
   });
 
   describe("WashingtonPostRule", () => {
-    const rule = new WashingtonPostRule();
+    const rule = WashingtonPostRule;
 
     it("should match washingtonpost.com hostnames", () => {
       expect(rule.matchesHostname("washingtonpost.com")).toBe(true);
@@ -812,26 +819,28 @@ describe("Rules System", () => {
           "https://www.washingtonpost.com/arcio/rss/category/opinions/",
         ),
       ).toBe(true);
-      expect(
-        feedsMap.has("https://feeds.washingtonpost.com/rss/local"),
-      ).toBe(true);
+      expect(feedsMap.has("https://feeds.washingtonpost.com/rss/local")).toBe(
+        true,
+      );
       expect(
         feedsMap.has(
           "https://www.washingtonpost.com/arcio/rss/category/sports/",
         ),
       ).toBe(true);
       expect(
-        feedsMap.has("https://feeds.washingtonpost.com/rss/business/technology"),
+        feedsMap.has(
+          "https://feeds.washingtonpost.com/rss/business/technology",
+        ),
       ).toBe(true);
-      expect(
-        feedsMap.has("http://feeds.washingtonpost.com/rss/national"),
-      ).toBe(true);
-      expect(
-        feedsMap.has("https://feeds.washingtonpost.com/rss/world"),
-      ).toBe(true);
-      expect(
-        feedsMap.has("http://feeds.washingtonpost.com/rss/business"),
-      ).toBe(true);
+      expect(feedsMap.has("http://feeds.washingtonpost.com/rss/national")).toBe(
+        true,
+      );
+      expect(feedsMap.has("https://feeds.washingtonpost.com/rss/world")).toBe(
+        true,
+      );
+      expect(feedsMap.has("http://feeds.washingtonpost.com/rss/business")).toBe(
+        true,
+      );
       expect(
         feedsMap.has("https://feeds.washingtonpost.com/rss/lifestyle"),
       ).toBe(true);
@@ -862,14 +871,10 @@ describe("Rules System", () => {
         ),
       ).toBe(true);
       expect(
-        feedsMap.has(
-          "http://feeds.washingtonpost.com/rss/rss_wizards-insider",
-        ),
+        feedsMap.has("http://feeds.washingtonpost.com/rss/rss_wizards-insider"),
       ).toBe(true);
       expect(
-        feedsMap.has(
-          "http://feeds.washingtonpost.com/rss/rss_soccer-insider",
-        ),
+        feedsMap.has("http://feeds.washingtonpost.com/rss/rss_soccer-insider"),
       ).toBe(true);
     });
 
@@ -922,7 +927,7 @@ describe("Rules System", () => {
   });
 
   describe("WSJRule", () => {
-    const rule = new WSJRule();
+    const rule = WSJRule;
 
     it("should match wsj.com hostnames", () => {
       expect(rule.matchesHostname("wsj.com")).toBe(true);
@@ -939,18 +944,12 @@ describe("Rules System", () => {
     it("should include the Opinion feed", () => {
       applyRules("https://www.wsj.com/", "www.wsj.com", feedsMap);
       expect(
-        feedsMap.get(
-          "https://feeds.content.dowjones.io/public/rss/RSSOpinion",
-        ),
+        feedsMap.get("https://feeds.content.dowjones.io/public/rss/RSSOpinion"),
       ).toEqual({ title: "Opinion", isFromRule: true });
     });
 
     it("should include news section feeds", () => {
-      applyRules(
-        "https://www.wsj.com/world",
-        "www.wsj.com",
-        feedsMap,
-      );
+      applyRules("https://www.wsj.com/world", "www.wsj.com", feedsMap);
       expect(
         feedsMap.has(
           "https://feeds.content.dowjones.io/public/rss/RSSWorldNews",
@@ -967,14 +966,10 @@ describe("Rules System", () => {
         ),
       ).toBe(true);
       expect(
-        feedsMap.has(
-          "https://feeds.content.dowjones.io/public/rss/RSSWSJD",
-        ),
+        feedsMap.has("https://feeds.content.dowjones.io/public/rss/RSSWSJD"),
       ).toBe(true);
       expect(
-        feedsMap.has(
-          "https://feeds.content.dowjones.io/public/rss/RSSUSnews",
-        ),
+        feedsMap.has("https://feeds.content.dowjones.io/public/rss/RSSUSnews"),
       ).toBe(true);
       expect(
         feedsMap.has(
@@ -1001,9 +996,7 @@ describe("Rules System", () => {
         ),
       ).toBe(true);
       expect(
-        feedsMap.has(
-          "https://feeds.content.dowjones.io/public/rss/RSSStyle",
-        ),
+        feedsMap.has("https://feeds.content.dowjones.io/public/rss/RSSStyle"),
       ).toBe(true);
       expect(
         feedsMap.has(

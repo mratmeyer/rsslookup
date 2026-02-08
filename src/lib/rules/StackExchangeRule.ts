@@ -24,8 +24,8 @@ export class StackExchangeRule implements SiteRule {
     );
   }
 
-  extractFeeds(context: RuleContext, feedsMap: FeedsMap): void {
-    const { hostname, pathname, origin } = context;
+  extractFeeds(context: RuleContext): void {
+    const { hostname, pathname, origin, feedsMap } = context;
 
     if (!origin) return;
 

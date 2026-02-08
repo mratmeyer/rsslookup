@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { trackEvent } from "~/lib/umami";
+import { trackUmamiEvent } from "~/lib/umami";
 import { lookupFeedsServerFn } from "~/lib/server-functions";
 import type { LookupResponse } from "~/lib/types";
 
@@ -29,7 +29,7 @@ export function useFeedLookup({
   const execute = async (url: string, source: string = "web") => {
     if (!url) return;
 
-    trackEvent(source === "bookmarklet" ? "bookmarklet" : "lookup");
+    trackUmamiEvent(source === "bookmarklet" ? "bookmarklet" : "lookup");
     setLoading(true);
     setResponse(null);
 

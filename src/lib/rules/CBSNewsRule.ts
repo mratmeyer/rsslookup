@@ -1,10 +1,9 @@
-import type { FeedsMap } from "../types";
-import type { SiteRule, RuleContext } from "./SiteRule";
+import { StaticFeedRule } from "./StaticFeedRule";
 
 /**
  * All known CBS News RSS feeds organized by category.
  */
-const CBS_NEWS_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
+export const CBS_NEWS_FEEDS = [
   // Topics
   {
     url: "https://www.cbsnews.com/latest/rss/main",
@@ -112,22 +111,10 @@ const CBS_NEWS_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
     url: "https://www.cbsnews.com/latest/rss/the-dish-full-episodes",
     title: "The Dish",
   },
-];
+] as const;
 
-/**
- * Rule for discovering RSS feeds on CBS News.
- * Handles cbsnews.com and www.cbsnews.com URLs by returning all known CBS News feeds.
- */
-export class CBSNewsRule implements SiteRule {
-  readonly name = "CBS News";
-
-  matchesHostname(hostname: string): boolean {
-    return hostname === "cbsnews.com" || hostname === "www.cbsnews.com";
-  }
-
-  extractFeeds(_context: RuleContext, feedsMap: FeedsMap): void {
-    for (const feed of CBS_NEWS_FEEDS) {
-      feedsMap.set(feed.url, { title: feed.title, isFromRule: true });
-    }
-  }
-}
+export const CBSNewsRule = new StaticFeedRule(
+  "CBS News",
+  ["cbsnews.com", "www.cbsnews.com"],
+  CBS_NEWS_FEEDS,
+);

@@ -1,5 +1,5 @@
-import type { FeedsMap } from "../types";
 import type { SiteRule, RuleContext } from "./SiteRule";
+import type { FeedsMap } from "../types";
 
 /**
  * Rule for discovering RSS feeds on YouTube.
@@ -21,8 +21,8 @@ export class YouTubeRule implements SiteRule {
     return this.validHostnames.includes(hostname);
   }
 
-  extractFeeds(context: RuleContext, feedsMap: FeedsMap): void {
-    const { fullURL, pathname, searchParams } = context;
+  extractFeeds(context: RuleContext): void {
+    const { fullURL, pathname, feedsMap } = context;
 
     this.extractChannelFeed(pathname, feedsMap);
     this.extractUserFeed(pathname, feedsMap);

@@ -1,10 +1,9 @@
-import type { FeedsMap } from "../types";
-import type { SiteRule, RuleContext } from "./SiteRule";
+import { StaticFeedRule } from "./StaticFeedRule";
 
 /**
  * All known New York Post RSS feeds organized by category.
  */
-const NY_POST_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
+export const NY_POST_FEEDS = [
   // Full Feeds
   {
     url: "https://nypost.com/feed/",
@@ -67,22 +66,10 @@ const NY_POST_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
     url: "https://nypost.com/real-estate/feed/",
     title: "Real Estate",
   },
-];
+] as const;
 
-/**
- * Rule for discovering RSS feeds on the New York Post.
- * Handles nypost.com and www.nypost.com URLs by returning all known NY Post feeds.
- */
-export class NYPostRule implements SiteRule {
-  readonly name = "NY Post";
-
-  matchesHostname(hostname: string): boolean {
-    return hostname === "nypost.com" || hostname === "www.nypost.com";
-  }
-
-  extractFeeds(_context: RuleContext, feedsMap: FeedsMap): void {
-    for (const feed of NY_POST_FEEDS) {
-      feedsMap.set(feed.url, { title: feed.title, isFromRule: true });
-    }
-  }
-}
+export const NYPostRule = new StaticFeedRule(
+  "NY Post",
+  ["nypost.com", "www.nypost.com"],
+  NY_POST_FEEDS,
+);

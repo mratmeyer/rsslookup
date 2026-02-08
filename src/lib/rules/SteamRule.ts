@@ -1,5 +1,5 @@
-import type { FeedsMap } from "../types";
 import type { SiteRule, RuleContext } from "./SiteRule";
+import type { FeedsMap } from "../types";
 
 /**
  * Rule for discovering RSS feeds on Steam.
@@ -14,8 +14,8 @@ export class SteamRule implements SiteRule {
     return this.validHostnames.includes(hostname);
   }
 
-  extractFeeds(context: RuleContext, feedsMap: FeedsMap): void {
-    const { pathname } = context;
+  extractFeeds(context: RuleContext): void {
+    const { pathname, feedsMap } = context;
 
     this.extractUpdatesFeed(pathname, feedsMap);
   }
@@ -33,8 +33,8 @@ export class SteamRule implements SiteRule {
       );
       let feedName = "Game Updates";
       if (gameNameMatch) {
-        let gameName = gameNameMatch[3];
-        let gameNameClean = gameName.replaceAll("_", " ");
+        const gameName = gameNameMatch[3];
+        const gameNameClean = gameName.replaceAll("_", " ");
         feedName = gameNameClean + " Updates";
       }
       feedsMap.set(`https://store.steampowered.com/feeds/news/app/${appId}/`, {

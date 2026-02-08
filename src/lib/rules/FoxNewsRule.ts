@@ -1,10 +1,9 @@
-import type { FeedsMap } from "../types";
-import type { SiteRule, RuleContext } from "./SiteRule";
+import { StaticFeedRule } from "./StaticFeedRule";
 
 /**
  * All known Fox News RSS feeds.
  */
-const FOX_NEWS_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
+export const FOX_NEWS_FEEDS = [
   {
     url: "https://moxie.foxnews.com/google-publisher/latest.xml",
     title: "Latest Headlines",
@@ -49,22 +48,10 @@ const FOX_NEWS_FEEDS: ReadonlyArray<{ url: string; title: string }> = [
     url: "https://moxie.foxnews.com/google-publisher/videos.xml",
     title: "Video",
   },
-];
+] as const;
 
-/**
- * Rule for discovering RSS feeds on Fox News.
- * Handles foxnews.com and www.foxnews.com URLs by returning all known Fox News feeds.
- */
-export class FoxNewsRule implements SiteRule {
-  readonly name = "Fox News";
-
-  matchesHostname(hostname: string): boolean {
-    return hostname === "foxnews.com" || hostname === "www.foxnews.com";
-  }
-
-  extractFeeds(_context: RuleContext, feedsMap: FeedsMap): void {
-    for (const feed of FOX_NEWS_FEEDS) {
-      feedsMap.set(feed.url, { title: feed.title, isFromRule: true });
-    }
-  }
-}
+export const FoxNewsRule = new StaticFeedRule(
+  "Fox News",
+  ["foxnews.com", "www.foxnews.com"],
+  FOX_NEWS_FEEDS,
+);
