@@ -1,4 +1,4 @@
-import { POSSIBLE_FEED_PATHS } from "./constants";
+import { POSSIBLE_FEED_PATHS, FETCH_TIMEOUT_MS } from "./constants";
 import type { FeedsMap } from "./types";
 
 /**
@@ -30,6 +30,7 @@ export async function checkCommonFeedPaths(
         method: "GET",
         headers: { "User-Agent": userAgent },
         redirect: "follow",
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
       });
 
       const contentType = response.headers.get("content-type") || "";

@@ -10,6 +10,11 @@ export const USER_AGENT =
   "RSSLookup/1.0.1 (https://github.com/mratmeyer/rsslookup)";
 
 /**
+ * Timeout in milliseconds for outbound HTTP requests.
+ */
+export const FETCH_TIMEOUT_MS = 10_000;
+
+/**
  * Valid MIME types for RSS/Atom feeds.
  * Includes HTML entity-encoded variants (&#re; = +) seen in some malformed pages
  * where the '+' character was incorrectly encoded as an HTML entity.

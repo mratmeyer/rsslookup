@@ -1,5 +1,5 @@
 import * as htmlparser2 from "htmlparser2";
-import { FEED_MIME_TYPES } from "./constants";
+import { FEED_MIME_TYPES, FETCH_TIMEOUT_MS } from "./constants";
 import type { FeedsMap } from "./types";
 
 /**
@@ -17,6 +17,7 @@ export async function fetchFeedTitle(
       method: "GET",
       headers: { "User-Agent": userAgent },
       redirect: "follow",
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
 
     if (!response.ok && response.status !== 304) {

@@ -1,7 +1,7 @@
 import { checkCommonFeedPaths } from "./scraper";
 import { parseHtmlForFeeds, fetchFeedTitle } from "./parser";
 import { applyRules } from "./rules";
-import { USER_AGENT } from "./constants";
+import { USER_AGENT, FETCH_TIMEOUT_MS } from "./constants";
 import { checkRateLimits } from "./rateLimit";
 import { validateUrl } from "./validateUrl";
 import type { LookupResponse, FeedsMap, CloudflareEnv } from "./types";
@@ -110,6 +110,7 @@ export async function lookupFeeds(
       method: "GET",
       headers: { "User-Agent": USER_AGENT },
       redirect: "follow" as const,
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     };
     response = await fetch(url, fetchOptions);
     upstreamStatus = response.status;
