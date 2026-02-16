@@ -116,6 +116,16 @@ export async function lookupFeeds(
     upstreamStatus = response.status;
     finalUrl = response.url; // Could be redirected
 
+    // Validate the final URL after redirects to prevent SSRF
+    const redirectValidation = validateUrl(new URL(finalUrl));
+    if (!redirectValidation.valid) {
+      recordAnalytics("error", 0, "redirect_ssrf");
+      return {
+        status: 502,
+        message: "The URL redirected to a disallowed destination.",
+      };
+    }
+
     if (!(response.ok || response.status === 304)) {
       if (foundFeeds.size === 0) {
         errorType = `http_${response.status}`;

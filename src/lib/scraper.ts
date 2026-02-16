@@ -1,4 +1,5 @@
 import { POSSIBLE_FEED_PATHS, FETCH_TIMEOUT_MS } from "./constants";
+import { validateUrl } from "./validateUrl";
 import type { FeedsMap } from "./types";
 
 /**
@@ -32,6 +33,11 @@ export async function checkCommonFeedPaths(
         redirect: "follow",
         signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
       });
+
+      // Validate the final URL after redirects to prevent SSRF
+      if (!validateUrl(new URL(response.url)).valid) {
+        return null;
+      }
 
       const contentType = response.headers.get("content-type") || "";
       if (

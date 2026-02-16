@@ -1,5 +1,6 @@
 import * as htmlparser2 from "htmlparser2";
 import { FEED_MIME_TYPES, FETCH_TIMEOUT_MS } from "./constants";
+import { validateUrl } from "./validateUrl";
 import type { FeedsMap } from "./types";
 
 /**
@@ -21,6 +22,11 @@ export async function fetchFeedTitle(
     });
 
     if (!response.ok && response.status !== 304) {
+      return null;
+    }
+
+    // Validate the final URL after redirects to prevent SSRF
+    if (!validateUrl(new URL(response.url)).valid) {
       return null;
     }
 
