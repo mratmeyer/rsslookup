@@ -3,6 +3,7 @@ import { parseHtmlForFeeds, fetchFeedTitle } from "./parser";
 import { applyRules } from "./rules";
 import { USER_AGENT } from "./constants";
 import { checkRateLimits } from "./rateLimit";
+import { validateUrl } from "./validateUrl";
 import type { LookupResponse, FeedsMap, CloudflareEnv } from "./types";
 import { trackEvent } from "./analytics";
 
@@ -72,7 +73,14 @@ export async function lookupFeeds(
     };
   }
 
-  // 2. CHECK RATE LIMITS
+  // 2. URL VALIDATION
+  const validation = validateUrl(parsedURL);
+  if (!validation.valid) {
+    recordAnalytics("error", 0, validation.errorType || "validation_failed");
+    return { status: 400, message: validation.error || "URL validation failed." };
+  }
+
+  // 3. CHECK RATE LIMITS
   const rateLimitResult = await checkRateLimits(ip, url, env, source, ctx);
   if (!rateLimitResult.allowed) {
     // Analytics for rate limits are handled inside checkRateLimits for granularity,

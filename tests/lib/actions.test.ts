@@ -68,6 +68,40 @@ describe("lookupFeeds", () => {
       expect(result.status).toBe(400);
       expect(result.message).toBe("Invalid URL format provided.");
     });
+
+    it("returns 400 for non-http scheme", async () => {
+      const result = await lookupFeeds("ftp://example.com");
+
+      expect(result.status).toBe(400);
+      expect(result.message).toBe("Only http and https URLs are supported.");
+    });
+
+    it("returns 400 for IP address URL", async () => {
+      const result = await lookupFeeds("http://192.168.1.1/feed");
+
+      expect(result.status).toBe(400);
+      expect(result.message).toBe(
+        "Please provide a domain name instead of an IP address.",
+      );
+    });
+
+    it("returns 400 for localhost URL", async () => {
+      const result = await lookupFeeds("http://localhost/feed");
+
+      expect(result.status).toBe(400);
+      expect(result.message).toBe(
+        "URLs pointing to local or internal networks are not allowed.",
+      );
+    });
+
+    it("returns 400 for hostname without valid domain", async () => {
+      const result = await lookupFeeds("http://myserver/feed");
+
+      expect(result.status).toBe(400);
+      expect(result.message).toBe(
+        "Please provide a URL with a valid domain name (e.g., example.com).",
+      );
+    });
   });
 
   // ============================================
