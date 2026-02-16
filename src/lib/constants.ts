@@ -15,6 +15,16 @@ export const USER_AGENT =
 export const FETCH_TIMEOUT_MS = 10_000;
 
 /**
+ * Maximum response body size in bytes for the main page HTML fetch.
+ */
+export const MAX_HTML_RESPONSE_BYTES = 2 * 1024 * 1024; // 2 MB
+
+/**
+ * Maximum response body size in bytes for feed XML fetches (title extraction).
+ */
+export const MAX_FEED_RESPONSE_BYTES = 512 * 1024; // 512 KB
+
+/**
  * Valid MIME types for RSS/Atom feeds.
  * Includes HTML entity-encoded variants (&#re; = +) seen in some malformed pages
  * where the '+' character was incorrectly encoded as an HTML entity.

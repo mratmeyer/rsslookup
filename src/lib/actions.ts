@@ -1,7 +1,8 @@
 import { checkCommonFeedPaths } from "./scraper";
 import { parseHtmlForFeeds, fetchFeedTitle } from "./parser";
 import { applyRules } from "./rules";
-import { USER_AGENT, FETCH_TIMEOUT_MS } from "./constants";
+import { USER_AGENT, FETCH_TIMEOUT_MS, MAX_HTML_RESPONSE_BYTES } from "./constants";
+import { readResponseBody } from "./readResponseBody";
 import { checkRateLimits } from "./rateLimit";
 import { validateUrl } from "./validateUrl";
 import type { LookupResponse, FeedsMap, CloudflareEnv } from "./types";
@@ -137,7 +138,7 @@ export async function lookupFeeds(
       }
       // If we have feeds from rules, fall through
     } else {
-      responseText = await response.text();
+      responseText = await readResponseBody(response, MAX_HTML_RESPONSE_BYTES);
     }
   } catch (error) {
     errorType = "fetch_error";

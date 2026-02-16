@@ -1,5 +1,6 @@
 import * as htmlparser2 from "htmlparser2";
-import { FEED_MIME_TYPES, FETCH_TIMEOUT_MS } from "./constants";
+import { FEED_MIME_TYPES, FETCH_TIMEOUT_MS, MAX_FEED_RESPONSE_BYTES } from "./constants";
+import { readResponseBody } from "./readResponseBody";
 import { validateUrl } from "./validateUrl";
 import type { FeedsMap } from "./types";
 
@@ -30,7 +31,7 @@ export async function fetchFeedTitle(
       return null;
     }
 
-    const text = await response.text();
+    const text = await readResponseBody(response, MAX_FEED_RESPONSE_BYTES);
     return parseFeedTitle(text);
   } catch {
     return null;

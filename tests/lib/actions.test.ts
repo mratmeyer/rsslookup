@@ -20,10 +20,19 @@ function createMockResponse(
     url = "https://example.com",
   } = options;
 
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream({
+    start(controller) {
+      controller.enqueue(encoder.encode(body));
+      controller.close();
+    },
+  });
+
   return {
     ok,
     status,
     url,
+    body: stream,
     headers: {
       get: (name: string) => headers[name.toLowerCase()] || null,
     } as Headers,
