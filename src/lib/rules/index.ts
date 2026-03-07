@@ -1,4 +1,4 @@
-import { cleanURL } from "../url";
+import { cleanURL } from "../utils/cleanUrl";
 import type { FeedsMap } from "../types";
 import type { SiteRule, RuleContext } from "./SiteRule";
 import { RedditRule } from "./RedditRule";

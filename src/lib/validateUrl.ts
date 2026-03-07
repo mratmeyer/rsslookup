@@ -63,7 +63,8 @@ export function validateUrl(parsedURL: URL): UrlValidationResult {
   if (!parsed.domain) {
     return {
       valid: false,
-      error: "Please provide a URL with a valid domain name (e.g., example.com).",
+      error:
+        "Please provide a URL with a valid domain name (e.g., example.com).",
       errorType: "invalid_domain",
     };
   }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { readResponseBody } from "~/lib/readResponseBody";
+import { readResponseBody } from "~/lib/utils/readResponseBody";
 
 function createResponseFromText(text: string): Response {
   return new Response(text);

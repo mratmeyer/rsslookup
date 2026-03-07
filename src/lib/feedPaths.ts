@@ -1,4 +1,5 @@
-import { POSSIBLE_FEED_PATHS, isFeedContentType } from "./constants";
+import { POSSIBLE_FEED_PATHS } from "./constants";
+import { isFeedContentType } from "./utils/feedContentType";
 import { safeFetch } from "./fetchFeed";
 import type { FeedsMap } from "./types";
 

@@ -40,5 +40,7 @@ export async function readResponseBody(
   }
 
   const decoder = new TextDecoder();
-  return chunks.map((chunk) => decoder.decode(chunk, { stream: true })).join("");
+  return chunks
+    .map((chunk) => decoder.decode(chunk, { stream: true }))
+    .join("");
 }

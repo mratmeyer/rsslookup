@@ -1,9 +1,10 @@
-import { checkCommonFeedPaths } from "./scraper";
-import { parseHtmlForFeeds, fetchFeedTitle } from "./parser";
+import { checkCommonFeedPaths } from "./feedPaths";
+import { parseHtmlForFeeds } from "./parseHtml";
+import { fetchFeedTitle } from "./feedTitle";
 import { applyRules } from "./rules";
 import { USER_AGENT, MAX_HTML_RESPONSE_BYTES } from "./constants";
 import { buildFetchOptions } from "./fetchFeed";
-import { readResponseBody } from "./readResponseBody";
+import { readResponseBody } from "./utils/readResponseBody";
 import { checkRateLimits } from "./rateLimit";
 import { validateUrl } from "./validateUrl";
 import type { LookupResponse, FeedsMap, CloudflareEnv } from "./types";
@@ -79,7 +80,10 @@ export async function lookupFeeds(
   const validation = validateUrl(parsedURL);
   if (!validation.valid) {
     recordAnalytics("error", 0, validation.errorType || "validation_failed");
-    return { status: 400, message: validation.error || "URL validation failed." };
+    return {
+      status: 400,
+      message: validation.error || "URL validation failed.",
+    };
   }
 
   // 3. CHECK RATE LIMITS
