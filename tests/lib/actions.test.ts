@@ -248,7 +248,7 @@ describe("lookupFeeds", () => {
   // 4. FEED TITLE FETCHING TESTS
   // ============================================
   describe("Feed Title Fetching", () => {
-    it("extracts title from RSS feed", async () => {
+    it("extracts title and metadata from RSS feed", async () => {
       const html = `
         <html>
           <head>
@@ -262,7 +262,7 @@ describe("lookupFeeds", () => {
         <rss version="2.0">
           <channel>
             <title>My Awesome Blog</title>
-            <item><title>Post 1</title></item>
+            <item><title>Post 1</title><pubDate>Mon, 01 Jan 2024 00:00:00 GMT</pubDate></item>
           </channel>
         </rss>
       `;
@@ -282,6 +282,8 @@ describe("lookupFeeds", () => {
 
       expect(result.status).toBe(200);
       expect(result.result?.[0].title).toBe("My Awesome Blog");
+      expect(result.result?.[0].itemCount).toBe(1);
+      expect(result.result?.[0].lastPostDate).toBe("2024-01-01T00:00:00.000Z");
     });
 
     it("uses hardcoded title for rule-based feeds", async () => {

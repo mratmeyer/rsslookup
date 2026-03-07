@@ -1,6 +1,6 @@
 import { checkCommonFeedPaths } from "./feedPaths";
 import { parseHtmlForFeeds } from "./parseHtml";
-import { fetchFeedTitle } from "./feedTitle";
+import { fetchFeedInfo } from "./feedInfo";
 import { applyRules } from "./rules";
 import { USER_AGENT, MAX_HTML_RESPONSE_BYTES } from "./constants";
 import { buildFetchOptions } from "./fetchFeed";
@@ -186,28 +186,37 @@ export async function lookupFeeds(
     };
   }
 
-  // 6. RESOLVE FEEDS AND FETCH TITLES
-  // Fetch titles only for feeds that don't have a hardcoded title
+  // 6. RESOLVE FEEDS AND FETCH METADATA
+  // Fetch info only for feeds that don't have a hardcoded title
   const feedEntries = Array.from(foundFeeds.entries());
 
   // Count fetches for missing titles
-  const titleFetchesNeeded = feedEntries.filter(
+  const infoFetchesNeeded = feedEntries.filter(
     ([, meta]) => meta.title === null,
   ).length;
-  externalRequestCount += titleFetchesNeeded;
+  externalRequestCount += infoFetchesNeeded;
 
-  const titlePromises = feedEntries.map(([feedUrl, metadata]) =>
+  const infoPromises = feedEntries.map(([feedUrl, metadata]) =>
     metadata.title !== null
-      ? Promise.resolve(metadata.title)
-      : fetchFeedTitle(feedUrl, USER_AGENT),
+      ? Promise.resolve(null)
+      : fetchFeedInfo(feedUrl, USER_AGENT),
   );
-  const titles = await Promise.all(titlePromises);
+  const infos = await Promise.all(infoPromises);
 
-  const resultData = feedEntries.map(([feedUrl, metadata], index) => ({
-    url: feedUrl,
-    title: titles[index],
-    isFromRule: metadata.isFromRule,
-  }));
+  const resultData = feedEntries.map(([feedUrl, metadata], index) => {
+    const info = infos[index];
+    return {
+      url: feedUrl,
+      title: info ? info.title : metadata.title,
+      isFromRule: metadata.isFromRule,
+      ...(info && {
+        description: info.description,
+        itemCount: info.itemCount,
+        lastPostDate: info.lastPostDate,
+        postFrequency: info.postFrequency,
+      }),
+    };
+  });
 
   recordAnalytics("success", resultData.length);
   return {

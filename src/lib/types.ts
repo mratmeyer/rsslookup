@@ -1,7 +1,19 @@
+export interface FeedInfo {
+  title: string | null;
+  description: string | null;
+  itemCount: number;
+  lastPostDate: string | null;
+  postFrequency: string | null;
+}
+
 export interface FeedResult {
   url: string;
   title: string | null;
+  description?: string | null;
   isFromRule?: boolean;
+  itemCount?: number;
+  lastPostDate?: string | null;
+  postFrequency?: string | null;
 }
 
 export interface LookupResponse {

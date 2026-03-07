@@ -7,8 +7,36 @@ interface FeedResultProps {
   feed: FeedResultType;
 }
 
+function formatRelativeDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return "today";
+  if (diffDays === 1) return "1 day ago";
+  if (diffDays < 7) return `${diffDays} days ago`;
+  const diffWeeks = Math.floor(diffDays / 7);
+  if (diffWeeks === 1) return "1 week ago";
+  if (diffWeeks < 5) return `${diffWeeks} weeks ago`;
+  const diffMonths = Math.floor(diffDays / 30);
+  if (diffMonths === 1) return "1 month ago";
+  if (diffMonths < 12) return `${diffMonths} months ago`;
+  const diffYears = Math.floor(diffDays / 365);
+  if (diffYears === 1) return "1 year ago";
+  return `${diffYears} years ago`;
+}
+
 export function FeedResult({ feed }: FeedResultProps) {
-  const { url, title, isFromRule } = feed;
+  const {
+    url,
+    title,
+    description,
+    isFromRule,
+    itemCount,
+    lastPostDate,
+    postFrequency,
+  } = feed;
   const [isCopied, setIsCopied] = useState(false);
   const [isTooltipHovered, setIsTooltipHovered] = useState(false);
 
@@ -37,13 +65,36 @@ export function FeedResult({ feed }: FeedResultProps) {
     >
       <div className="flex flex-col min-w-0 mr-4">
         {title && (
-          <span className="text-muted-foreground text-xs font-bold mb-1 truncate">
+          <span
+            className="text-muted-foreground text-xs font-bold mb-1 truncate"
+            title={description || undefined}
+          >
             {title}
           </span>
         )}
         <span className="text-url-foreground text-base font-medium truncate font-mono bg-url dark:bg-zinc-700 px-3 py-1 rounded-full transition-colors duration-200 self-start max-w-full">
           {url}
         </span>
+        {(lastPostDate ||
+          postFrequency ||
+          (itemCount != null && itemCount > 0 && itemCount < 5)) && (
+          <div className="flex items-center gap-1.5 mt-1.5 text-xs text-muted-foreground">
+            {itemCount != null && itemCount > 0 && itemCount < 5 && (
+              <span>
+                {itemCount} {itemCount === 1 ? "item" : "items"}
+              </span>
+            )}
+            {itemCount != null &&
+              itemCount > 0 &&
+              itemCount < 5 &&
+              lastPostDate && <span>·</span>}
+            {lastPostDate && (
+              <span>Last post {formatRelativeDate(lastPostDate)}</span>
+            )}
+            {lastPostDate && postFrequency && <span>·</span>}
+            {postFrequency && <span>{postFrequency}</span>}
+          </div>
+        )}
       </div>
       <div className="flex items-center gap-3 ml-2">
         {isFromRule && (

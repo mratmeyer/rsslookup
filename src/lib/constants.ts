@@ -20,9 +20,9 @@ export const FETCH_TIMEOUT_MS = 10_000;
 export const MAX_HTML_RESPONSE_BYTES = 2 * 1024 * 1024; // 2 MB
 
 /**
- * Maximum response body size in bytes for feed XML fetches (title extraction).
+ * Maximum response body size in bytes for feed XML fetches (metadata extraction).
  */
-export const MAX_FEED_RESPONSE_BYTES = 512 * 1024; // 512 KB
+export const MAX_FEED_RESPONSE_BYTES = 1024 * 1024; // 1 MB
 
 /**
  * Common feed paths to check when no feed is found in HTML.
