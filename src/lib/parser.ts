@@ -1,7 +1,7 @@
 import * as htmlparser2 from "htmlparser2";
-import { FEED_MIME_TYPES, FETCH_TIMEOUT_MS, MAX_FEED_RESPONSE_BYTES } from "./constants";
+import { FEED_MIME_TYPES, MAX_FEED_RESPONSE_BYTES, isFeedContentType } from "./constants";
 import { readResponseBody } from "./readResponseBody";
-import { validateUrl } from "./validateUrl";
+import { safeFetch } from "./fetchFeed";
 import type { FeedsMap } from "./types";
 
 /**
@@ -15,23 +15,15 @@ export async function fetchFeedTitle(
   userAgent: string,
 ): Promise<string | null> {
   try {
-    const response = await fetch(feedUrl, {
-      method: "GET",
-      headers: { "User-Agent": userAgent },
-      redirect: "follow",
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    });
+    const result = await safeFetch(feedUrl, userAgent);
+    if (!result) return null;
 
-    if (!response.ok && response.status !== 304) {
+    const contentType = result.response.headers.get("content-type") || "";
+    if (!isFeedContentType(contentType)) {
       return null;
     }
 
-    // Validate the final URL after redirects to prevent SSRF
-    if (!validateUrl(new URL(response.url)).valid) {
-      return null;
-    }
-
-    const text = await readResponseBody(response, MAX_FEED_RESPONSE_BYTES);
+    const text = await readResponseBody(result.response, MAX_FEED_RESPONSE_BYTES);
     return parseFeedTitle(text);
   } catch {
     return null;

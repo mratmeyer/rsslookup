@@ -40,6 +40,21 @@ export const FEED_MIME_TYPES = new Set([
  * Common feed paths to check when no feed is found in HTML.
  * Includes both absolute paths (starting with /) and relative paths.
  */
+/**
+ * Checks whether a content-type header value indicates an RSS/Atom feed.
+ */
+export function isFeedContentType(contentType: string): boolean {
+  return (
+    contentType.includes("xml") ||
+    contentType.includes("rss") ||
+    contentType.includes("atom")
+  );
+}
+
+/**
+ * Common feed paths to check when no feed is found in HTML.
+ * Includes both absolute paths (starting with /) and relative paths.
+ */
 export const POSSIBLE_FEED_PATHS = [
   // Absolute paths
   "/atom",

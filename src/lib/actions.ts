@@ -1,7 +1,8 @@
 import { checkCommonFeedPaths } from "./scraper";
 import { parseHtmlForFeeds, fetchFeedTitle } from "./parser";
 import { applyRules } from "./rules";
-import { USER_AGENT, FETCH_TIMEOUT_MS, MAX_HTML_RESPONSE_BYTES } from "./constants";
+import { USER_AGENT, MAX_HTML_RESPONSE_BYTES } from "./constants";
+import { buildFetchOptions } from "./fetchFeed";
 import { readResponseBody } from "./readResponseBody";
 import { checkRateLimits } from "./rateLimit";
 import { validateUrl } from "./validateUrl";
@@ -107,13 +108,7 @@ export async function lookupFeeds(
   // 4. FETCH URL CONTENT
   try {
     externalRequestCount++;
-    const fetchOptions = {
-      method: "GET",
-      headers: { "User-Agent": USER_AGENT },
-      redirect: "follow" as const,
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    };
-    response = await fetch(url, fetchOptions);
+    response = await fetch(url, buildFetchOptions(USER_AGENT));
     upstreamStatus = response.status;
     finalUrl = response.url; // Could be redirected
 

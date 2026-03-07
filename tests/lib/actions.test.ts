@@ -272,7 +272,11 @@ describe("lookupFeeds", () => {
         .mockResolvedValueOnce(
           createMockResponse(html, { url: "https://example.com" }),
         )
-        .mockResolvedValueOnce(createMockResponse(rssFeed));
+        .mockResolvedValueOnce(
+          createMockResponse(rssFeed, {
+            headers: { "content-type": "application/rss+xml" },
+          }),
+        );
 
       const result = await lookupFeeds("https://example.com");
 

@@ -1,5 +1,5 @@
-import { POSSIBLE_FEED_PATHS, FETCH_TIMEOUT_MS } from "./constants";
-import { validateUrl } from "./validateUrl";
+import { POSSIBLE_FEED_PATHS, isFeedContentType } from "./constants";
+import { safeFetch } from "./fetchFeed";
 import type { FeedsMap } from "./types";
 
 /**
@@ -27,26 +27,12 @@ export async function checkCommonFeedPaths(
       // We are about to make a request
       requestCount++;
 
-      const response = await fetch(potentialFeedUrl, {
-        method: "GET",
-        headers: { "User-Agent": userAgent },
-        redirect: "follow",
-        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-      });
+      const result = await safeFetch(potentialFeedUrl, userAgent);
+      if (!result) return null;
 
-      // Validate the final URL after redirects to prevent SSRF
-      if (!validateUrl(new URL(response.url)).valid) {
-        return null;
-      }
-
-      const contentType = response.headers.get("content-type") || "";
-      if (
-        (response.ok || response.status === 304) &&
-        (contentType.includes("xml") ||
-          contentType.includes("rss") ||
-          contentType.includes("atom"))
-      ) {
-        return response.url;
+      const contentType = result.response.headers.get("content-type") || "";
+      if (isFeedContentType(contentType)) {
+        return result.url;
       }
 
       return null;
