@@ -107,6 +107,7 @@ export function FeedResult({ feed }: FeedResultProps) {
 
   const handlePreviewClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    setIsPreviewHovered(false);
     trackUmamiEvent("post-preview");
     setIsPreviewOpen(true);
   };
@@ -183,8 +184,6 @@ export function FeedResult({ feed }: FeedResultProps) {
               onKeyDown={handlePreviewKeyDown}
               onMouseEnter={() => setIsPreviewHovered(true)}
               onMouseLeave={() => setIsPreviewHovered(false)}
-              onFocus={() => setIsPreviewHovered(true)}
-              onBlur={() => setIsPreviewHovered(false)}
               aria-label={`Preview posts for ${title || url}`}
               className="group/preview relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-secondary p-1.5 transition-all duration-200 dark:border-transparent dark:bg-white/10 sm:h-9 sm:w-9 sm:p-2 [@media(any-hover:hover)]:hover:bg-primary/15 active:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
             >
