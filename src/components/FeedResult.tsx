@@ -202,10 +202,10 @@ export function FeedResult({ feed }: FeedResultProps) {
           )}
           <span
             aria-hidden="true"
-            className={`relative ml-auto flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl p-1.5 transition-all duration-300 sm:ml-0 sm:h-9 sm:w-9 sm:p-2 ${
+            className={`relative ml-auto flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border p-1.5 transition-colors duration-300 sm:ml-0 sm:h-9 sm:w-9 sm:p-2 ${
               isCopied
-                ? "bg-green-500/20"
-                : `border border-border bg-secondary dark:border-transparent dark:bg-white/10 ${copyHoverClasses}`
+                ? "border-transparent bg-green-500/20"
+                : `border-border bg-secondary dark:border-transparent dark:bg-white/10 ${copyHoverClasses}`
             }`}
           >
             <svg
