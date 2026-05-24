@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
 import type { FeedResult as FeedResultType } from "~/lib/types";
 import { CommunityRuleIcon } from "./CommunityRuleIcon";
@@ -243,92 +244,95 @@ export function FeedResult({ feed }: FeedResultProps) {
         </div>
       </div>
 
-      {isPreviewOpen && hasPreviewPosts && (
-        <div
-          role="presentation"
-          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/45 px-4 py-4 sm:items-center sm:py-6"
-          onClick={() => setIsPreviewOpen(false)}
-        >
+      {isPreviewOpen &&
+        hasPreviewPosts &&
+        createPortal(
           <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={`feed-preview-${encodeURIComponent(url)}`}
-            className="flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border/80 dark:border-white/10 bg-background shadow-2xl sm:max-h-[min(720px,calc(100dvh-3rem))]"
-            onClick={(e) => e.stopPropagation()}
+            role="presentation"
+            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/45 px-4 py-4 sm:items-center sm:py-6"
+            onClick={() => setIsPreviewOpen(false)}
           >
-            <div className="flex flex-shrink-0 items-start justify-between gap-4 border-b border-border/70 dark:border-white/10 p-5">
-              <div className="min-w-0">
-                <h3
-                  id={`feed-preview-${encodeURIComponent(url)}`}
-                  className="text-base font-semibold text-foreground-heading"
-                >
-                  Recent posts
-                </h3>
-                <p className="mt-1 truncate text-sm text-muted-foreground">
-                  {title || url}
-                </p>
-              </div>
-              <button
-                type="button"
-                autoFocus
-                onClick={() => setIsPreviewOpen(false)}
-                className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-secondary dark:bg-white/10 text-muted-foreground transition-colors [@media(any-hover:hover)]:hover:bg-primary/15 [@media(any-hover:hover)]:hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
-                aria-label="Close preview"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="min-h-0 flex-1 overflow-y-auto p-5 overscroll-contain">
-              <div className="space-y-4">
-                {previewPosts.map((post, index) => (
-                  <article
-                    key={`${post.url || post.title || "post"}-${index}`}
-                    className="border-b border-border/60 dark:border-white/10 pb-4 last:border-0 last:pb-0"
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={`feed-preview-${encodeURIComponent(url)}`}
+              className="flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border/80 dark:border-white/10 bg-background shadow-2xl sm:max-h-[min(720px,calc(100dvh-3rem))]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex flex-shrink-0 items-start justify-between gap-4 border-b border-border/70 dark:border-white/10 p-5">
+                <div className="min-w-0">
+                  <h3
+                    id={`feed-preview-${encodeURIComponent(url)}`}
+                    className="text-base font-semibold text-foreground-heading"
                   >
-                    {post.url ? (
-                      <a
-                        href={post.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="line-clamp-2 text-sm font-semibold leading-6 text-foreground-heading transition-colors [@media(any-hover:hover)]:hover:text-primary"
-                      >
-                        {post.title || post.url}
-                      </a>
-                    ) : (
-                      <h4 className="line-clamp-2 text-sm font-semibold leading-6 text-foreground-heading">
-                        {post.title || "Untitled post"}
-                      </h4>
-                    )}
-                    {post.publishedAt && (
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {formatPreviewDate(post.publishedAt)}
-                      </p>
-                    )}
-                    {post.summary && (
-                      <p className="line-clamp-2 mt-2 text-sm leading-6 text-muted-foreground">
-                        {post.summary}
-                      </p>
-                    )}
-                  </article>
-                ))}
+                    Recent posts
+                  </h3>
+                  <p className="mt-1 truncate text-sm text-muted-foreground">
+                    {title || url}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  autoFocus
+                  onClick={() => setIsPreviewOpen(false)}
+                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-secondary dark:bg-white/10 text-muted-foreground transition-colors [@media(any-hover:hover)]:hover:bg-primary/15 [@media(any-hover:hover)]:hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
+                  aria-label="Close preview"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto p-5 overscroll-contain">
+                <div className="space-y-4">
+                  {previewPosts.map((post, index) => (
+                    <article
+                      key={`${post.url || post.title || "post"}-${index}`}
+                      className="border-b border-border/60 dark:border-white/10 pb-4 last:border-0 last:pb-0"
+                    >
+                      {post.url ? (
+                        <a
+                          href={post.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="line-clamp-2 text-sm font-semibold leading-6 text-foreground-heading transition-colors [@media(any-hover:hover)]:hover:text-primary"
+                        >
+                          {post.title || post.url}
+                        </a>
+                      ) : (
+                        <h4 className="line-clamp-2 text-sm font-semibold leading-6 text-foreground-heading">
+                          {post.title || "Untitled post"}
+                        </h4>
+                      )}
+                      {post.publishedAt && (
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {formatPreviewDate(post.publishedAt)}
+                        </p>
+                      )}
+                      {post.summary && (
+                        <p className="line-clamp-2 mt-2 text-sm leading-6 text-muted-foreground">
+                          {post.summary}
+                        </p>
+                      )}
+                    </article>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
