@@ -127,9 +127,9 @@ export function FeedResult({ feed }: FeedResultProps) {
         onClick={handleCopy}
         onKeyDown={handleKeyDown}
         aria-label={`Copy feed URL ${url}`}
-        className={`bg-white/90 dark:bg-white/[0.055] group/card flex w-full items-center justify-between border border-border/70 dark:border-white/10 p-4 sm:p-[1.125rem] rounded-2xl shadow-sm text-left ${cardHoverClasses} active:border-border active:shadow-md cursor-pointer transition duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
+        className={`bg-white/90 dark:bg-white/[0.055] group/card flex w-full flex-col items-stretch gap-3 border border-border/70 dark:border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-[1.125rem] rounded-2xl shadow-sm text-left ${cardHoverClasses} active:border-border active:shadow-md cursor-pointer transition duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
       >
-        <div className="flex flex-col min-w-0 mr-4">
+        <div className="flex min-w-0 flex-col sm:mr-4">
           {title && (
             <span
               className="text-muted-foreground text-xs font-semibold mb-1.5 truncate"
@@ -144,7 +144,7 @@ export function FeedResult({ feed }: FeedResultProps) {
           {(lastPostDate ||
             postFrequency ||
             (itemCount != null && itemCount > 0 && itemCount < 5)) && (
-            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 mt-2 text-xs text-muted-foreground">
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
               {itemCount != null && itemCount > 0 && itemCount < 5 && (
                 <span>
                   {itemCount} {itemCount === 1 ? "item" : "items"}
@@ -162,7 +162,7 @@ export function FeedResult({ feed }: FeedResultProps) {
             </div>
           )}
         </div>
-        <div className="flex items-center gap-3 ml-2">
+        <div className="flex items-center gap-2 sm:ml-2 sm:gap-3">
           {isFromRule && (
             <CommunityRuleIcon onHoverChange={setIsTooltipHovered} />
           )}
@@ -176,11 +176,11 @@ export function FeedResult({ feed }: FeedResultProps) {
               onFocus={() => setIsPreviewHovered(true)}
               onBlur={() => setIsPreviewHovered(false)}
               aria-label={`Preview posts for ${title || url}`}
-              className="group/preview flex-shrink-0 p-2 rounded-xl transition-all duration-200 relative w-9 h-9 flex items-center justify-center bg-secondary dark:bg-white/10 [@media(any-hover:hover)]:hover:bg-primary/15 active:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
+              className="group/preview relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-secondary p-1.5 transition-all duration-200 dark:bg-white/10 sm:h-9 sm:w-9 sm:p-2 [@media(any-hover:hover)]:hover:bg-primary/15 active:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 stroke-muted-foreground [@media(any-hover:hover)]:group-hover/preview:stroke-primary group-active/preview:stroke-primary transition-colors duration-200"
+                className="h-[18px] w-[18px] stroke-muted-foreground transition-colors duration-200 sm:h-5 sm:w-5 [@media(any-hover:hover)]:group-hover/preview:stroke-primary group-active/preview:stroke-primary"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -201,7 +201,7 @@ export function FeedResult({ feed }: FeedResultProps) {
           )}
           <span
             aria-hidden="true"
-            className={`flex-shrink-0 p-2 rounded-xl transition-all duration-300 relative w-9 h-9 flex items-center justify-center ${
+            className={`relative ml-auto flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl p-1.5 transition-all duration-300 sm:ml-0 sm:h-9 sm:w-9 sm:p-2 ${
               isCopied
                 ? "bg-green-500/20"
                 : `bg-secondary dark:bg-white/10 ${copyHoverClasses}`
@@ -209,7 +209,7 @@ export function FeedResult({ feed }: FeedResultProps) {
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className={`h-5 w-5 stroke-muted-foreground ${copyIconHoverClasses} transition-all duration-200 ease-in-out absolute ${
+              className={`absolute h-[18px] w-[18px] stroke-muted-foreground transition-all duration-200 ease-in-out sm:h-5 sm:w-5 ${copyIconHoverClasses} ${
                 isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
               }`}
               fill="none"
@@ -225,7 +225,7 @@ export function FeedResult({ feed }: FeedResultProps) {
             </svg>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className={`h-5 w-5 stroke-green-500 transition-all duration-200 ease-in-out absolute ${
+              className={`absolute h-[18px] w-[18px] stroke-green-500 transition-all duration-200 ease-in-out sm:h-5 sm:w-5 ${
                 isCopied ? "scale-100 opacity-100" : "scale-0 opacity-0"
               }`}
               fill="none"
