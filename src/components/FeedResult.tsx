@@ -27,6 +27,16 @@ function formatRelativeDate(isoDate: string): string {
   return `${diffYears} years ago`;
 }
 
+function formatPreviewDate(isoDate: string): string {
+  const absoluteDate = new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(isoDate));
+
+  return `${absoluteDate} · ${formatRelativeDate(isoDate)}`;
+}
+
 export function FeedResult({ feed }: FeedResultProps) {
   const {
     url,
@@ -36,9 +46,25 @@ export function FeedResult({ feed }: FeedResultProps) {
     itemCount,
     lastPostDate,
     postFrequency,
+    posts,
   } = feed;
   const [isCopied, setIsCopied] = useState(false);
   const [isTooltipHovered, setIsTooltipHovered] = useState(false);
+  const [isPreviewHovered, setIsPreviewHovered] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const previewPosts = posts ?? [];
+  const hasPreviewPosts = previewPosts.length > 0;
+  const cardHoverClasses = isPreviewHovered
+    ? ""
+    : "[@media(any-hover:hover)]:hover:border-border [@media(any-hover:hover)]:dark:hover:border-white/20 [@media(any-hover:hover)]:hover:shadow-md";
+  const copyHoverClasses =
+    isTooltipHovered || isPreviewHovered
+      ? ""
+      : "[@media(any-hover:hover)]:group-hover/card:bg-primary/15 group-active/card:bg-primary/15";
+  const copyIconHoverClasses =
+    isTooltipHovered || isPreviewHovered
+      ? ""
+      : "[@media(any-hover:hover)]:group-hover/card:stroke-primary group-active/card:stroke-primary";
 
   useEffect(() => {
     if (isCopied) {
@@ -49,6 +75,25 @@ export function FeedResult({ feed }: FeedResultProps) {
     }
   }, [isCopied]);
 
+  useEffect(() => {
+    if (!isPreviewOpen) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsPreviewOpen(false);
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [isPreviewOpen]);
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(url);
@@ -56,6 +101,15 @@ export function FeedResult({ feed }: FeedResultProps) {
     } catch {
       toast.error("Failed to copy");
     }
+  };
+
+  const handlePreviewClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setIsPreviewOpen(true);
+  };
+
+  const handlePreviewKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -66,93 +120,215 @@ export function FeedResult({ feed }: FeedResultProps) {
   };
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={handleCopy}
-      onKeyDown={handleKeyDown}
-      aria-label={`Copy feed URL ${url}`}
-      className="bg-white/90 dark:bg-white/[0.055] group/card flex w-full items-center justify-between border border-border/70 dark:border-white/10 p-4 sm:p-[1.125rem] rounded-2xl shadow-sm text-left [@media(any-hover:hover)]:hover:border-border [@media(any-hover:hover)]:dark:hover:border-white/20 [@media(any-hover:hover)]:hover:shadow-md active:border-border active:shadow-md cursor-pointer transition duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-    >
-      <div className="flex flex-col min-w-0 mr-4">
-        {title && (
-          <span
-            className="text-muted-foreground text-xs font-semibold mb-1.5 truncate"
-            title={description || undefined}
-          >
-            {title}
+    <>
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={handleCopy}
+        onKeyDown={handleKeyDown}
+        aria-label={`Copy feed URL ${url}`}
+        className={`bg-white/90 dark:bg-white/[0.055] group/card flex w-full items-center justify-between border border-border/70 dark:border-white/10 p-4 sm:p-[1.125rem] rounded-2xl shadow-sm text-left ${cardHoverClasses} active:border-border active:shadow-md cursor-pointer transition duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
+      >
+        <div className="flex flex-col min-w-0 mr-4">
+          {title && (
+            <span
+              className="text-muted-foreground text-xs font-semibold mb-1.5 truncate"
+              title={description || undefined}
+            >
+              {title}
+            </span>
+          )}
+          <span className="text-url-foreground text-[15px] font-medium truncate font-mono bg-url dark:bg-zinc-700/90 px-3 py-1.5 rounded-xl transition-colors duration-200 self-start max-w-full">
+            {url}
           </span>
-        )}
-        <span className="text-url-foreground text-[15px] font-medium truncate font-mono bg-url dark:bg-zinc-700/90 px-3 py-1.5 rounded-xl transition-colors duration-200 self-start max-w-full">
-          {url}
-        </span>
-        {(lastPostDate ||
-          postFrequency ||
-          (itemCount != null && itemCount > 0 && itemCount < 5)) && (
-          <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 mt-2 text-xs text-muted-foreground">
-            {itemCount != null && itemCount > 0 && itemCount < 5 && (
-              <span>
-                {itemCount} {itemCount === 1 ? "item" : "items"}
-              </span>
-            )}
-            {itemCount != null &&
-              itemCount > 0 &&
-              itemCount < 5 &&
-              lastPostDate && <span>·</span>}
-            {lastPostDate && (
-              <span>Last post {formatRelativeDate(lastPostDate)}</span>
-            )}
-            {lastPostDate && postFrequency && <span>·</span>}
-            {postFrequency && <span>{postFrequency}</span>}
-          </div>
-        )}
+          {(lastPostDate ||
+            postFrequency ||
+            (itemCount != null && itemCount > 0 && itemCount < 5)) && (
+            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 mt-2 text-xs text-muted-foreground">
+              {itemCount != null && itemCount > 0 && itemCount < 5 && (
+                <span>
+                  {itemCount} {itemCount === 1 ? "item" : "items"}
+                </span>
+              )}
+              {itemCount != null &&
+                itemCount > 0 &&
+                itemCount < 5 &&
+                lastPostDate && <span>·</span>}
+              {lastPostDate && (
+                <span>Last post {formatRelativeDate(lastPostDate)}</span>
+              )}
+              {lastPostDate && postFrequency && <span>·</span>}
+              {postFrequency && <span>{postFrequency}</span>}
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-3 ml-2">
+          {isFromRule && (
+            <CommunityRuleIcon onHoverChange={setIsTooltipHovered} />
+          )}
+          {hasPreviewPosts && (
+            <button
+              type="button"
+              onClick={handlePreviewClick}
+              onKeyDown={handlePreviewKeyDown}
+              onMouseEnter={() => setIsPreviewHovered(true)}
+              onMouseLeave={() => setIsPreviewHovered(false)}
+              onFocus={() => setIsPreviewHovered(true)}
+              onBlur={() => setIsPreviewHovered(false)}
+              aria-label={`Preview posts for ${title || url}`}
+              className="group/preview flex-shrink-0 p-2 rounded-xl transition-all duration-200 relative w-9 h-9 flex items-center justify-center bg-secondary dark:bg-white/10 [@media(any-hover:hover)]:hover:bg-primary/15 active:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 stroke-muted-foreground [@media(any-hover:hover)]:group-hover/preview:stroke-primary group-active/preview:stroke-primary transition-colors duration-200"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2.25 12s3.75-6.75 9.75-6.75S21.75 12 21.75 12 18 18.75 12 18.75 2.25 12 2.25 12z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 15a3 3 0 100-6 3 3 0 000 6z"
+                />
+              </svg>
+            </button>
+          )}
+          <span
+            aria-hidden="true"
+            className={`flex-shrink-0 p-2 rounded-xl transition-all duration-300 relative w-9 h-9 flex items-center justify-center ${
+              isCopied
+                ? "bg-green-500/20"
+                : `bg-secondary dark:bg-white/10 ${copyHoverClasses}`
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`h-5 w-5 stroke-muted-foreground ${copyIconHoverClasses} transition-all duration-200 ease-in-out absolute ${
+                isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
+              }`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`h-5 w-5 stroke-green-500 transition-all duration-200 ease-in-out absolute ${
+                isCopied ? "scale-100 opacity-100" : "scale-0 opacity-0"
+              }`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </span>
+        </div>
       </div>
-      <div className="flex items-center gap-3 ml-2">
-        {isFromRule && (
-          <CommunityRuleIcon onHoverChange={setIsTooltipHovered} />
-        )}
-        <span
-          aria-hidden="true"
-          className={`flex-shrink-0 p-2 rounded-xl transition-all duration-300 relative w-9 h-9 flex items-center justify-center ${
-            isCopied
-              ? "bg-green-500/20"
-              : `bg-secondary dark:bg-white/10 ${isTooltipHovered ? "" : "[@media(any-hover:hover)]:group-hover/card:bg-primary/15 group-active/card:bg-primary/15"}`
-          }`}
+
+      {isPreviewOpen && hasPreviewPosts && (
+        <div
+          role="presentation"
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/45 px-4 py-4 sm:items-center sm:py-6"
+          onClick={() => setIsPreviewOpen(false)}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className={`h-5 w-5 stroke-muted-foreground ${isTooltipHovered ? "" : "[@media(any-hover:hover)]:group-hover/card:stroke-primary group-active/card:stroke-primary"} transition-all duration-200 ease-in-out absolute ${
-              isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`feed-preview-${encodeURIComponent(url)}`}
+            className="flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border/80 dark:border-white/10 bg-background shadow-2xl sm:max-h-[min(720px,calc(100dvh-3rem))]"
+            onClick={(e) => e.stopPropagation()}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-            />
-          </svg>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className={`h-5 w-5 stroke-green-500 transition-all duration-200 ease-in-out absolute ${
-              isCopied ? "scale-100 opacity-100" : "scale-0 opacity-0"
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-        </span>
-      </div>
-    </div>
+            <div className="flex flex-shrink-0 items-start justify-between gap-4 border-b border-border/70 dark:border-white/10 p-5">
+              <div className="min-w-0">
+                <h3
+                  id={`feed-preview-${encodeURIComponent(url)}`}
+                  className="text-base font-semibold text-foreground-heading"
+                >
+                  Recent posts
+                </h3>
+                <p className="mt-1 truncate text-sm text-muted-foreground">
+                  {title || url}
+                </p>
+              </div>
+              <button
+                type="button"
+                autoFocus
+                onClick={() => setIsPreviewOpen(false)}
+                className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-secondary dark:bg-white/10 text-muted-foreground transition-colors [@media(any-hover:hover)]:hover:bg-primary/15 [@media(any-hover:hover)]:hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
+                aria-label="Close preview"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto p-5 overscroll-contain">
+              <div className="space-y-4">
+                {previewPosts.map((post, index) => (
+                  <article
+                    key={`${post.url || post.title || "post"}-${index}`}
+                    className="border-b border-border/60 dark:border-white/10 pb-4 last:border-0 last:pb-0"
+                  >
+                    {post.url ? (
+                      <a
+                        href={post.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="line-clamp-2 text-sm font-semibold leading-6 text-foreground-heading transition-colors [@media(any-hover:hover)]:hover:text-primary"
+                      >
+                        {post.title || post.url}
+                      </a>
+                    ) : (
+                      <h4 className="line-clamp-2 text-sm font-semibold leading-6 text-foreground-heading">
+                        {post.title || "Untitled post"}
+                      </h4>
+                    )}
+                    {post.publishedAt && (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {formatPreviewDate(post.publishedAt)}
+                      </p>
+                    )}
+                    {post.summary && (
+                      <p className="line-clamp-2 mt-2 text-sm leading-6 text-muted-foreground">
+                        {post.summary}
+                      </p>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

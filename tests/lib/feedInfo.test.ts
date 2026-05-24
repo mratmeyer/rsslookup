@@ -10,10 +10,13 @@ describe("parseFeedInfo", () => {
           <description>A blog about testing things</description>
           <item>
             <title>Post 3</title>
+            <link>https://example.com/post-3</link>
+            <description>Newest post</description>
             <pubDate>Wed, 10 Jan 2024 00:00:00 GMT</pubDate>
           </item>
           <item>
             <title>Post 2</title>
+            <link>https://example.com/post-2</link>
             <pubDate>Wed, 03 Jan 2024 00:00:00 GMT</pubDate>
           </item>
           <item>
@@ -31,6 +34,12 @@ describe("parseFeedInfo", () => {
     expect(info.itemCount).toBe(3);
     expect(info.lastPostDate).toBe("2024-01-10T00:00:00.000Z");
     expect(info.postFrequency).toBe("~1 post/week");
+    expect(info.posts[0]).toEqual({
+      title: "Post 3",
+      url: "https://example.com/post-3",
+      publishedAt: "2024-01-10T00:00:00.000Z",
+      summary: "Newest post",
+    });
   });
 
   it("parses Atom feed with subtitle and published dates", () => {
@@ -40,6 +49,8 @@ describe("parseFeedInfo", () => {
         <subtitle>An Atom-powered blog</subtitle>
         <entry>
           <title>Entry 2</title>
+          <link href="https://example.com/entry-2" />
+          <summary>Latest Atom entry</summary>
           <published>2024-01-15T00:00:00Z</published>
         </entry>
         <entry>
@@ -56,6 +67,12 @@ describe("parseFeedInfo", () => {
     expect(info.itemCount).toBe(2);
     expect(info.lastPostDate).toBe("2024-01-15T00:00:00.000Z");
     expect(info.postFrequency).toBe("~2 posts/month");
+    expect(info.posts[0]).toEqual({
+      title: "Entry 2",
+      url: "https://example.com/entry-2",
+      publishedAt: "2024-01-15T00:00:00.000Z",
+      summary: "Latest Atom entry",
+    });
   });
 
   it("parses Atom feed with updated dates", () => {
@@ -78,6 +95,24 @@ describe("parseFeedInfo", () => {
     expect(info.itemCount).toBe(2);
     expect(info.lastPostDate).toBe("2024-01-08T00:00:00.000Z");
     expect(info.postFrequency).toBe("~1 post/week");
+  });
+
+  it("prefers Atom alternate links over self links", () => {
+    const xml = `
+      <feed xmlns="http://www.w3.org/2005/Atom">
+        <title>Linked Atom Blog</title>
+        <entry>
+          <title>Entry</title>
+          <link rel="self" href="https://example.com/feed/entry-api" />
+          <link rel="alternate" href="https://example.com/posts/entry" />
+          <updated>2024-01-08T00:00:00Z</updated>
+        </entry>
+      </feed>
+    `;
+
+    const info = parseFeedInfo(xml);
+
+    expect(info.posts[0].url).toBe("https://example.com/posts/entry");
   });
 
   it("returns no frequency for feed with 0 items", () => {
@@ -166,6 +201,28 @@ describe("parseFeedInfo", () => {
 
     expect(info.title).toBeNull();
     expect(info.itemCount).toBe(0);
+  });
+
+  it("strips markup and truncates preview summaries", () => {
+    const longText = "word ".repeat(80);
+    const xml = `
+      <rss version="2.0">
+        <channel>
+          <title>Summary Blog</title>
+          <item>
+            <title>Post</title>
+            <description><![CDATA[<p>${longText}</p><a href="https://example.com">Read</a>]]></description>
+          </item>
+        </channel>
+      </rss>
+    `;
+
+    const info = parseFeedInfo(xml);
+
+    expect(info.posts[0].summary).not.toContain("<p>");
+    expect(info.posts[0].summary).not.toContain("<a");
+    expect(info.posts[0].summary?.length).toBeLessThanOrEqual(240);
+    expect(info.posts[0].summary).toMatch(/\.\.\.$/);
   });
 
   it("calculates daily frequency", () => {

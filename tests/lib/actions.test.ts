@@ -262,7 +262,12 @@ describe("lookupFeeds", () => {
         <rss version="2.0">
           <channel>
             <title>My Awesome Blog</title>
-            <item><title>Post 1</title><pubDate>Mon, 01 Jan 2024 00:00:00 GMT</pubDate></item>
+            <item>
+              <title>Post 1</title>
+              <link>https://example.com/post-1</link>
+              <description>First post</description>
+              <pubDate>Mon, 01 Jan 2024 00:00:00 GMT</pubDate>
+            </item>
           </channel>
         </rss>
       `;
@@ -284,6 +289,12 @@ describe("lookupFeeds", () => {
       expect(result.result?.[0].title).toBe("My Awesome Blog");
       expect(result.result?.[0].itemCount).toBe(1);
       expect(result.result?.[0].lastPostDate).toBe("2024-01-01T00:00:00.000Z");
+      expect(result.result?.[0].posts?.[0]).toEqual({
+        title: "Post 1",
+        url: "https://example.com/post-1",
+        publishedAt: "2024-01-01T00:00:00.000Z",
+        summary: "First post",
+      });
     });
 
     it("uses hardcoded title for rule-based feeds", async () => {
@@ -309,6 +320,7 @@ describe("lookupFeeds", () => {
           }),
         ]),
       );
+      expect(result.result?.every((feed) => !("posts" in feed))).toBe(true);
     });
   });
 });

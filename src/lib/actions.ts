@@ -214,6 +214,7 @@ export async function lookupFeeds(
         itemCount: info.itemCount,
         lastPostDate: info.lastPostDate,
         postFrequency: info.postFrequency,
+        posts: info.posts,
       }),
     };
   });

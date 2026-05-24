@@ -3,7 +3,18 @@ import { MAX_FEED_RESPONSE_BYTES } from "./constants";
 import { isFeedContentType } from "./utils/feedContentType";
 import { readResponseBody } from "./utils/readResponseBody";
 import { safeFetch } from "./fetchFeed";
-import type { FeedInfo } from "./types";
+import type { FeedInfo, FeedPostPreview } from "./types";
+
+const MAX_PREVIEW_POSTS = 10;
+const MAX_SUMMARY_LENGTH = 240;
+
+type CurrentPost = {
+  title: string;
+  url: string | null;
+  hasAlternateUrl: boolean;
+  publishedAt: string | null;
+  summary: string;
+};
 
 /**
  * Fetches an RSS/Atom feed and extracts its metadata.
@@ -49,13 +60,16 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
   let inTitle = false;
   let inDescription = false;
   let inDate = false;
+  let currentPost: CurrentPost | null = null;
+  let currentPostField: "title" | "link" | "summary" | "date" | null = null;
   let itemCount = 0;
+  const posts: FeedPostPreview[] = [];
   const dates: Date[] = [];
   let currentDateText = "";
 
   const parser = new htmlparser2.Parser(
     {
-      onopentag(name) {
+      onopentag(name, attribs) {
         const tagName = name.toLowerCase();
         if (tagName === "channel") {
           inChannel = true;
@@ -63,8 +77,10 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
           inFeed = true;
         } else if (tagName === "item") {
           inItem = true;
+          currentPost = createCurrentPost();
         } else if (tagName === "entry") {
           inEntry = true;
+          currentPost = createCurrentPost();
         } else if (
           tagName === "title" &&
           (inChannel || inFeed) &&
@@ -81,6 +97,28 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
           description === null
         ) {
           inDescription = true;
+        } else if ((inItem || inEntry) && tagName === "title") {
+          currentPostField = "title";
+        } else if ((inItem || inEntry) && tagName === "link") {
+          if (inEntry && attribs.href && currentPost) {
+            const rel = attribs.rel?.toLowerCase();
+            if (rel === "alternate" || (!rel && !currentPost.url)) {
+              currentPost.url = attribs.href;
+              currentPost.hasAlternateUrl = true;
+            } else if (!currentPost.url && !currentPost.hasAlternateUrl) {
+              currentPost.url = attribs.href;
+            }
+          } else if (inItem) {
+            currentPostField = "link";
+          }
+        } else if (
+          (inItem || inEntry) &&
+          (tagName === "description" ||
+            tagName === "summary" ||
+            tagName === "content") &&
+          currentPost?.summary === ""
+        ) {
+          currentPostField = "summary";
         } else if (
           (inItem || inEntry) &&
           (tagName === "pubdate" ||
@@ -88,6 +126,7 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
             tagName === "updated")
         ) {
           inDate = true;
+          currentPostField = "date";
           currentDateText = "";
         }
       },
@@ -96,7 +135,17 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
           title = text.trim();
         } else if (inDescription) {
           description = (description || "") + text;
-        } else if (inDate) {
+        }
+
+        if (currentPost && currentPostField === "title") {
+          currentPost.title += text;
+        } else if (currentPost && currentPostField === "link") {
+          currentPost.url = `${currentPost.url || ""}${text}`;
+        } else if (currentPost && currentPostField === "summary") {
+          currentPost.summary += text;
+        }
+
+        if (inDate) {
           currentDateText += text;
         }
       },
@@ -104,19 +153,37 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
         const tagName = name.toLowerCase();
         if (tagName === "title") {
           inTitle = false;
+          if (currentPostField === "title") {
+            currentPostField = null;
+          }
         } else if (tagName === "description" || tagName === "subtitle") {
           if (inDescription) {
             description = description?.trim() || null;
           }
           inDescription = false;
+          if (currentPostField === "summary") {
+            currentPostField = null;
+          }
+        } else if (
+          (tagName === "link" && currentPostField === "link") ||
+          ((tagName === "summary" || tagName === "content") &&
+            currentPostField === "summary")
+        ) {
+          currentPostField = null;
         } else if (tagName === "channel") {
           inChannel = false;
         } else if (tagName === "feed") {
           inFeed = false;
         } else if (tagName === "item") {
+          addPreviewPost(posts, currentPost);
+          currentPost = null;
+          currentPostField = null;
           inItem = false;
           itemCount++;
         } else if (tagName === "entry") {
+          addPreviewPost(posts, currentPost);
+          currentPost = null;
+          currentPostField = null;
           inEntry = false;
           itemCount++;
         } else if (
@@ -128,9 +195,15 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
             const parsed = new Date(currentDateText.trim());
             if (!isNaN(parsed.getTime())) {
               dates.push(parsed);
+              if (currentPost) {
+                currentPost.publishedAt = parsed.toISOString();
+              }
             }
           }
           inDate = false;
+          if (currentPostField === "date") {
+            currentPostField = null;
+          }
           currentDateText = "";
         }
       },
@@ -154,7 +227,54 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
     itemCount,
     lastPostDate,
     postFrequency: calculateFrequency(dates),
+    posts,
   };
+}
+
+function createCurrentPost(): CurrentPost {
+  return {
+    title: "",
+    url: null,
+    hasAlternateUrl: false,
+    publishedAt: null,
+    summary: "",
+  };
+}
+
+function addPreviewPost(
+  posts: FeedPostPreview[],
+  post: CurrentPost | null,
+): void {
+  if (!post || posts.length >= MAX_PREVIEW_POSTS) return;
+
+  const title = cleanText(post.title);
+  const url = cleanText(post.url || "");
+  const summary = truncateSummary(cleanText(post.summary));
+
+  posts.push({
+    title: title || null,
+    url: url || null,
+    publishedAt: post.publishedAt,
+    ...(summary && { summary }),
+  });
+}
+
+function cleanText(value: string): string {
+  return value
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function truncateSummary(summary: string): string {
+  if (summary.length <= MAX_SUMMARY_LENGTH) return summary;
+  return `${summary.slice(0, MAX_SUMMARY_LENGTH - 3).trimEnd()}...`;
 }
 
 function calculateFrequency(dates: Date[]): string | null {
