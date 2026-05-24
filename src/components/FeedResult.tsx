@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
 import type { FeedResult as FeedResultType } from "~/lib/types";
+import { trackUmamiEvent } from "~/lib/umami";
 import { CommunityRuleIcon } from "./CommunityRuleIcon";
 
 interface FeedResultProps {
@@ -106,6 +107,7 @@ export function FeedResult({ feed }: FeedResultProps) {
 
   const handlePreviewClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    trackUmamiEvent("post-preview");
     setIsPreviewOpen(true);
   };
 
