@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "@tanstack/react-router";
+import { APP_RESET_EVENT } from "~/lib/constants";
 
 const BOOKMARKLET_CODE =
   "javascript:(function(){var currentUrl=window.location.href; var encodedUrl=encodeURIComponent(currentUrl); var targetUrl='https://www.rsslookup.com/?url='+encodedUrl; window.open(targetUrl,'_blank','noreferrer');})();";
@@ -17,7 +18,12 @@ export function Navbar() {
 
   return (
     <nav className="flex items-center justify-between mb-10 py-5">
-      <Link to="/" className="flex items-center gap-3 group/logo">
+      <Link
+        to="/"
+        search={{}}
+        onClick={() => window.dispatchEvent(new Event(APP_RESET_EVENT))}
+        className="flex items-center gap-3 group/logo"
+      >
         <img
           src="/icons/rsslookup_128.png"
           alt="RSS Lookup Icon"

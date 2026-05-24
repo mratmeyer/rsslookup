@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { trackUmamiEvent } from "~/lib/umami";
 import { lookupFeedsServerFn } from "~/lib/server-functions";
 import type { LookupResponse } from "~/lib/types";
@@ -11,6 +11,7 @@ interface UseFeedLookupResult {
   response: LookupResponse | null;
   loading: boolean;
   execute: (url: string, source?: string) => Promise<void>;
+  reset: () => void;
 }
 
 /**
@@ -25,9 +26,13 @@ export function useFeedLookup({
   const [response, setResponse] = useState<LookupResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const hasAutoExecutedRef = useRef(false);
+  const requestIdRef = useRef(0);
 
-  const execute = async (url: string, source: string = "web") => {
+  const execute = useCallback(async (url: string, source: string = "web") => {
     if (!url) return;
+
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
 
     trackUmamiEvent(source === "bookmarklet" ? "bookmarklet" : "lookup");
     setLoading(true);
@@ -35,18 +40,31 @@ export function useFeedLookup({
 
     try {
       const data = await lookupFeedsServerFn({ data: { url, source } });
-      setResponse(data as LookupResponse);
+      if (requestIdRef.current === requestId) {
+        setResponse(data as LookupResponse);
+      }
     } catch (error) {
-      setResponse({
-        status: 500,
-        message:
-          (error as { message?: string }).message ||
-          "An error occurred while fetching data.",
-      });
+      if (requestIdRef.current === requestId) {
+        setResponse({
+          status: 500,
+          message:
+            (error as { message?: string }).message ||
+            "An error occurred while fetching data.",
+        });
+      }
     } finally {
-      setLoading(false);
+      if (requestIdRef.current === requestId) {
+        setLoading(false);
+      }
     }
-  };
+  }, []);
+
+  const reset = useCallback(() => {
+    requestIdRef.current += 1;
+    hasAutoExecutedRef.current = false;
+    setResponse(null);
+    setLoading(false);
+  }, []);
 
   // Auto-execute lookup when URL param is provided (bookmarklet support)
   useEffect(() => {
@@ -54,7 +72,7 @@ export function useFeedLookup({
       hasAutoExecutedRef.current = true;
       execute(initialUrl, "bookmarklet");
     }
-  }, [initialUrl]);
+  }, [execute, initialUrl]);
 
-  return { response, loading, execute };
+  return { response, loading, execute, reset };
 }

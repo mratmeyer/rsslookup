@@ -10,6 +10,7 @@ import { ScrollReveal } from "~/components/ScrollReveal";
 import { ScrollIndicator } from "~/components/ScrollIndicator";
 import { URLInput } from "~/components/URLInput";
 import { SearchButton } from "~/components/SearchButton";
+import { APP_RESET_EVENT } from "~/lib/constants";
 import {
   useFeedLookup,
   useScrollArrowVisibility,
@@ -46,11 +47,12 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const { url: urlParam } = Route.useSearch();
   const [url, setUrl] = useState(urlParam || "");
+  const [inputResetKey, setInputResetKey] = useState(0);
   const [scrollIndicatorDismissed, setScrollIndicatorDismissed] =
     useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { response, loading, execute } = useFeedLookup({
+  const { response, loading, execute, reset } = useFeedLookup({
     initialUrl: urlParam,
   });
   const showArrow = useScrollArrowVisibility({ targetElementId: "rss-info" });
@@ -63,10 +65,26 @@ function HomePage() {
   useKeyboardShortcut("k", focusInput, { meta: true, ctrl: true });
 
   useEffect(() => {
-    if (urlParam) {
-      setUrl((currentUrl) => (currentUrl !== urlParam ? urlParam : currentUrl));
-    }
+    setUrl((currentUrl) =>
+      currentUrl !== (urlParam || "") ? urlParam || "" : currentUrl,
+    );
   }, [urlParam]);
+
+  useEffect(() => {
+    const handleAppReset = () => {
+      inputRef.current?.blur();
+      setUrl("");
+      setInputResetKey((key) => key + 1);
+      setScrollIndicatorDismissed(false);
+      reset();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    window.addEventListener(APP_RESET_EVENT, handleAppReset);
+    return () => {
+      window.removeEventListener(APP_RESET_EVENT, handleAppReset);
+    };
+  }, [reset]);
 
   // Dismiss scroll indicator permanently when user interacts with input
   const handleInputFocusChange = useCallback((focused: boolean) => {
@@ -111,6 +129,7 @@ function HomePage() {
             <form onSubmit={handleSubmit} className="relative group/form">
               <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
                 <URLInput
+                  key={inputResetKey}
                   value={url}
                   onChange={setUrl}
                   inputRef={inputRef}

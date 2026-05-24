@@ -15,6 +15,11 @@ export const USER_AGENT =
 export const FETCH_TIMEOUT_MS = 10_000;
 
 /**
+ * Browser event fired when the app chrome should clear the active lookup.
+ */
+export const APP_RESET_EVENT = "rsslookup:reset";
+
+/**
  * Maximum response body size in bytes for the main page HTML fetch.
  */
 export const MAX_HTML_RESPONSE_BYTES = 2 * 1024 * 1024; // 2 MB
