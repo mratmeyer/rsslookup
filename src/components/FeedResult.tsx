@@ -61,11 +61,11 @@ export function FeedResult({ feed }: FeedResultProps) {
   const copyHoverClasses =
     isTooltipHovered || isPreviewHovered
       ? ""
-      : "[@media(any-hover:hover)]:group-hover/card:bg-primary/15 group-active/card:bg-primary/15";
+      : "[@media(any-hover:hover)]:group-hover/card:bg-primary/15";
   const copyIconHoverClasses =
     isTooltipHovered || isPreviewHovered
       ? ""
-      : "[@media(any-hover:hover)]:group-hover/card:stroke-primary group-active/card:stroke-primary";
+      : "[@media(any-hover:hover)]:group-hover/card:stroke-primary";
 
   useEffect(() => {
     if (isCopied) {
@@ -107,6 +107,12 @@ export function FeedResult({ feed }: FeedResultProps) {
   const handlePreviewClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setIsPreviewOpen(true);
+  };
+
+  const handlePreviewPointerDown = (
+    e: React.PointerEvent<HTMLButtonElement>,
+  ) => {
+    e.stopPropagation();
   };
 
   const handlePreviewKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
@@ -171,6 +177,7 @@ export function FeedResult({ feed }: FeedResultProps) {
             <button
               type="button"
               onClick={handlePreviewClick}
+              onPointerDown={handlePreviewPointerDown}
               onKeyDown={handlePreviewKeyDown}
               onMouseEnter={() => setIsPreviewHovered(true)}
               onMouseLeave={() => setIsPreviewHovered(false)}
@@ -273,9 +280,8 @@ export function FeedResult({ feed }: FeedResultProps) {
                 </div>
                 <button
                   type="button"
-                  autoFocus
                   onClick={() => setIsPreviewOpen(false)}
-                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground transition-colors dark:border-transparent dark:bg-white/10 [@media(any-hover:hover)]:hover:bg-primary/15 [@media(any-hover:hover)]:hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
+                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground transition-colors dark:border-transparent dark:bg-white/10 [@media(any-hover:hover)]:hover:bg-primary/15 [@media(any-hover:hover)]:hover:text-primary active:bg-primary/15 active:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
                   aria-label="Close preview"
                 >
                   <svg
