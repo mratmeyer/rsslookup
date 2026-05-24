@@ -5,6 +5,7 @@ interface URLInputProps {
   onChange: (value: string) => void;
   inputRef: React.RefObject<HTMLInputElement | null>;
   isMac: boolean | null;
+  disabled?: boolean;
   onFocusChange?: (focused: boolean) => void;
 }
 
@@ -17,6 +18,7 @@ export function URLInput({
   onChange,
   inputRef,
   isMac,
+  disabled = false,
   onFocusChange,
 }: URLInputProps) {
   const mirrorRef = useRef<HTMLDivElement>(null);
@@ -66,7 +68,13 @@ export function URLInput({
 
   return (
     <div className="relative flex-grow">
-      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/40 pointer-events-none group-focus-within/form:text-primary/50 transition-colors duration-200 z-10">
+      <div
+        className={`absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-200 z-10 ${
+          disabled
+            ? "text-muted-foreground/25"
+            : "text-muted-foreground/45 group-focus-within/form:text-primary/60"
+        }`}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -84,7 +92,9 @@ export function URLInput({
       </div>
       <div
         ref={mirrorRef}
-        className="absolute inset-0 pl-12 pr-4 sm:pr-16 py-4 text-lg w-full h-16 whitespace-pre overflow-hidden pointer-events-none flex items-center border border-transparent bg-transparent tracking-[0.015em]"
+        className={`absolute inset-0 pl-12 pr-4 sm:pr-16 py-4 text-[17px] w-full h-[3.75rem] whitespace-pre overflow-hidden pointer-events-none flex items-center border border-transparent bg-transparent tracking-[0.01em] transition-opacity duration-200 ${
+          disabled ? "opacity-55" : "opacity-100"
+        }`}
         aria-hidden="true"
       >
         {renderValueWithColors(value)}
@@ -106,12 +116,13 @@ export function URLInput({
           setIsFocused(false);
           onFocusChange?.(false);
         }}
-        className={`pl-12 pr-4 sm:pr-16 py-4 text-lg rounded-[1.75rem] border border-input-border bg-input dark:bg-zinc-800 w-full h-16 focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition-[border-color,box-shadow] duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/50 caret-foreground tracking-[0.015em] ${
+        disabled={disabled}
+        className={`pl-12 pr-4 sm:pr-16 py-4 text-[17px] rounded-[1.5rem] border border-input-border/90 bg-input dark:bg-zinc-800 w-full h-[3.75rem] focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition-[border-color,box-shadow,opacity] duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/45 caret-foreground tracking-[0.01em] disabled:cursor-not-allowed disabled:border-input-border/50 disabled:bg-input/70 disabled:placeholder:text-muted-foreground/30 dark:disabled:bg-zinc-800/60 ${
           value ? "text-transparent" : "text-foreground"
         }`}
         id="inputText"
         name="inputText"
-        placeholder="Paste URL here..."
+        placeholder="Paste a website URL"
         value={value}
         autoComplete="off"
         spellCheck="false"

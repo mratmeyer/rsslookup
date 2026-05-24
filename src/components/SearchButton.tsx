@@ -8,12 +8,14 @@ interface SearchButtonProps {
 export function SearchButton({ loading }: SearchButtonProps) {
   return (
     <button
-      className={`w-full sm:w-36 h-16 flex-shrink-0 bg-primary text-primary-foreground text-lg rounded-[1.75rem] font-semibold px-6 transition-all duration-200 ease-in-out disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2 shadow-md ${
+      type="submit"
+      className={`w-full sm:w-[8.5rem] h-[3.75rem] flex-shrink-0 bg-primary text-primary-foreground text-base rounded-[1.5rem] font-semibold px-6 transition-all duration-200 ease-in-out disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(249,115,22,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
         loading
           ? "loading-gradient loading-gradient-pulse"
-          : "[@media(any-hover:hover)]:hover:bg-primary-hover active:bg-primary-hover"
+          : "[@media(any-hover:hover)]:hover:bg-primary-hover [@media(any-hover:hover)]:hover:shadow-[0_10px_24px_rgba(249,115,22,0.24)] active:bg-primary-hover"
       }`}
       disabled={loading}
+      aria-busy={loading}
     >
       {loading ? (
         <svg
@@ -28,7 +30,7 @@ export function SearchButton({ loading }: SearchButtonProps) {
             cy="12"
             r="10"
             stroke="currentColor"
-            strokeWidth="4"
+            strokeWidth="5"
           ></circle>
           <path
             className="opacity-90"

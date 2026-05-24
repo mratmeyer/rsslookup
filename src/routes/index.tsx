@@ -82,6 +82,20 @@ function HomePage() {
     }
   }, [url]);
 
+  // Hide the quiet scroll hint after any intentional page movement.
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 8) {
+        setScrollIndicatorDismissed(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url) return;
@@ -91,30 +105,31 @@ function HomePage() {
   return (
     <div>
       <div id="app">
-        <div className="min-h-[calc(100vh-12rem)] sm:flex sm:flex-col sm:justify-start sm:pt-[8vh]">
+        <div className="min-h-[calc(100vh-10rem)] sm:flex sm:flex-col sm:justify-start sm:pt-[5vh]">
           <Intro />
-          <div className="mb-12 bg-secondary/80 dark:bg-white/[0.02] p-2 sm:p-3 rounded-[2.5rem] border border-border/50">
+          <div className="mb-10 bg-secondary/70 dark:bg-white/[0.025] p-2 sm:p-2.5 rounded-[2rem] border border-border/70 dark:border-white/10 shadow-sm">
             <form onSubmit={handleSubmit} className="relative group/form">
-              <div className="flex flex-col sm:flex-row items-stretch gap-2">
+              <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
                 <URLInput
                   value={url}
                   onChange={setUrl}
                   inputRef={inputRef}
                   isMac={isMac}
+                  disabled={loading}
                   onFocusChange={handleInputFocusChange}
                 />
                 <SearchButton loading={loading} />
               </div>
             </form>
             {response != null && (
-              <div className="mt-6 px-1 pb-2">
+              <div className="mt-5 px-1 pb-1.5 sm:px-2">
                 {response.status === 200 && response.result ? (
                   <div>
-                    <h2 className="text-xl font-semibold mt-4 mb-5 leading-tight text-foreground-heading">
+                    <h2 className="text-lg font-semibold mt-3 mb-4 leading-tight text-foreground-heading">
                       Found {response.result.length}{" "}
                       {response.result.length === 1 ? "Feed" : "Feeds"}
                     </h2>
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {response.result.map((feed) => (
                         <FeedResult key={feed.url} feed={feed} />
                       ))}
@@ -128,7 +143,9 @@ function HomePage() {
           </div>
         </div>
 
-        <ScrollIndicator visible={showArrow && !scrollIndicatorDismissed} />
+        <ScrollIndicator
+          visible={showArrow && !scrollIndicatorDismissed && !loading}
+        />
 
         <div id="rss-info" className="mt-12">
           <ScrollReveal threshold={0.1}>
