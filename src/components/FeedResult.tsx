@@ -128,7 +128,7 @@ export function FeedResult({ feed }: FeedResultProps) {
         onClick={handleCopy}
         onKeyDown={handleKeyDown}
         aria-label={`Copy feed URL ${url}`}
-        className={`bg-white/90 dark:bg-white/[0.055] group/card flex w-full flex-col items-stretch gap-3 border border-border/70 dark:border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-[1.125rem] rounded-2xl shadow-sm text-left ${cardHoverClasses} active:border-border active:shadow-md cursor-pointer transition duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
+        className={`bg-white dark:bg-white/[0.055] group/card flex w-full flex-col items-stretch gap-3 border border-border dark:border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-[1.125rem] rounded-2xl shadow-sm text-left ${cardHoverClasses} active:border-border active:shadow-md cursor-pointer transition duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
       >
         <div className="flex min-w-0 flex-col sm:mr-4">
           {title && (
@@ -177,7 +177,7 @@ export function FeedResult({ feed }: FeedResultProps) {
               onFocus={() => setIsPreviewHovered(true)}
               onBlur={() => setIsPreviewHovered(false)}
               aria-label={`Preview posts for ${title || url}`}
-              className="group/preview relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-secondary p-1.5 transition-all duration-200 dark:bg-white/10 sm:h-9 sm:w-9 sm:p-2 [@media(any-hover:hover)]:hover:bg-primary/15 active:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
+              className="group/preview relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-secondary p-1.5 transition-all duration-200 dark:border-transparent dark:bg-white/10 sm:h-9 sm:w-9 sm:p-2 [@media(any-hover:hover)]:hover:bg-primary/15 active:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -205,7 +205,7 @@ export function FeedResult({ feed }: FeedResultProps) {
             className={`relative ml-auto flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl p-1.5 transition-all duration-300 sm:ml-0 sm:h-9 sm:w-9 sm:p-2 ${
               isCopied
                 ? "bg-green-500/20"
-                : `bg-secondary dark:bg-white/10 ${copyHoverClasses}`
+                : `border border-border bg-secondary dark:border-transparent dark:bg-white/10 ${copyHoverClasses}`
             }`}
           >
             <svg
@@ -256,10 +256,10 @@ export function FeedResult({ feed }: FeedResultProps) {
               role="dialog"
               aria-modal="true"
               aria-labelledby={`feed-preview-${encodeURIComponent(url)}`}
-              className="flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border/80 dark:border-white/10 bg-background shadow-2xl sm:max-h-[min(720px,calc(100dvh-3rem))]"
+              className="flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-2xl dark:border-white/10 dark:bg-background sm:max-h-[min(720px,calc(100dvh-3rem))]"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex flex-shrink-0 items-start justify-between gap-4 border-b border-border/70 dark:border-white/10 p-5">
+              <div className="flex flex-shrink-0 items-start justify-between gap-4 border-b border-border dark:border-white/10 p-5">
                 <div className="min-w-0">
                   <h3
                     id={`feed-preview-${encodeURIComponent(url)}`}
@@ -275,7 +275,7 @@ export function FeedResult({ feed }: FeedResultProps) {
                   type="button"
                   autoFocus
                   onClick={() => setIsPreviewOpen(false)}
-                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-secondary dark:bg-white/10 text-muted-foreground transition-colors [@media(any-hover:hover)]:hover:bg-primary/15 [@media(any-hover:hover)]:hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
+                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground transition-colors dark:border-transparent dark:bg-white/10 [@media(any-hover:hover)]:hover:bg-primary/15 [@media(any-hover:hover)]:hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
                   aria-label="Close preview"
                 >
                   <svg

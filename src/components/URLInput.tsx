@@ -58,7 +58,7 @@ export function URLInput({
     if (protocolMatch) {
       return (
         <>
-          <span className="text-muted-foreground/50">{protocolMatch[1]}</span>
+          <span className="text-muted-foreground/70">{protocolMatch[1]}</span>
           <span>{protocolMatch[2]}</span>
         </>
       );
@@ -72,7 +72,7 @@ export function URLInput({
         className={`absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-200 z-10 ${
           disabled
             ? "text-muted-foreground/25"
-            : "text-muted-foreground/45 group-focus-within/form:text-primary/60"
+            : "text-muted-foreground/60 group-focus-within/form:text-primary/80"
         }`}
       >
         <svg
@@ -117,7 +117,7 @@ export function URLInput({
           onFocusChange?.(false);
         }}
         disabled={disabled}
-        className={`pl-12 pr-4 sm:pr-16 py-4 text-[17px] rounded-[1.5rem] border border-input-border/90 bg-input dark:bg-zinc-800 w-full h-[3.75rem] focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition-[border-color,box-shadow,opacity] duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/45 caret-foreground tracking-[0.01em] disabled:cursor-not-allowed disabled:border-input-border/50 disabled:bg-input/70 disabled:placeholder:text-muted-foreground/30 dark:disabled:bg-zinc-800/60 ${
+        className={`pl-12 pr-4 sm:pr-16 py-4 text-[17px] rounded-[1.5rem] border border-input-border bg-input dark:bg-zinc-800 w-full h-[3.75rem] focus:border-ring focus:ring-2 focus:ring-ring/20 outline-none transition-[border-color,box-shadow,opacity] duration-200 ease-in-out shadow-sm placeholder:text-muted-foreground/70 caret-foreground tracking-[0.01em] disabled:cursor-not-allowed disabled:border-input-border/50 disabled:bg-input/70 disabled:placeholder:text-muted-foreground/30 dark:disabled:bg-zinc-800/60 ${
           value ? "text-transparent" : "text-foreground"
         }`}
         id="inputText"

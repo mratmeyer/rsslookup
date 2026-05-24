@@ -125,7 +125,7 @@ function HomePage() {
       <div id="app">
         <div className="min-h-[calc(100vh-10rem)] sm:flex sm:flex-col sm:justify-start sm:pt-[5vh]">
           <Intro />
-          <div className="mb-10 bg-secondary/70 dark:bg-white/[0.025] p-2 sm:p-2.5 rounded-[2rem] border border-border/70 dark:border-white/10 shadow-sm">
+          <div className="mb-10 rounded-[2rem] border border-border bg-white/80 p-2 shadow-[0_10px_30px_rgba(15,23,42,0.06)] dark:border-white/10 dark:bg-white/[0.025] dark:shadow-sm sm:p-2.5">
             <form onSubmit={handleSubmit} className="relative group/form">
               <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
                 <URLInput
