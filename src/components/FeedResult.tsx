@@ -275,7 +275,7 @@ export function FeedResult({ feed }: FeedResultProps) {
                   type="button"
                   autoFocus
                   onClick={() => setIsPreviewOpen(false)}
-                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground transition-colors dark:border-transparent dark:bg-white/10 [@media(any-hover:hover)]:hover:bg-primary/15 [@media(any-hover:hover)]:hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
+                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground transition-colors dark:border-transparent dark:bg-white/10 [@media(any-hover:hover)]:hover:border-primary [@media(any-hover:hover)]:hover:bg-primary [@media(any-hover:hover)]:hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
                   aria-label="Close preview"
                 >
                   <svg
