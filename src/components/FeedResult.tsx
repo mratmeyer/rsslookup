@@ -68,10 +68,12 @@ export function FeedResult({ feed }: FeedResultProps) {
     isTooltipHovered || isPreviewHovered
       ? ""
       : "[@media(hover:hover)_and_(pointer:fine)]:group-hover/card:stroke-primary [@media(hover:hover)_and_(pointer:fine)]:group-hover/copy:stroke-primary";
-  const copyTouchActiveClasses = isCardPointerActive ? "bg-primary/15" : "";
   const copyIconTouchActiveClasses = isCardPointerActive
     ? "stroke-primary"
     : "";
+  const copyBaseClasses = isCardPointerActive
+    ? "border-border bg-primary/15 dark:border-transparent"
+    : `border-border bg-secondary dark:border-transparent dark:bg-white/10 active:bg-primary/15 ${copyHoverClasses}`;
 
   useEffect(() => {
     if (isCopied) {
@@ -251,7 +253,7 @@ export function FeedResult({ feed }: FeedResultProps) {
             className={`group/copy relative ml-auto flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border p-1.5 transition-colors duration-300 sm:ml-0 sm:h-9 sm:w-9 sm:p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25 ${
               isCopied
                 ? "border-transparent bg-green-500/20"
-                : `border-border bg-secondary dark:border-transparent dark:bg-white/10 active:bg-primary/15 ${copyTouchActiveClasses} ${copyHoverClasses}`
+                : copyBaseClasses
             }`}
           >
             <svg
