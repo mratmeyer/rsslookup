@@ -53,6 +53,7 @@ export function FeedResult({ feed }: FeedResultProps) {
   const [isCopied, setIsCopied] = useState(false);
   const [isTooltipHovered, setIsTooltipHovered] = useState(false);
   const [isPreviewHovered, setIsPreviewHovered] = useState(false);
+  const [isCardPointerActive, setIsCardPointerActive] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const previewPosts = posts ?? [];
   const hasPreviewPosts = previewPosts.length > 0;
@@ -67,6 +68,10 @@ export function FeedResult({ feed }: FeedResultProps) {
     isTooltipHovered || isPreviewHovered
       ? ""
       : "[@media(hover:hover)_and_(pointer:fine)]:group-hover/card:stroke-primary [@media(hover:hover)_and_(pointer:fine)]:group-hover/copy:stroke-primary";
+  const copyTouchActiveClasses = isCardPointerActive ? "bg-primary/15" : "";
+  const copyIconTouchActiveClasses = isCardPointerActive
+    ? "stroke-primary"
+    : "";
 
   useEffect(() => {
     if (isCopied) {
@@ -118,6 +123,19 @@ export function FeedResult({ feed }: FeedResultProps) {
     e.stopPropagation();
   };
 
+  const handleCardPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "mouse") return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setIsCardPointerActive(true);
+  };
+
+  const handleCardPointerEnd = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+    setIsCardPointerActive(false);
+  };
+
   const handlePreviewClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setIsPreviewHovered(false);
@@ -149,6 +167,9 @@ export function FeedResult({ feed }: FeedResultProps) {
         tabIndex={0}
         onClick={handleCopy}
         onKeyDown={handleKeyDown}
+        onPointerDown={handleCardPointerDown}
+        onPointerUp={handleCardPointerEnd}
+        onPointerCancel={handleCardPointerEnd}
         aria-label={`Copy feed URL ${url}`}
         className={`bg-white dark:bg-white/[0.055] group/card flex w-full flex-col items-stretch gap-3 border border-border dark:border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-[1.125rem] rounded-2xl shadow-sm text-left ${cardHoverClasses} active:border-border active:shadow-md cursor-pointer transition duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
       >
@@ -230,12 +251,12 @@ export function FeedResult({ feed }: FeedResultProps) {
             className={`group/copy relative ml-auto flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border p-1.5 transition-colors duration-300 sm:ml-0 sm:h-9 sm:w-9 sm:p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25 ${
               isCopied
                 ? "border-transparent bg-green-500/20"
-                : `border-border bg-secondary dark:border-transparent dark:bg-white/10 active:bg-primary/15 ${copyHoverClasses}`
+                : `border-border bg-secondary dark:border-transparent dark:bg-white/10 active:bg-primary/15 ${copyTouchActiveClasses} ${copyHoverClasses}`
             }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className={`absolute h-[18px] w-[18px] stroke-muted-foreground transition-all duration-200 ease-in-out sm:h-5 sm:w-5 group-active/copy:stroke-primary ${copyIconHoverClasses} ${
+              className={`absolute h-[18px] w-[18px] stroke-muted-foreground transition-all duration-200 ease-in-out sm:h-5 sm:w-5 group-active/copy:stroke-primary ${copyIconTouchActiveClasses} ${copyIconHoverClasses} ${
                 isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
               }`}
               fill="none"
