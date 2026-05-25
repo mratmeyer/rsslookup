@@ -62,11 +62,11 @@ export function FeedResult({ feed }: FeedResultProps) {
   const copyHoverClasses =
     isTooltipHovered || isPreviewHovered
       ? ""
-      : "[@media(hover:hover)_and_(pointer:fine)]:group-hover/card:bg-primary/15";
+      : "[@media(hover:hover)_and_(pointer:fine)]:group-hover/card:bg-primary/15 [@media(hover:hover)_and_(pointer:fine)]:group-hover/copy:bg-primary/15";
   const copyIconHoverClasses =
     isTooltipHovered || isPreviewHovered
       ? ""
-      : "[@media(hover:hover)_and_(pointer:fine)]:group-hover/card:stroke-primary";
+      : "[@media(hover:hover)_and_(pointer:fine)]:group-hover/card:stroke-primary [@media(hover:hover)_and_(pointer:fine)]:group-hover/copy:stroke-primary";
 
   useEffect(() => {
     if (isCopied) {
@@ -103,6 +103,19 @@ export function FeedResult({ feed }: FeedResultProps) {
     } catch {
       toast.error("Failed to copy");
     }
+  };
+
+  const handleCopyButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    void handleCopy();
+  };
+
+  const handleCopyPointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+  };
+
+  const handleCopyKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
   };
 
   const handlePreviewClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -208,17 +221,21 @@ export function FeedResult({ feed }: FeedResultProps) {
               </svg>
             </button>
           )}
-          <span
-            aria-hidden="true"
-            className={`relative ml-auto flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border p-1.5 transition-colors duration-300 sm:ml-0 sm:h-9 sm:w-9 sm:p-2 ${
+          <button
+            type="button"
+            onClick={handleCopyButtonClick}
+            onPointerDown={handleCopyPointerDown}
+            onKeyDown={handleCopyKeyDown}
+            aria-label={`Copy feed URL ${url}`}
+            className={`group/copy relative ml-auto flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border p-1.5 transition-colors duration-300 sm:ml-0 sm:h-9 sm:w-9 sm:p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25 ${
               isCopied
                 ? "border-transparent bg-green-500/20"
-                : `border-border bg-secondary dark:border-transparent dark:bg-white/10 ${copyHoverClasses}`
+                : `border-border bg-secondary dark:border-transparent dark:bg-white/10 active:bg-primary/15 ${copyHoverClasses}`
             }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className={`absolute h-[18px] w-[18px] stroke-muted-foreground transition-all duration-200 ease-in-out sm:h-5 sm:w-5 ${copyIconHoverClasses} ${
+              className={`absolute h-[18px] w-[18px] stroke-muted-foreground transition-all duration-200 ease-in-out sm:h-5 sm:w-5 group-active/copy:stroke-primary ${copyIconHoverClasses} ${
                 isCopied ? "scale-0 opacity-0" : "scale-100 opacity-100"
               }`}
               fill="none"
@@ -248,7 +265,7 @@ export function FeedResult({ feed }: FeedResultProps) {
                 d="M5 13l4 4L19 7"
               />
             </svg>
-          </span>
+          </button>
         </div>
       </div>
 
