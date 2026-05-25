@@ -62,11 +62,11 @@ export function FeedResult({ feed }: FeedResultProps) {
   const copyHoverClasses =
     isTooltipHovered || isPreviewHovered
       ? ""
-      : "[@media(any-hover:hover)]:group-hover/card:bg-primary/15";
+      : "[@media(hover:hover)_and_(pointer:fine)]:group-hover/card:bg-primary/15";
   const copyIconHoverClasses =
     isTooltipHovered || isPreviewHovered
       ? ""
-      : "[@media(any-hover:hover)]:group-hover/card:stroke-primary";
+      : "[@media(hover:hover)_and_(pointer:fine)]:group-hover/card:stroke-primary";
 
   useEffect(() => {
     if (isCopied) {
