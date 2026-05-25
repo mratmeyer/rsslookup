@@ -46,15 +46,17 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   const { url: urlParam } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const [url, setUrl] = useState(urlParam || "");
   const [inputResetKey, setInputResetKey] = useState(0);
   const [scrollIndicatorDismissed, setScrollIndicatorDismissed] =
     useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const pendingLookupSourceRef = useRef<string | null>(null);
+  const lastExecutedUrlRef = useRef<string | null>(null);
+  const hasHandledInitialSearchRef = useRef(false);
 
-  const { response, loading, execute, reset } = useFeedLookup({
-    initialUrl: urlParam,
-  });
+  const { response, loading, execute, reset } = useFeedLookup();
   const showArrow = useScrollArrowVisibility({ targetElementId: "rss-info" });
   const { isMac } = usePlatformDetection();
 
@@ -65,10 +67,31 @@ function HomePage() {
   useKeyboardShortcut("k", focusInput, { meta: true, ctrl: true });
 
   useEffect(() => {
+    const isInitialSearch = !hasHandledInitialSearchRef.current;
+    hasHandledInitialSearchRef.current = true;
+
     setUrl((currentUrl) =>
       currentUrl !== (urlParam || "") ? urlParam || "" : currentUrl,
     );
-  }, [urlParam]);
+
+    if (!urlParam) {
+      lastExecutedUrlRef.current = null;
+      pendingLookupSourceRef.current = null;
+      return;
+    }
+
+    if (lastExecutedUrlRef.current === urlParam) {
+      pendingLookupSourceRef.current = null;
+      return;
+    }
+
+    const source =
+      pendingLookupSourceRef.current ||
+      (isInitialSearch ? "bookmarklet" : "web");
+    pendingLookupSourceRef.current = null;
+    lastExecutedUrlRef.current = urlParam;
+    void execute(urlParam, source);
+  }, [execute, urlParam]);
 
   useEffect(() => {
     const handleAppReset = () => {
@@ -76,6 +99,8 @@ function HomePage() {
       setUrl("");
       setInputResetKey((key) => key + 1);
       setScrollIndicatorDismissed(false);
+      pendingLookupSourceRef.current = null;
+      lastExecutedUrlRef.current = null;
       reset();
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
@@ -116,8 +141,24 @@ function HomePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!url) return;
-    await execute(url, "web");
+    const submittedUrl = url.trim();
+    if (!submittedUrl) return;
+
+    setUrl(submittedUrl);
+
+    if (submittedUrl === urlParam) {
+      lastExecutedUrlRef.current = submittedUrl;
+      await execute(submittedUrl, "web");
+      return;
+    }
+
+    pendingLookupSourceRef.current = "web";
+    await navigate({
+      search: (previousSearch) => ({
+        ...previousSearch,
+        url: submittedUrl,
+      }),
+    });
   };
 
   return (

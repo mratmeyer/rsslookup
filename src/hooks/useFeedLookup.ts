@@ -1,11 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { trackUmamiEvent } from "~/lib/umami";
 import { lookupFeedsServerFn } from "~/lib/server-functions";
 import type { LookupResponse } from "~/lib/types";
-
-interface UseFeedLookupOptions {
-  initialUrl?: string;
-}
 
 interface UseFeedLookupResult {
   response: LookupResponse | null;
@@ -16,16 +12,11 @@ interface UseFeedLookupResult {
 
 /**
  * Handles feed lookup logic including:
- * - Manual execution via form submit
- * - Auto-execution for bookmarklet support
  * - Loading and response state management
  */
-export function useFeedLookup({
-  initialUrl,
-}: UseFeedLookupOptions = {}): UseFeedLookupResult {
+export function useFeedLookup(): UseFeedLookupResult {
   const [response, setResponse] = useState<LookupResponse | null>(null);
   const [loading, setLoading] = useState(false);
-  const hasAutoExecutedRef = useRef(false);
   const requestIdRef = useRef(0);
 
   const execute = useCallback(async (url: string, source: string = "web") => {
@@ -61,18 +52,9 @@ export function useFeedLookup({
 
   const reset = useCallback(() => {
     requestIdRef.current += 1;
-    hasAutoExecutedRef.current = false;
     setResponse(null);
     setLoading(false);
   }, []);
-
-  // Auto-execute lookup when URL param is provided (bookmarklet support)
-  useEffect(() => {
-    if (initialUrl && !hasAutoExecutedRef.current) {
-      hasAutoExecutedRef.current = true;
-      execute(initialUrl, "bookmarklet");
-    }
-  }, [execute, initialUrl]);
 
   return { response, loading, execute, reset };
 }
