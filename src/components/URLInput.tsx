@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 
+import { ensureHttpProtocol } from "~/lib/normalizeUrlInput";
+
 interface URLInputProps {
   value: string;
   onChange: (value: string) => void;
@@ -11,7 +13,7 @@ interface URLInputProps {
 
 /**
  * URL input field with syntax highlighting for the protocol portion.
- * Includes auto-prefix of https:// when typing (not pasting).
+ * Includes auto-prefix of https:// when typing or pasting into an empty field.
  */
 export function URLInput({
   value,
@@ -23,28 +25,16 @@ export function URLInput({
 }: URLInputProps) {
   const mirrorRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
-  const isPastingRef = useRef(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newValue = e.target.value;
 
-    // Prefill logic: if typing into an empty field and it's not a paste
-    if (!value && newValue && !isPastingRef.current) {
-      // Check if it doesn't already have a protocol
-      if (!newValue.match(/^https?:\/\//i)) {
-        newValue = `https://${newValue}`;
-      }
+    // Prefill the protocol when typing or pasting into an empty field.
+    if (!value && newValue) {
+      newValue = ensureHttpProtocol(newValue);
     }
 
     onChange(newValue);
-    // Reset pasting flag on next tick to ensure it covers the current change
-    setTimeout(() => {
-      isPastingRef.current = false;
-    }, 0);
-  };
-
-  const handlePaste = () => {
-    isPastingRef.current = true;
   };
 
   const handleScroll = () => {
@@ -106,7 +96,6 @@ export function URLInput({
         ref={inputRef}
         type="url"
         onChange={handleInputChange}
-        onPaste={handlePaste}
         onScroll={handleScroll}
         onFocus={() => {
           setIsFocused(true);
