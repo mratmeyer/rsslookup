@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useRef, useCallback } from "react";
 
 import { Intro } from "~/components/Intro";
+import { EmptyState } from "~/components/EmptyState";
 import { ErrorMessage } from "~/components/ErrorMessage";
 import { FeedResult } from "~/components/FeedResult";
 import { RSSInfo } from "~/components/RSSInfo";
@@ -183,7 +184,7 @@ function HomePage() {
             </form>
             {response != null && (
               <div className="mt-5 px-1 pb-1.5 sm:px-2">
-                {response.status === 200 && response.result ? (
+                {response.status === 200 && response.result?.length ? (
                   <div>
                     <h2 className="text-lg font-semibold mt-3 mb-4 leading-tight text-foreground-heading">
                       Found {response.result.length}{" "}
@@ -195,6 +196,8 @@ function HomePage() {
                       ))}
                     </div>
                   </div>
+                ) : response.status === 200 && response.result ? (
+                  <EmptyState />
                 ) : (
                   <ErrorMessage message={response.message || "Unknown error"} />
                 )}

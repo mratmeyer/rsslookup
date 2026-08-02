@@ -181,8 +181,8 @@ export async function lookupFeeds(
   if (foundFeeds.size === 0) {
     recordAnalytics("no_feeds", 0);
     return {
-      status: 404,
-      message: "No feeds found on this site.",
+      status: 200,
+      result: [],
     };
   }
 

@@ -209,7 +209,7 @@ describe("lookupFeeds", () => {
       expect(result.message).toContain("Unable to access URL: Status 403");
     });
 
-    it("returns 404 when no feeds found on site", async () => {
+    it("returns an empty successful result when no feeds are found", async () => {
       global.fetch = vi.fn().mockImplementation((url) => {
         if (
           (url as string).includes("example.com") &&
@@ -230,8 +230,9 @@ describe("lookupFeeds", () => {
 
       const result = await lookupFeeds("https://example.com");
 
-      expect(result.status).toBe(404);
-      expect(result.message).toBe("No feeds found on this site.");
+      expect(result.status).toBe(200);
+      expect(result.result).toEqual([]);
+      expect(result.message).toBeUndefined();
     });
 
     it("succeeds with rules even when fetch fails for URLs with hardcoded rules", async () => {
