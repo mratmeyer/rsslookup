@@ -4,7 +4,7 @@ import { lookupFeeds } from "./actions";
 import type { CloudflareEnv } from "./types";
 
 export const lookupFeedsServerFn = createServerFn()
-  .inputValidator((data: { url: string; source?: string }) => data)
+  .validator((data: { url: string; source?: string }) => data)
   .handler(async ({ data }) => {
     const request = getRequest();
 
