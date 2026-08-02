@@ -187,6 +187,70 @@ describe("parseFeedInfo", () => {
     expect(info.description).toBe("Channel description");
   });
 
+  it("does not duplicate titles from nested elements inside items", () => {
+    const xml = `
+      <rss version="2.0">
+        <channel>
+          <title>Test Blog</title>
+          <item>
+            <title>An example post title.</title>
+            <link>https://example.com/post</link>
+            <media:content height="540" medium="image" url="https://example.com/image.webp" width="540"/>
+            <description><img src="https://example.com/image.webp">A short example description for the post preview.</description>
+            <pubDate>Fri, 31 Jul 2026 19:00:00 +0000</pubDate>
+            <guid>https://example.com/post</guid>
+            <category>General</category>
+            <og xmlns:og="http://ogp.me/ns#">
+              <type>article</type>
+              <title>An example post title.</title>
+              <description/>
+              <site_name>Example</site_name>
+              <url>https://example.com/post</url>
+            </og>
+          </item>
+        </channel>
+      </rss>
+    `;
+
+    const info = parseFeedInfo(xml);
+
+    expect(info.title).toBe("Test Blog");
+    expect(info.posts).toHaveLength(1);
+    expect(info.posts[0].title).toBe("An example post title.");
+    expect(info.posts[0].summary).toBe(
+      "A short example description for the post preview.",
+    );
+    expect(info.posts[0].url).toBe("https://example.com/post");
+    expect(info.posts[0].publishedAt).toBe("2026-07-31T19:00:00.000Z");
+  });
+
+  it("ignores nested element fields that could pollute previews", () => {
+    const xml = `
+      <rss version="2.0">
+        <channel>
+          <title>Test Blog</title>
+          <item>
+            <og>
+              <title>Nested og title</title>
+              <description>Nested og description</description>
+              <link>https://example.com/og</link>
+            </og>
+            <title>Real Post</title>
+            <link>https://example.com/real</link>
+            <description>Real summary</description>
+          </item>
+        </channel>
+      </rss>
+    `;
+
+    const info = parseFeedInfo(xml);
+
+    expect(info.posts).toHaveLength(1);
+    expect(info.posts[0].title).toBe("Real Post");
+    expect(info.posts[0].url).toBe("https://example.com/real");
+    expect(info.posts[0].summary).toBe("Real summary");
+  });
+
   it("handles malformed/empty XML", () => {
     const info = parseFeedInfo("");
 

@@ -66,6 +66,7 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
   const posts: FeedPostPreview[] = [];
   const dates: Date[] = [];
   let currentDateText = "";
+  let postElementDepth = 0;
 
   const parser = new htmlparser2.Parser(
     {
@@ -78,9 +79,11 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
         } else if (tagName === "item") {
           inItem = true;
           currentPost = createCurrentPost();
+          postElementDepth = 0;
         } else if (tagName === "entry") {
           inEntry = true;
           currentPost = createCurrentPost();
+          postElementDepth = 0;
         } else if (
           tagName === "title" &&
           (inChannel || inFeed) &&
@@ -97,9 +100,17 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
           description === null
         ) {
           inDescription = true;
-        } else if ((inItem || inEntry) && tagName === "title") {
+        } else if (
+          (inItem || inEntry) &&
+          tagName === "title" &&
+          postElementDepth === 0
+        ) {
           currentPostField = "title";
-        } else if ((inItem || inEntry) && tagName === "link") {
+        } else if (
+          (inItem || inEntry) &&
+          tagName === "link" &&
+          postElementDepth === 0
+        ) {
           if (inEntry && attribs.href && currentPost) {
             const rel = attribs.rel?.toLowerCase();
             if (rel === "alternate" || (!rel && !currentPost.url)) {
@@ -116,6 +127,7 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
           (tagName === "description" ||
             tagName === "summary" ||
             tagName === "content") &&
+          postElementDepth === 0 &&
           currentPost?.summary === ""
         ) {
           currentPostField = "summary";
@@ -123,11 +135,16 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
           (inItem || inEntry) &&
           (tagName === "pubdate" ||
             tagName === "published" ||
-            tagName === "updated")
+            tagName === "updated") &&
+          postElementDepth === 0
         ) {
           inDate = true;
           currentPostField = "date";
           currentDateText = "";
+        }
+
+        if ((inItem || inEntry) && tagName !== "item" && tagName !== "entry") {
+          postElementDepth++;
         }
       },
       ontext(text) {
@@ -179,12 +196,14 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
           currentPost = null;
           currentPostField = null;
           inItem = false;
+          postElementDepth = 0;
           itemCount++;
         } else if (tagName === "entry") {
           addPreviewPost(posts, currentPost);
           currentPost = null;
           currentPostField = null;
           inEntry = false;
+          postElementDepth = 0;
           itemCount++;
         } else if (
           tagName === "pubdate" ||
@@ -205,6 +224,10 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
             currentPostField = null;
           }
           currentDateText = "";
+        }
+
+        if ((inItem || inEntry) && tagName !== "item" && tagName !== "entry") {
+          postElementDepth--;
         }
       },
     },
