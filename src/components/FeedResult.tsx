@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
 import type { FeedResult as FeedResultType } from "~/lib/types";
@@ -55,6 +55,9 @@ export function FeedResult({ feed }: FeedResultProps) {
   const [isPreviewHovered, setIsPreviewHovered] = useState(false);
   const [isCardPointerActive, setIsCardPointerActive] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const previewButtonRef = useRef<HTMLButtonElement>(null);
+  const previewDialogRef = useRef<HTMLDivElement>(null);
+  const previewCloseButtonRef = useRef<HTMLButtonElement>(null);
   const previewPosts = posts ?? [];
   const hasPreviewPosts = previewPosts.length > 0;
   const cardHoverClasses = isPreviewHovered
@@ -84,24 +87,76 @@ export function FeedResult({ feed }: FeedResultProps) {
     }
   }, [isCopied]);
 
+  const closePreview = useCallback(() => {
+    setIsPreviewOpen(false);
+  }, []);
+
   useEffect(() => {
     if (!isPreviewOpen) return;
 
-    const handleEscape = (event: KeyboardEvent) => {
+    const previewButton = previewButtonRef.current;
+    const previousOverflow = document.body.style.overflow;
+
+    const handlePreviewKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setIsPreviewOpen(false);
+        event.preventDefault();
+        closePreview();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const dialog = previewDialogRef.current;
+      if (!dialog) return;
+
+      const focusableElements = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter(
+        (element) =>
+          element.getAttribute("aria-hidden") !== "true" &&
+          !element.hasAttribute("hidden"),
+      );
+
+      const firstFocusableElement = focusableElements[0];
+      const lastFocusableElement = focusableElements.at(-1);
+
+      if (!firstFocusableElement || !lastFocusableElement) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const activeElement = document.activeElement;
+      const focusIsOutsideDialog = !dialog.contains(activeElement);
+
+      if (event.shiftKey) {
+        if (activeElement === firstFocusableElement || focusIsOutsideDialog) {
+          event.preventDefault();
+          lastFocusableElement.focus();
+        }
+      } else if (
+        activeElement === lastFocusableElement ||
+        focusIsOutsideDialog
+      ) {
+        event.preventDefault();
+        firstFocusableElement.focus();
       }
     };
 
-    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleEscape);
+    previewCloseButtonRef.current?.focus();
+    window.addEventListener("keydown", handlePreviewKeyDown);
 
     return () => {
       document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleEscape);
+      window.removeEventListener("keydown", handlePreviewKeyDown);
+      if (previewButton?.isConnected) {
+        previewButton.focus();
+      }
     };
-  }, [isPreviewOpen]);
+  }, [closePreview, isPreviewOpen]);
 
   const handleCopy = async () => {
     try {
@@ -214,6 +269,7 @@ export function FeedResult({ feed }: FeedResultProps) {
           )}
           {hasPreviewPosts && (
             <button
+              ref={previewButtonRef}
               type="button"
               onClick={handlePreviewClick}
               onPointerDown={handlePreviewPointerDown}
@@ -251,9 +307,7 @@ export function FeedResult({ feed }: FeedResultProps) {
             onKeyDown={handleCopyKeyDown}
             aria-label={`Copy feed URL ${url}`}
             className={`group/copy relative ml-auto flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border p-1.5 transition-colors duration-300 sm:ml-0 sm:h-9 sm:w-9 sm:p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25 ${
-              isCopied
-                ? "border-transparent bg-green-500/20"
-                : copyBaseClasses
+              isCopied ? "border-transparent bg-green-500/20" : copyBaseClasses
             }`}
           >
             <svg
@@ -298,10 +352,12 @@ export function FeedResult({ feed }: FeedResultProps) {
           <div
             role="presentation"
             className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/45 px-4 py-4 sm:items-center sm:py-6"
-            onClick={() => setIsPreviewOpen(false)}
+            onClick={closePreview}
           >
             <div
+              ref={previewDialogRef}
               role="dialog"
+              tabIndex={-1}
               aria-modal="true"
               aria-labelledby={`feed-preview-${encodeURIComponent(url)}`}
               className="flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-2xl dark:border-white/10 dark:bg-background sm:max-h-[min(720px,calc(100dvh-3rem))]"
@@ -320,8 +376,9 @@ export function FeedResult({ feed }: FeedResultProps) {
                   </p>
                 </div>
                 <button
+                  ref={previewCloseButtonRef}
                   type="button"
-                  onClick={() => setIsPreviewOpen(false)}
+                  onClick={closePreview}
                   className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground transition-colors dark:border-transparent dark:bg-white/10 [@media(any-hover:hover)]:hover:bg-primary/15 [@media(any-hover:hover)]:hover:text-primary active:bg-primary/15 active:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
                   aria-label="Close preview"
                 >
