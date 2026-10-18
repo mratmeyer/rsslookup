@@ -27,10 +27,10 @@ export function FAQ() {
       <h2 className="text-3xl font-semibold mb-8 leading-tight text-foreground-heading">
         Frequently asked questions
       </h2>
-      <div className="divide-y divide-border/50 dark:divide-white/10 border-y border-border/50 dark:border-white/10">
+      <div className="divide-y divide-border dark:divide-white/10 border-y border-border dark:border-white/10">
         {faqs.map(({ question, answer }) => (
           <details key={question} className="faq-item group">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-lg font-semibold leading-tight text-foreground-heading transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm [&::-webkit-details-marker]:hidden">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-lg font-semibold leading-tight text-foreground-heading transition-colors [@media(any-hover:hover)]:hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm [&::-webkit-details-marker]:hidden">
               <h3>{question}</h3>
               <svg
                 className="h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-300 group-open:rotate-180"
