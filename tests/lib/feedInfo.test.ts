@@ -289,6 +289,28 @@ describe("parseFeedInfo", () => {
     expect(info.posts[0].summary).toMatch(/\.\.\.$/);
   });
 
+  it("decodes HTML entities in titles and summaries", () => {
+    const xml = `
+      <rss version="2.0">
+        <channel>
+          <title>Tom &amp;amp; Jerry&#8217;s Blog</title>
+          <item>
+            <title>Why BioWare&amp;#039;s Neverwinter Nights still has players</title>
+            <description><![CDATA[<p>It&rsquo;s &ldquo;fine&rdquo; &mdash; caf&eacute;&nbsp;&#x1F600;</p>]]></description>
+          </item>
+        </channel>
+      </rss>
+    `;
+
+    const info = parseFeedInfo(xml);
+
+    expect(info.title).toBe("Tom & Jerry’s Blog");
+    expect(info.posts[0].title).toBe(
+      "Why BioWare's Neverwinter Nights still has players",
+    );
+    expect(info.posts[0].summary).toBe("It’s “fine” — café \u{1F600}");
+  });
+
   it("calculates daily frequency", () => {
     const items = Array.from({ length: 10 }, (_, i) => {
       const date = new Date("2024-01-10T00:00:00Z");
