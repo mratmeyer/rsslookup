@@ -1,3 +1,4 @@
+import { decodeHTML } from "entities";
 import * as htmlparser2 from "htmlparser2";
 import { MAX_FEED_RESPONSE_BYTES } from "./constants";
 import { isFeedContentType } from "./utils/feedContentType";
@@ -149,7 +150,7 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
       },
       ontext(text) {
         if (inTitle) {
-          title = text.trim();
+          title = (title || "") + text;
         } else if (inDescription) {
           description = (description || "") + text;
         }
@@ -245,8 +246,8 @@ export function parseFeedInfo(xmlContent: string): FeedInfo {
   }
 
   return {
-    title: title || null,
-    description: description || null,
+    title: cleanText(title ?? "") || null,
+    description: cleanText(description ?? "") || null,
     itemCount,
     lastPostDate,
     postFrequency: calculateFrequency(dates),
@@ -283,14 +284,10 @@ function addPreviewPost(
 }
 
 function cleanText(value: string): string {
-  return value
-    .replace(/<[^>]*>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
+  // The XML parser has already decoded one layer of entities. Feed fields
+  // often carry escaped HTML (or double-encoded text like `&amp;#039;`),
+  // so strip tags and decode the remaining HTML entities here.
+  return decodeHTML(value.replace(/<[^>]*>/g, " "))
     .replace(/\s+/g, " ")
     .trim();
 }

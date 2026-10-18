@@ -21,6 +21,7 @@
     "@tanstack/react-start": "^1.168.34",
     "@upstash/ratelimit": "^2.0.7",
     "@upstash/redis": "^1.36.0",
+    "entities": "^7.0.1",
     "htmlparser2": "^10.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
